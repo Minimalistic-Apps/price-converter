@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Minimalistic Price Converter</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_add_currency">Add currency</string>
+
+    <string-array name="currencies">
+        <item>BTC</item>
+        <item>USD</item>
+        <item>EUR</item>
+        <item>CZK</item>
+    </string-array>
+</resources>
