@@ -6,6 +6,9 @@
     <string-array name="currencies">
         <item>BTC</item>
         <item>Satoshi</item>
+        <item>USD</item>
+        <item>EUR</item>
+
         <item>AED</item>
         <item>AFN</item>
         <item>ALL</item>
@@ -54,7 +57,6 @@
         <item>EGP</item>
         <item>ERN</item>
         <item>ETB</item>
-        <item>EUR</item>
         <item>FJD</item>
         <item>FKP</item>
         <item>GBP</item>
@@ -154,7 +156,6 @@
         <item>TZS</item>
         <item>UAH</item>
         <item>UGX</item>
-        <item>USD</item>
         <item>USN</item>
         <item>UYI</item>
         <item>UYU</item>

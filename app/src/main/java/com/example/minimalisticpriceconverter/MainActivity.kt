@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +22,8 @@ class MainActivity : AppCompatActivity() {
 
     private var parentLinearLayout: LinearLayout? = null
 
-    private var currencies: Map<String, View> = mutableMapOf<String, View>()
+    private var currencies: MutableList<String> = mutableListOf()
+    private var currencyViews: MutableList<View> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,49 +39,73 @@ class MainActivity : AppCompatActivity() {
         parentLinearLayout = findViewById(R.id.parent_linear_layout)
 
         if (currencies != null && currencies != "") {
-            for (currency in currencies.split(",")) {
-                val inflater =
-                    this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                val rowView: View = inflater.inflate(R.layout.field, null)
-                val spinner = rowView.findViewById<Spinner>(R.id.type_spinner)
-                spinner.setSelection(availableCurrencies.indexOf(currency))
+            val currenciesSplited = currencies.split(",")
 
-                Log.v(TAG, "Currency $currency added from data storage")
-
-                parentLinearLayout?.addView(rowView, parentLinearLayout!!.childCount - 1)
-
-                this.currencies = this.currencies + (currency to rowView)
+            for (i in currenciesSplited.indices) {
+                val currency = currenciesSplited[i]
+                addRowViewAt(i, currency)
             }
         }
 
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view -> this.onAdd(view) }
     }
 
-    fun onAdd(view: View) {
-        val inflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    private fun addRowViewAt(index: Int, currency: String) {
+        val inflater =
+            this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val rowView: View = inflater.inflate(R.layout.field, null)
-
-        val remainingCurrencies = availableCurrencies.subtract(currencies.keys)
-
-        if (remainingCurrencies.isEmpty()) {
-            return
-        }
-
-        val currency = remainingCurrencies.first()
         val spinner = rowView.findViewById<Spinner>(R.id.type_spinner)
         spinner.setSelection(availableCurrencies.indexOf(currency))
 
-        parentLinearLayout?.addView(rowView, parentLinearLayout!!.childCount - 1)
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (view == null || parent == null) {
+                    return
+                }
 
-        currencies = currencies + (currency to rowView)
+                val i = currencyViews.indexOf(parent.parent as View)
+                if (i == -1) {
+                    return
+                }
 
+                val selectedCurrency = availableCurrencies.get(position)
+                currencies[i] = selectedCurrency
+                saveCurrencies()
+            }
+        }
+
+        parentLinearLayout?.addView(rowView, parentLinearLayout!!.childCount)
+
+        currencies.add(index, currency)
+        this.currencyViews.add(index, rowView)
+
+    }
+
+    fun onAdd(view: View) {
+        val remainingCurrencies = availableCurrencies.subtract(currencies)
+        if (remainingCurrencies.isEmpty()) {
+            return
+        }
+        val currency = remainingCurrencies.first()
+
+        addRowViewAt(currencies.size, currency)
         saveCurrencies()
     }
 
     fun onDelete(view: View) {
-        val currency = currencies.filterValues { it == view.parent }.keys.first()
+        val i = currencyViews.indexOf(view.parent as View)
         parentLinearLayout?.removeView(view.parent as View)
-        currencies = currencies - currency
+
+        currencies.removeAt(i)
+        currencyViews.removeAt(i)
+
+        saveCurrencies()
     }
 
     private fun saveCurrencies() {
@@ -87,7 +113,7 @@ class MainActivity : AppCompatActivity() {
 
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
         with(sharedPref.edit()) {
-            val data = _this.currencies.keys.joinToString(",")
+            val data = _this.currencies.joinToString(",")
             Log.v(TAG, "saveCurrencies $data")
 
             putString(getString(R.string.currencies_key), data)
