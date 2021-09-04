@@ -1,17 +1,22 @@
 package com.example.minimalisticpriceconverter
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
-import android.widget.LinearLayout
-import android.widget.Spinner
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.minimalisticpriceconverter.abstractapi.AbstractApiRatesPlugin
+import com.example.minimalisticpriceconverter.ratesapiplugin.Callback
+import com.example.minimalisticpriceconverter.ratesapiplugin.RatesApiPlugin
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.math.BigDecimal
 
 
 class MainActivity : AppCompatActivity() {
@@ -24,6 +29,21 @@ class MainActivity : AppCompatActivity() {
 
     private var currencies: MutableList<String> = mutableListOf()
     private var currencyViews: MutableList<View> = mutableListOf()
+
+    private var ratesBasedInUSD: Map<String, BigDecimal> = mapOf()
+
+    private var ratePlugins: Map<String, RatesApiPlugin> =
+        mapOf("AbstractApi" to AbstractApiRatesPlugin())
+
+    private fun isNetworkConnected(): Boolean {
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetwork
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+
+        return networkCapabilities != null &&
+                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,15 +59,53 @@ class MainActivity : AppCompatActivity() {
         parentLinearLayout = findViewById(R.id.parent_linear_layout)
 
         if (currencies != null && currencies != "") {
-            val currenciesSplited = currencies.split(",")
+            val currenciesSplit = currencies.split(",")
 
-            for (i in currenciesSplited.indices) {
-                val currency = currenciesSplited[i]
+            for (i in currenciesSplit.indices) {
+                val currency = currenciesSplit[i]
                 addRowViewAt(i, currency)
             }
         }
 
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view -> this.onAdd(view) }
+
+        if (isNetworkConnected()) {
+            val plugin = ratePlugins["AbstractApi"] ?: throw Exception("Missing plugin AbstractApi")
+
+            val _this = this
+
+            plugin.call("8d8aaf3858904a149ae64f262c772667", object : Callback {
+                override fun onSuccess(data: Map<String, BigDecimal>) {
+                    ratesBasedInUSD = data
+
+                    for (currencyFromRates in ratesBasedInUSD.keys) {
+
+                        for (i in _this.currencies.indices) {
+                            val currencyFromState = _this.currencies[i]
+                            if (currencyFromRates == currencyFromState) {
+                                val rateText =
+                                    currencyViews[i].findViewById<TextView>(R.id.rate)
+                                rateText.text = formatBtcPrice(ratesBasedInUSD[currencyFromRates])
+                            }
+                        }
+                    }
+                }
+
+                override fun onFailure(t: Throwable) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Unable to load users: " + t.message,
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            })
+        } else {
+            AlertDialog.Builder(this).setTitle("No Internet Connection")
+                .setMessage("Please check your internet connection and try again")
+                .setPositiveButton(android.R.string.ok) { _, _ -> }
+                .setIcon(android.R.drawable.ic_dialog_alert).show()
+        }
     }
 
     private fun addRowViewAt(index: Int, currency: String) {
@@ -56,6 +114,8 @@ class MainActivity : AppCompatActivity() {
         val rowView: View = inflater.inflate(R.layout.field, null)
         val spinner = rowView.findViewById<Spinner>(R.id.type_spinner)
         spinner.setSelection(availableCurrencies.indexOf(currency))
+        val rateText = rowView.findViewById<TextView>(R.id.rate)
+        rateText.text = formatBtcPrice(ratesBasedInUSD[currency])
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -73,8 +133,13 @@ class MainActivity : AppCompatActivity() {
                 if (i == -1) {
                     return
                 }
-
                 val selectedCurrency = availableCurrencies.get(position)
+
+                val rateTextToUpdate =
+                    (parent.parent as View).findViewById<TextView>(R.id.rate)
+                rateTextToUpdate.text =
+                    ratesBasedInUSD[selectedCurrency]?.toPlainString() ?: "n/a"
+
                 currencies[i] = selectedCurrency
                 saveCurrencies()
             }
