@@ -85,7 +85,9 @@ class MainActivity : AppCompatActivity() {
                             if (currencyFromRates == currencyFromState) {
                                 val rateText =
                                     currencyViews[i].findViewById<TextView>(R.id.rate)
-                                rateText.text = formatBtcPrice(ratesBasedInUSD[currencyFromRates])
+                                val formattedBtcPrice =
+                                    formatBtcPrice(ratesBasedInUSD[currencyFromRates])
+                                rateText.text = "1 $currencyFromRates = $formattedBtcPrice BTC"
                             }
                         }
                     }
@@ -115,7 +117,8 @@ class MainActivity : AppCompatActivity() {
         val spinner = rowView.findViewById<Spinner>(R.id.type_spinner)
         spinner.setSelection(availableCurrencies.indexOf(currency))
         val rateText = rowView.findViewById<TextView>(R.id.rate)
-        rateText.text = formatBtcPrice(ratesBasedInUSD[currency])
+        val formattedBtcPrice = formatBtcPrice(ratesBasedInUSD[currency])
+        rateText.text = "1 $currency = $formattedBtcPrice BTC"
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -137,8 +140,9 @@ class MainActivity : AppCompatActivity() {
 
                 val rateTextToUpdate =
                     (parent.parent as View).findViewById<TextView>(R.id.rate)
-                rateTextToUpdate.text =
-                    ratesBasedInUSD[selectedCurrency]?.toPlainString() ?: "n/a"
+
+                val selectedFormattedBtcPrice = formatBtcPrice(ratesBasedInUSD[selectedCurrency])
+                rateTextToUpdate.text = "1 $selectedCurrency = $selectedFormattedBtcPrice BTC"
 
                 currencies[i] = selectedCurrency
                 saveCurrencies()
