@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="64dp"
+    android:layout_marginTop="16dp"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -31,7 +32,7 @@
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_weight="3"
-        android:entries="@array/currencies"
+        android:entries="@array/shitcoins"
         android:gravity="end" />
 
     <Button

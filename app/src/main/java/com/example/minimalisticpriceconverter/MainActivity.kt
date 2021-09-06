@@ -45,13 +45,22 @@ class MainActivity : AppCompatActivity() {
                 networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
+
+    fun deleteBtc(view: View) {
+        Toast.makeText(
+            this@MainActivity,
+            resources.getString(R.string.delete_btc),
+            Toast.LENGTH_SHORT
+        )
+            .show()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        availableCurrencies = resources.getStringArray(R.array.currencies)
+        availableCurrencies = resources.getStringArray(R.array.shitcoins)
 
         setContentView(R.layout.activity_main)
-        setSupportActionBar(findViewById(R.id.toolbar))
 
         val currencies = this.getPreferences(Context.MODE_PRIVATE)
             .getString(getString(R.string.currencies_key), "")

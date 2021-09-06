@@ -1,14 +1,17 @@
 <resources>
     <string name="app_name">Minimalistic Price Converter</string>
     <string name="action_settings">Settings</string>
-    <string name="action_add_currency">Add currency</string>
+    <string name="action_add_shitcoin">Add shitcoin</string>
+    <string name="delete_btc">Bitcoin cannot be uninvented. It will outlive all fiat shitcoin.</string>
+    <string name="btc">BTC</string>
 
-    <string-array name="currencies">
+    <string-array name="bitcoin">
         <item>BTC</item>
-        <item>Satoshi</item>
+    </string-array>
+
+    <string-array name="shitcoins">
         <item>USD</item>
         <item>EUR</item>
-
         <item>AED</item>
         <item>AFN</item>
         <item>ALL</item>
