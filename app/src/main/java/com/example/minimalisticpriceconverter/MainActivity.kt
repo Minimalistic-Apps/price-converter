@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         availableCurrencies = resources.getStringArray(R.array.shitcoins)
 
         setContentView(R.layout.activity_main)
+        setSupportActionBar(findViewById(R.id.toolbar))
 
         val currencies = this.getPreferences(Context.MODE_PRIVATE)
             .getString(getString(R.string.currencies_key), "")
