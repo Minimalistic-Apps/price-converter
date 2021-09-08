@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
@@ -86,6 +87,8 @@ class MainActivity : AppCompatActivity() {
         val _this = this
 
         val btcEdit = findViewById<EditText>(R.id.btc_number_edit_text)
+        btcEdit.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(BITCOIN_PRECISION))
+
         btcEdit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -198,6 +201,11 @@ class MainActivity : AppCompatActivity() {
 
         val numberEditText = rowView.findViewById<TextView>(R.id.number_edit_text)
         numberEditText.isEnabled = rate != null
+        numberEditText.filters = arrayOf<InputFilter>(
+            DecimalDigitsInputFilter(
+                FIAT_SHITCOIN_PRECISION
+            )
+        )
 
         val _this = this
 
