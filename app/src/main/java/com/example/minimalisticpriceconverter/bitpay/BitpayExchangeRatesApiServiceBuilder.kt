@@ -1,11 +1,11 @@
-package com.example.minimalisticpriceconverter.coingecko
+package com.example.minimalisticpriceconverter.bitpay
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object ExchangeRatesAbstractApiServiceBuilder {
+object BitpayExchangeRatesApiServiceBuilder {
 
-    private const val BASE_URL = "https://api.coingecko.com/"
+    private const val BASE_URL = "https://bitpay.com/"
 
     private fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
@@ -14,6 +14,6 @@ object ExchangeRatesAbstractApiServiceBuilder {
             .build() // Doesn't require the adapter
     }
 
-    val apiService: ExchangeRatesAbstractApiService =
-        getRetrofit().create(ExchangeRatesAbstractApiService::class.java)
+    val API_SERVICE_BITPAY: BitpayExchangeRatesApiService =
+        getRetrofit().create(BitpayExchangeRatesApiService::class.java)
 }

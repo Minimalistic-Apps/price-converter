@@ -15,6 +15,8 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.minimalisticpriceconverter.bitpay.BitpayApiRatesPlugin
+import com.example.minimalisticpriceconverter.blockchaininfo.BlockchainInfoApiRatesPlugin
 import com.example.minimalisticpriceconverter.coingecko.CoingeckoApiRatesPlugin
 import com.example.minimalisticpriceconverter.ratesapiplugin.BITCOIN_PRECISION
 import com.example.minimalisticpriceconverter.ratesapiplugin.Callback
@@ -39,10 +41,14 @@ class MainActivity : AppCompatActivity() {
     private var currencies: MutableList<String> = mutableListOf()
     private var currencyViews: MutableList<View> = mutableListOf()
 
-    private var ratesBasedInBTC: Map<String, BigDecimal> = mapOf()
+    private var ratesBasedInBTC: MutableMap<String, BigDecimal> = mutableMapOf()
 
     private var ratePlugins: Map<String, RatesApiPlugin> =
-        mapOf("Coingecko" to CoingeckoApiRatesPlugin())
+        mapOf(
+            "Coingecko" to CoingeckoApiRatesPlugin(),
+            "Bitpay" to BitpayApiRatesPlugin(),
+            "BlockchainInfo" to BlockchainInfoApiRatesPlugin()
+        )
 
     private fun isNetworkConnected(): Boolean {
         val connectivityManager =
@@ -64,30 +70,69 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private fun updateUiWithRates() {
+        for (currencyFromRates in ratesBasedInBTC.keys) {
 
-        availableCurrencies = resources.getStringArray(R.array.shitcoins)
+            for (i in this.currencies.indices) {
+                val currencyFromState = this.currencies[i]
+                if (currencyFromRates == currencyFromState) {
+                    val rateText =
+                        currencyViews[i].findViewById<TextView>(R.id.rate)
+                    val formattedBtcPrice =
+                        formatBtcPrice(ratesBasedInBTC[currencyFromRates])
+                    rateText.text = "1 $currencyFromRates = $formattedBtcPrice BTC"
 
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(findViewById(R.id.toolbar))
+                    val editText =
+                        currencyViews[i].findViewById<TextView>(R.id.number_edit_text)
 
-        val currencies = this.getPreferences(Context.MODE_PRIVATE)
-            .getString(getString(R.string.currencies_key), "")
-
-        parentLinearLayout = findViewById(R.id.parent_linear_layout)
-
-        if (currencies != null && currencies != "") {
-            val currenciesSplit = currencies.split(",")
-
-            for (i in currenciesSplit.indices) {
-                val currency = currenciesSplit[i]
-                addRowViewAt(i, currency)
+                    editText.isEnabled = true
+                }
             }
         }
+    }
 
+    private fun loadRates() {
+        for (pluginEntry in ratePlugins) {
+            pluginEntry.value.call("", object : Callback {
+                override fun onSuccess(data: Map<String, BigDecimal>) {
+
+                    data.forEach {
+                        val originalRate = ratesBasedInBTC[it.key]
+                        if (originalRate == null) {
+                            ratesBasedInBTC[it.key] = it.value
+                        } else {
+                            ratesBasedInBTC[it.key] =
+                                it.value.plus(originalRate)
+                                    .divide(BigDecimal(2), BITCOIN_PRECISION, RoundingMode.HALF_UP)
+                        }
+                    }
+
+                    Log.v(
+                        TAG,
+                        "Prices updated by ${pluginEntry.key}, "
+                                + "new values: ${ratesBasedInBTC.toString()}"
+                    )
+
+                    updateUiWithRates()
+                }
+
+                override fun onFailure(t: Throwable) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Unable to load rates from ${pluginEntry.key}: ${t.message}",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            })
+        }
+
+    }
+
+    private fun setupBtcSpecialField() {
         val btcEdit = findViewById<EditText>(R.id.btc_number_edit_text)
         btcEdit.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(BITCOIN_PRECISION))
+        btcEdit.setSelectAllOnFocus(true);
 
         btcEdit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -106,48 +151,40 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun loadAppCurrenciesState() {
+        val currencies = this.getPreferences(Context.MODE_PRIVATE)
+            .getString(getString(R.string.currencies_key), "")
+
+        if (currencies != null && currencies != "") {
+            val currenciesSplit = currencies.split(",")
+
+            for (currencyIndex in currenciesSplit.indices) {
+                val currency = currenciesSplit[currencyIndex]
+                addCurrencyToStateAndAddUiViewForIt(currencyIndex, currency)
+            }
+        }
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        availableCurrencies = resources.getStringArray(R.array.shitcoins)
+
+        setContentView(R.layout.activity_main)
+        setSupportActionBar(findViewById(R.id.toolbar))
+
+        parentLinearLayout = findViewById(R.id.parent_linear_layout)
+
+        loadAppCurrenciesState()
+        setupBtcSpecialField()
 
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view -> this.onAdd(view) }
 
         if (isNetworkConnected()) {
-            val plugin = ratePlugins["Coingecko"] ?: throw Exception("Missing plugin Coingecko")
-
-            val _this = this
-
-            plugin.call("", object : Callback {
-                override fun onSuccess(data: Map<String, BigDecimal>) {
-                    ratesBasedInBTC = data
-                    Log.v(TAG, data.toString())
-
-                    for (currencyFromRates in ratesBasedInBTC.keys) {
-
-                        for (i in _this.currencies.indices) {
-                            val currencyFromState = _this.currencies[i]
-                            if (currencyFromRates == currencyFromState) {
-                                val rateText =
-                                    currencyViews[i].findViewById<TextView>(R.id.rate)
-                                val formattedBtcPrice =
-                                    formatBtcPrice(ratesBasedInBTC[currencyFromRates])
-                                rateText.text = "1 $currencyFromRates = $formattedBtcPrice BTC"
-
-                                val editText =
-                                    currencyViews[i].findViewById<TextView>(R.id.number_edit_text)
-
-                                editText.isEnabled = true
-                            }
-                        }
-                    }
-                }
-
-                override fun onFailure(t: Throwable) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Unable to load users: " + t.message,
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
-            })
+            loadRates()
         } else {
             AlertDialog.Builder(this).setTitle("No Internet Connection")
                 .setMessage("Please check your internet connection and try again")
@@ -207,7 +244,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun addRowViewAt(index: Int, currency: String) {
+    private fun addCurrencyToStateAndAddUiViewForIt(index: Int, currency: String) {
         val inflater =
             this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val rowView: View = inflater.inflate(R.layout.field, null)
@@ -225,6 +262,7 @@ class MainActivity : AppCompatActivity() {
                 FIAT_SHITCOIN_PRECISION
             )
         )
+        numberEditText.setSelectAllOnFocus(true);
 
         numberEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -305,7 +343,7 @@ class MainActivity : AppCompatActivity() {
         }
         val currency = remainingCurrencies.first()
 
-        addRowViewAt(currencies.size, currency)
+        addCurrencyToStateAndAddUiViewForIt(currencies.size, currency)
         saveCurrencies()
     }
 

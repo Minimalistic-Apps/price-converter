@@ -1,4 +1,4 @@
-package com.example.minimalisticpriceconverter.coingecko
+package com.example.minimalisticpriceconverter.blockchaininfo
 
 import com.example.minimalisticpriceconverter.ratesapiplugin.BITCOIN_PRECISION
 import com.example.minimalisticpriceconverter.ratesapiplugin.Callback
@@ -9,24 +9,24 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
 
-class CoingeckoApiRatesPlugin : RatesApiPlugin {
-    private var api = CoingeckoExchangeRatesApiServiceBuilder.API_SERVICE_COINGECKO
+class BlockchainInfoApiRatesPlugin : RatesApiPlugin {
+    private var api = BlockchainInfoExchangeRatesApiServiceBuilder.API_SERVICE_BLOCKCHAIN_INFO
 
     override fun call(token: String, callback: Callback) {
-        val call: Call<CoingeckoExchangeRatesResponse> = api.get()
+        val call: Call<BlockChainInfoRatesResponse> = api.get()
 
-        call.enqueue(object : retrofit2.Callback<CoingeckoExchangeRatesResponse> {
+        call.enqueue(object : retrofit2.Callback<BlockChainInfoRatesResponse> {
             override fun onResponse(
-                call: Call<CoingeckoExchangeRatesResponse>,
-                responseCoingecko: Response<CoingeckoExchangeRatesResponse>
+                call: Call<BlockChainInfoRatesResponse>,
+                responseBlockchainInfo: Response<BlockChainInfoRatesResponse>
             ) {
-                val body = responseCoingecko.body()
+                val body = responseBlockchainInfo.body()
 
                 if (body != null) {
-                    callback.onSuccess(body.rates.entries.associate {
+                    callback.onSuccess(body.entries.associate { it ->
                         it.key.uppercase(Locale.getDefault()) to BigDecimal.valueOf(1)
                             .divide(
-                                BigDecimal.valueOf(it.value.value),
+                                BigDecimal.valueOf(it.value.last),
                                 BITCOIN_PRECISION,
                                 RoundingMode.HALF_UP
                             )
@@ -36,10 +36,7 @@ class CoingeckoApiRatesPlugin : RatesApiPlugin {
                 }
             }
 
-            override fun onFailure(
-                call: Call<CoingeckoExchangeRatesResponse>,
-                throwable: Throwable
-            ) {
+            override fun onFailure(call: Call<BlockChainInfoRatesResponse>, throwable: Throwable) {
                 callback.onFailure(throwable)
             }
         })
