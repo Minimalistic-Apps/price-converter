@@ -92,27 +92,32 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadRates() {
+        val rates: MutableMap<String, MutableList<BigDecimal>> = mutableMapOf()
+
         for (pluginEntry in ratePlugins) {
             pluginEntry.value.call("", object : Callback {
                 override fun onSuccess(data: Map<String, BigDecimal>) {
 
                     data.forEach {
-                        val originalRate = ratesBasedInBTC[it.key]
-                        if (originalRate == null) {
-                            ratesBasedInBTC[it.key] = it.value
-                        } else {
-                            ratesBasedInBTC[it.key] =
-                                it.value.plus(originalRate)
-                                    .divide(BigDecimal(2), BITCOIN_PRECISION, RoundingMode.HALF_UP)
+                        if (rates[it.key] == null) {
+                            rates[it.key] = mutableListOf()
                         }
+                        rates[it.key]?.add(it.value)
                     }
 
                     Log.v(
                         TAG,
                         "Prices updated by ${pluginEntry.key}, "
-                                + "new values: ${ratesBasedInBTC.toString()}"
+                                + "new values: $rates"
                     )
 
+                    rates.entries.forEach {
+                        ratesBasedInBTC[it.key] =
+                            it.value.reduce { acc, bigDecimal -> acc.plus(bigDecimal) }
+                                .divide(BigDecimal(it.value.size), BITCOIN_PRECISION, RoundingMode.HALF_UP)
+                    }
+
+                    Log.v(TAG, "" + ratesBasedInBTC)
                     updateUiWithRates()
                 }
 
@@ -126,7 +131,6 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
-
     }
 
     private fun setupBtcSpecialField() {
