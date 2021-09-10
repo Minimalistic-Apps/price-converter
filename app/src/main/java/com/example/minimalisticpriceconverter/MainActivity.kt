@@ -15,7 +15,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.minimalisticpriceconverter.abstractapi.AbstractApiRatesPlugin
+import com.example.minimalisticpriceconverter.coingecko.CoingeckoApiRatesPlugin
 import com.example.minimalisticpriceconverter.ratesapiplugin.BITCOIN_PRECISION
 import com.example.minimalisticpriceconverter.ratesapiplugin.Callback
 import com.example.minimalisticpriceconverter.ratesapiplugin.RatesApiPlugin
@@ -25,6 +25,8 @@ import java.math.RoundingMode
 
 // Because fuel prices are often denominated in 3 decimal places
 const val FIAT_SHITCOIN_PRECISION = 3
+
+const val VIRTUAL_BTC_CURRENCY_INDEX = -2 // Not using -1 as it is returned by indexOf()
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     private var ratesBasedInBTC: Map<String, BigDecimal> = mapOf()
 
     private var ratePlugins: Map<String, RatesApiPlugin> =
-        mapOf("AbstractApi" to AbstractApiRatesPlugin())
+        mapOf("Coingecko" to CoingeckoApiRatesPlugin())
 
     private fun isNetworkConnected(): Boolean {
         val connectivityManager =
@@ -84,8 +86,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val _this = this
-
         val btcEdit = findViewById<EditText>(R.id.btc_number_edit_text)
         btcEdit.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(BITCOIN_PRECISION))
 
@@ -99,11 +99,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 val value = parseBigDecimalFromString("" + s) ?: return
-
-                for (i in _this.currencies.indices) {
-                    val targetCurrency = _this.currencies[i]
-                    updateCurrenciesByChangeOnIndex(i, "BTC", targetCurrency, value)
-                }
+                recalculatePrices(VIRTUAL_BTC_CURRENCY_INDEX, value)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -114,13 +110,14 @@ class MainActivity : AppCompatActivity() {
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view -> this.onAdd(view) }
 
         if (isNetworkConnected()) {
-            val plugin = ratePlugins["AbstractApi"] ?: throw Exception("Missing plugin AbstractApi")
+            val plugin = ratePlugins["Coingecko"] ?: throw Exception("Missing plugin Coingecko")
 
             val _this = this
 
-            plugin.call("8d8aaf3858904a149ae64f262c772667", object : Callback {
+            plugin.call("", object : Callback {
                 override fun onSuccess(data: Map<String, BigDecimal>) {
                     ratesBasedInBTC = data
+                    Log.v(TAG, data.toString())
 
                     for (currencyFromRates in ratesBasedInBTC.keys) {
 
@@ -160,24 +157,46 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateCurrenciesByChangeOnIndex(
-        i: Int,
-        sourceCurrency: String,
+        currencyIndex: Int,
         targetCurrency: String,
+        sourceRate: BigDecimal,
         sourceCurrencyValue: BigDecimal
     ) {
-        val currencyView = this.currencyViews[i]
+        val currencyView = this.currencyViews[currencyIndex]
         val editField = currencyView.findViewById<EditText>(R.id.number_edit_text)
-        val sourceRate =
-            (if (sourceCurrency == "BTC") BigDecimal(1) else this.ratesBasedInBTC.get(sourceCurrency))
-                ?: return
-
         val targetRate = this.ratesBasedInBTC.get(targetCurrency) ?: return
-
         val newValue =
             sourceCurrencyValue.multiply(sourceRate)
                 .divide(targetRate, FIAT_SHITCOIN_PRECISION, RoundingMode.HALF_UP)
         editField.text =
             Editable.Factory.getInstance().newEditable(newValue.toPlainString())
+    }
+
+    private fun recalculatePrices(sourceIndex: Int, sourceCurrencyValue: BigDecimal) {
+        val sourceCurrency =
+            if (sourceIndex == VIRTUAL_BTC_CURRENCY_INDEX) "BTC" else this.currencies[sourceIndex]
+
+        Log.v(
+            TAG,
+            "recalculating prices for $sourceCurrency at index "
+                    + "$sourceIndex at value ${sourceCurrencyValue.toPlainString()}"
+        )
+
+        val sourceRate =
+            (if (sourceCurrency == "BTC") BigDecimal(1) else this.ratesBasedInBTC.get(sourceCurrency))
+                ?: return
+
+        for (targetCurrencyIndex in this.currencies.indices) {
+            val targetCurrency = this.currencies[targetCurrencyIndex]
+            if (sourceIndex != targetCurrencyIndex) {
+                updateCurrenciesByChangeOnIndex(
+                    targetCurrencyIndex,
+                    targetCurrency,
+                    sourceRate,
+                    sourceCurrencyValue
+                )
+            }
+        }
 
         if (sourceCurrency != "BTC") {
             val btcEditField = findViewById<EditText>(R.id.btc_number_edit_text)
@@ -207,8 +226,6 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-        val _this = this
-
         numberEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -219,13 +236,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 val value = parseBigDecimalFromString("" + s) ?: return
-
-                for (i in _this.currencies.indices) {
-                    val targetCurrency = _this.currencies[i]
-                    if (targetCurrency != currency) {
-                        updateCurrenciesByChangeOnIndex(i, currency, targetCurrency, value)
-                    }
-                }
+                recalculatePrices(index, value)
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -245,8 +256,8 @@ class MainActivity : AppCompatActivity() {
                     return
                 }
 
-                val i = currencyViews.indexOf(parent.parent as View)
-                if (i == -1) {
+                val currencyIndex = currencyViews.indexOf(parent.parent as View)
+                if (currencyIndex == -1) {
                     return
                 }
                 val selectedCurrency = availableCurrencies.get(position)
@@ -254,11 +265,29 @@ class MainActivity : AppCompatActivity() {
                 val rateTextToUpdate =
                     (parent.parent as View).findViewById<TextView>(R.id.rate)
 
-                val selectedFormattedBtcPrice = formatBtcPrice(ratesBasedInBTC[selectedCurrency])
+                val selectedCurrencyRate = ratesBasedInBTC[selectedCurrency]
+                val selectedFormattedBtcPrice = formatBtcPrice(selectedCurrencyRate)
                 rateTextToUpdate.text = "1 $selectedCurrency = $selectedFormattedBtcPrice BTC"
 
-                currencies[i] = selectedCurrency
+                val editText =
+                    (parent.parent as View).findViewById<EditText>(R.id.number_edit_text)
+                editText.isEnabled = selectedCurrencyRate != null
+                if (!editText.isEnabled) {
+                    editText.setText("")
+                }
+
+                currencies[currencyIndex] = selectedCurrency
                 saveCurrencies()
+
+                // After all new data saved, recalculate prices
+                val focused = editText.requestFocus() // set focus to prevent infinite loop
+                if (focused) {
+                    Log.v(TAG, "focused")
+                    val value = parseBigDecimalFromString(editText.text.toString())
+                    if (value != null) {
+                        recalculatePrices(currencyIndex, value)
+                    }
+                }
             }
         }
 
