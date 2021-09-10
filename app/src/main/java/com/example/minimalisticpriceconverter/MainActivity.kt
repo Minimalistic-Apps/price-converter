@@ -20,6 +20,7 @@ import com.example.minimalisticpriceconverter.bitpay.BitpayApiRatesPlugin
 import com.example.minimalisticpriceconverter.blockchaininfo.BlockchainInfoApiRatesPlugin
 import com.example.minimalisticpriceconverter.coingecko.CoingeckoApiRatesPlugin
 import com.example.minimalisticpriceconverter.ratesapiplugin.BITCOIN_PRECISION
+import com.example.minimalisticpriceconverter.ratesapiplugin.BITCOIN_RATE_PRECISION_INTERNAL
 import com.example.minimalisticpriceconverter.ratesapiplugin.Callback
 import com.example.minimalisticpriceconverter.ratesapiplugin.RatesApiPlugin
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -121,7 +122,7 @@ class MainActivity : AppCompatActivity() {
                             it.value.reduce { acc, bigDecimal -> acc.plus(bigDecimal) }
                                 .divide(
                                     BigDecimal(it.value.size),
-                                    BITCOIN_PRECISION,
+                                    BITCOIN_RATE_PRECISION_INTERNAL,
                                     RoundingMode.HALF_UP
                                 )
                     }
@@ -238,6 +239,13 @@ class MainActivity : AppCompatActivity() {
         val currencyView = this.currencyViews[currencyIndex]
         val editField = currencyView.findViewById<EditText>(R.id.number_edit_text)
         val targetRate = this.ratesBasedInBTC.get(targetCurrency) ?: return
+
+        // Cannot use .equals()
+        // https://stackoverflow.com/a/10950967
+        if (targetRate.compareTo(BigDecimal.ZERO) == 0) {
+            return
+        }
+
         val newValue =
             sourceCurrencyValue.multiply(sourceRate)
                 .divide(targetRate, FIAT_SHITCOIN_PRECISION, RoundingMode.HALF_UP)

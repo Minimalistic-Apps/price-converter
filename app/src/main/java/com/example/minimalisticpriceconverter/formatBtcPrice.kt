@@ -1,10 +1,17 @@
 package com.example.minimalisticpriceconverter
 
+import com.example.minimalisticpriceconverter.ratesapiplugin.BITCOIN_PRECISION
 import java.math.BigDecimal
+
+val ONE_SAT_IN_BTC = BigDecimal(0.00000001);
 
 fun formatBtcPrice(price: BigDecimal?): String {
     if (price == null) {
         return "n/a"
+    }
+
+    if (price < ONE_SAT_IN_BTC) {
+        return price.toString()
     }
 
     val s = price.toPlainString()
@@ -20,6 +27,10 @@ fun formatBtcPrice(price: BigDecimal?): String {
                 result += ","
             }
             depth++
+
+            if (depth >= BITCOIN_PRECISION) {
+                break
+            }
         }
 
         result += ch

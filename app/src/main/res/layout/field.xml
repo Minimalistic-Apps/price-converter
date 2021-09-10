@@ -24,6 +24,8 @@
             android:layout_weight="1"
             android:fontFamily="monospace"
             android:text=""
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:textSize="11sp" />
     </LinearLayout>
 

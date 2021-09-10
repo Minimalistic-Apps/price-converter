@@ -1,6 +1,6 @@
 package com.example.minimalisticpriceconverter.coingecko
 
-import com.example.minimalisticpriceconverter.ratesapiplugin.BITCOIN_PRECISION
+import com.example.minimalisticpriceconverter.ratesapiplugin.BITCOIN_RATE_PRECISION_INTERNAL
 import com.example.minimalisticpriceconverter.ratesapiplugin.Callback
 import com.example.minimalisticpriceconverter.ratesapiplugin.RatesApiPlugin
 import retrofit2.Call
@@ -27,7 +27,7 @@ class CoingeckoApiRatesPlugin : RatesApiPlugin {
                         it.key.uppercase(Locale.getDefault()) to BigDecimal.valueOf(1)
                             .divide(
                                 BigDecimal.valueOf(it.value.value),
-                                BITCOIN_PRECISION,
+                                BITCOIN_RATE_PRECISION_INTERNAL,
                                 RoundingMode.HALF_UP
                             )
                     })
