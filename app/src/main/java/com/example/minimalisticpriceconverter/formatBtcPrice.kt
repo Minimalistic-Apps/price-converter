@@ -23,14 +23,15 @@ fun formatBtcPrice(price: BigDecimal?): String {
         if (ch == '.') {
             dot = true
         } else if (dot) {
+            if (depth >= BITCOIN_PRECISION) {
+                break
+            }
+
             if (depth == 2 || (depth - 2) % 3 == 0) {
                 result += ","
             }
             depth++
 
-            if (depth >= BITCOIN_PRECISION) {
-                break
-            }
         }
 
         result += ch
