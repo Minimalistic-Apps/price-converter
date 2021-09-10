@@ -22,75 +22,90 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
-        android:paddingTop="64dp"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/btc_layout"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="197dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/btc_number_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_weight="5"
-                    android:digits="0123456789."
-                    android:inputType="number" />
-
-                <TextView
-                    android:id="@+id/rate"
-                    android:layout_width="match_parent"
-                    android:layout_height="16dp"
-                    android:layout_weight="1"
-                    android:fontFamily="monospace"
-                    android:text=""
-                    android:textSize="11sp" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="3"
-                android:paddingStart="7dp"
-                android:paddingEnd="7dp"
-                android:textColor="@color/black"
-                android:text="@string/btc"
-                android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/delete_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:onClick="deleteBtc" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/parent_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:context=".MainActivity">
+            android:paddingTop="64dp">
+
+            <ProgressBar
+                android:id="@+id/progressBar1"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="invisible" />
+
+            <LinearLayout
+                android:id="@+id/btc_layout"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="197dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/btc_number_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_weight="5"
+                        android:digits="0123456789."
+                        android:inputType="number" />
+
+                    <TextView
+                        android:id="@+id/rate"
+                        android:layout_width="match_parent"
+                        android:layout_height="16dp"
+                        android:layout_weight="1"
+                        android:fontFamily="monospace"
+                        android:text=""
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="3"
+                    android:paddingStart="7dp"
+                    android:paddingEnd="7dp"
+                    android:text="@string/btc"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/delete_button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:onClick="deleteBtc" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/parent_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:context=".MainActivity">
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

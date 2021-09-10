@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.minimalisticpriceconverter.bitpay.BitpayApiRatesPlugin
 import com.example.minimalisticpriceconverter.blockchaininfo.BlockchainInfoApiRatesPlugin
 import com.example.minimalisticpriceconverter.coingecko.CoingeckoApiRatesPlugin
@@ -37,6 +38,9 @@ class MainActivity : AppCompatActivity() {
     private var availableCurrencies = arrayOf<String>()
 
     private var parentLinearLayout: LinearLayout? = null
+
+    private var spinner: ProgressBar? = null
+    private var spinnerCounter: Int = 0
 
     private var currencies: MutableList<String> = mutableListOf()
     private var currencyViews: MutableList<View> = mutableListOf()
@@ -95,6 +99,7 @@ class MainActivity : AppCompatActivity() {
         val rates: MutableMap<String, MutableList<BigDecimal>> = mutableMapOf()
 
         for (pluginEntry in ratePlugins) {
+            startSpinner()
             pluginEntry.value.call("", object : Callback {
                 override fun onSuccess(data: Map<String, BigDecimal>) {
 
@@ -114,11 +119,17 @@ class MainActivity : AppCompatActivity() {
                     rates.entries.forEach {
                         ratesBasedInBTC[it.key] =
                             it.value.reduce { acc, bigDecimal -> acc.plus(bigDecimal) }
-                                .divide(BigDecimal(it.value.size), BITCOIN_PRECISION, RoundingMode.HALF_UP)
+                                .divide(
+                                    BigDecimal(it.value.size),
+                                    BITCOIN_PRECISION,
+                                    RoundingMode.HALF_UP
+                                )
                     }
 
                     Log.v(TAG, "" + ratesBasedInBTC)
                     updateUiWithRates()
+
+                    stopSpinner()
                 }
 
                 override fun onFailure(t: Throwable) {
@@ -128,8 +139,21 @@ class MainActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     )
                         .show()
+                    stopSpinner()
                 }
             })
+        }
+    }
+
+    private fun startSpinner() {
+        spinnerCounter++
+        spinner?.visibility = View.VISIBLE
+    }
+
+    private fun stopSpinner() {
+        spinnerCounter--
+        if (spinnerCounter == 0) {
+            spinner?.visibility = View.INVISIBLE
         }
     }
 
@@ -181,6 +205,14 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         parentLinearLayout = findViewById(R.id.parent_linear_layout)
+
+        spinner = findViewById(R.id.progressBar1)
+
+        val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refreshLayout)
+        swipeRefreshLayout.setOnRefreshListener {
+            loadRates()
+            swipeRefreshLayout.isRefreshing = false
+        }
 
         loadAppCurrenciesState()
         setupBtcSpecialField()
