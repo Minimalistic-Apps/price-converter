@@ -1,6 +1,7 @@
 package com.example.minimalisticpriceconverter
 
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
@@ -430,5 +431,10 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    fun startAboutActivity(item: android.view.MenuItem) {
+        val intent = Intent(this, AboutActivity::class.java)
+        startActivity(intent)
     }
 }
