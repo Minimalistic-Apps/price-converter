@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Minimalistic Price Converter</string>
+    <string name="app_name">Price Converter</string>
     <string name="action_about">About</string>
     <string name="action_add_shitcoin">Add shitcoin</string>
     <string name="delete_btc">Bitcoin cannot be uninvented. It will outlive all fiat shitcoins.</string>

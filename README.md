@@ -1,12 +1,41 @@
 # Minimalistic Price Converter
 
+![](doc/preview1.png)
+
+## Feature requests
+
+This is minimalistic app that has one sole purpose: **Help to convert prices in the grocery stores
+between fiat shitcoins and uses Bitcoin as base currency.**
+
+> **No other crypto shitcoins (so called "cryptocurrencies") will be added, unless there will be
+some *significant* vendor, that is denomination prices in them!**
+
+## FAQ
+
+1. **Why there are three decimal places for fiat shitcoins?**:
+   Gas prices are often denominated with such precision.
+2. **Why my favourite fiat shitcoin has rate displayed like `1 SHIT = 1.345E-10 BTC`?**
+   App internally uses BTC as base currency, it stores rates between BTC and fiat shitcoins with
+   precision up to 16 decimal places. But it shows only 8 because that's 1 satoshi. If the shitcoin
+   is so shitty that 1 unit of it is worth less then 1 sat
+   the [scientific notation](https://en.wikipedia.org/wiki/Scientific_notation)
+   is used to display it. If it is worth less then `1E-16` of BTC the app will round it to zero and
+   won't work.
+3. **What is the source of rates?** The app calculate averages of rates from those endpoints:
+    - https://bitpay.com/rates
+    - https://blockchain.info/ticker
+    - https://api.coingecko.com/api/v3/exchange_rates
+
 ## Verify APK
+
 Run this command on the downloaded APK
+
 ```
 apksigner verify --print-certs --verbose minimalistic-price-converter-<version>.apk`
 ```
 
 Output should contain following:
+
 ```
 Verifies
 Verified using v1 scheme (JAR signing): true
@@ -31,10 +60,11 @@ Signer #1 public key MD5 digest: 2d3223b33400839b3ba7dc4cfb4cd8cc
 3. `JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8 ./gradlew assembleRelease`
 
 ## Signing the APK
-Useful guide: https://medium.com/modulotech/how-to-sign-an-unsigned-apk-using-command-line-636a056373a0
 
-1. Generate key `keytool -genkey -v -keystore ~/.keystore/<your_name>.keystore -alias <your_alias> -keyalg RSA -keysize 2048 -validity 10000`
-2. Sign apk `apksigner sign --ks ~/.keystore/<your_name>.keystore app/build/outputs/apk/release/app-release-unsigned.apk`
-3. 
+Useful
+guide: https://medium.com/modulotech/how-to-sign-an-unsigned-apk-using-command-line-636a056373a0
 
-
+1. Generate
+   key `keytool -genkey -v -keystore ~/.keystore/<your_name>.keystore -alias <your_alias> -keyalg RSA -keysize 2048 -validity 10000`
+2. Sign
+   apk `apksigner sign --ks ~/.keystore/<your_name>.keystore app/build/outputs/apk/release/app-release-unsigned.apk`
