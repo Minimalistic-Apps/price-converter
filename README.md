@@ -1,6 +1,6 @@
 # Minimalistic Price Converter
 
-![](doc/preview1.png)
+![](doc/preview1.png | width=256)
 
 ## Feature requests
 
