@@ -2,24 +2,36 @@
 
 <img src="https://github.com/Minimalistic-Apps/price-converter/blob/master/doc/preview1.png" width="256"/>
 
+## Features
+
+- [x] Uses Bitcoin as base currency
+- [x] Use rates as average from Bitpay, Blockchain.info and Coingecko
+- [x] Supports Bitcoin and most of ISO fiat shitcoins
+- [x] Swipe down refreshes rates 
+- [x] Displays rates in sats-friendy format (`0.00,001,000`)
+
 ## Feature requests
 
-This is minimalistic app that has one sole purpose: **Help to convert prices in the grocery stores
-between fiat shitcoins and uses Bitcoin as base currency.**
+This is minimalistic app that has one sole purpose. **It converts prices in grocery stores between
+fiat shitcoins and uses Bitcoin as base currency.**
 
-> **No other crypto shitcoins (so called "cryptocurrencies") will be added, unless there will be some *significant* vendor, that is denomination prices in them!**
+Only features that are aligned with the purpose of the app will be considered.
+
+> **No other crypto shitcoins (so called "cryptocurrencies") will be added, unless there will be some *significant* vendor, that is denominating prices in them!**
 
 ## FAQ
 
-1. **Why there are three decimal places for fiat shitcoins?**:
-   Gas prices are often denominated with such precision.
-2. **Why my favourite fiat shitcoin has rate displayed like `1 SHIT = 1.345E-10 BTC`?**
-   App internally uses BTC as base currency, it stores rates between BTC and fiat shitcoins with
-   precision up to 16 decimal places. But it shows only 8 because that's 1 satoshi. If the shitcoin
-   is so shitty that 1 unit of it is worth less then 1 sat
+1. **Why there are three decimal places for fiat shitcoins?**
+   Gas prices are often denominated with that precision.
+
+2. **Why is the rate of my favourite fiat shitcoin displayed like `1 SHIT = 1.345E-10 BTC`?**
+   The app internally uses BTC as base currency and stores rates between BTC and fiat shitcoins with
+   precision of 16 decimal places. Normally, it shows only 8 because that's 1 satoshi. If the
+   shitcoin is so shitty that 1 unit of it is worth less then 1 sat
    the [scientific notation](https://en.wikipedia.org/wiki/Scientific_notation)
    is used to display it. If it is worth less then `1E-16` of BTC the app will round it to zero and
    won't work.
+
 3. **What is the source of rates?** The app calculate averages of rates from those endpoints:
     - https://bitpay.com/rates
     - https://blockchain.info/ticker
