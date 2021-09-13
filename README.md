@@ -1,6 +1,6 @@
 # Minimalistic Price Converter
 
-<img src="https://github.com/Minimalistic-Apps/price-converter/blob/master/doc/preview1.png" width="256"/>
+![](https://github.com/Minimalistic-Apps/price-converter/blob/master/doc/preview1.png)
 
 ## Features
 
