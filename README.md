@@ -1,14 +1,13 @@
 # Minimalistic Price Converter
 
-![](doc/preview1.png|width=256)
+<img src="https://github.com/Minimalistic-Apps/price-converter/blob/master/doc/preview1.png" width="256"/>
 
 ## Feature requests
 
 This is minimalistic app that has one sole purpose: **Help to convert prices in the grocery stores
 between fiat shitcoins and uses Bitcoin as base currency.**
 
-> **No other crypto shitcoins (so called "cryptocurrencies") will be added, unless there will be
-some *significant* vendor, that is denomination prices in them!**
+> **No other crypto shitcoins (so called "cryptocurrencies") will be added, unless there will be some *significant* vendor, that is denomination prices in them!**
 
 ## FAQ
 
