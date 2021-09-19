@@ -161,7 +161,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupBtcSpecialField() {
         val btcEdit = findViewById<EditText>(R.id.btc_number_edit_text)
-        btcEdit.setSelectAllOnFocus(true);
+
+        btcEdit.filters = arrayOf<InputFilter>(BitcoinInputFilter())
+
+        btcEdit.setSelectAllOnFocus(true)
 
         btcEdit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -321,10 +324,11 @@ class MainActivity : AppCompatActivity() {
         val formattedBtcPrice = formatBtcRate(rate)
         rateText.text = "1 $currency = $formattedBtcPrice BTC"
 
-        val numberEditText = rowView.findViewById<TextView>(R.id.number_edit_text)
+        val numberEditText = rowView.findViewById<EditText>(R.id.number_edit_text)
         numberEditText.isEnabled = rate != null
         numberEditText.filters =
             arrayOf<InputFilter>(DecimalDigitsInputFilter(getPrecision(currency)))
+
         numberEditText.setSelectAllOnFocus(true);
 
         numberEditText.addTextChangedListener(object : TextWatcher {

@@ -5,11 +5,11 @@ import android.text.Spanned
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-internal class DecimalDigitsInputFilter(digitsAfterZero: Int) :
+internal class BitcoinInputFilter() :
     InputFilter {
 
     private val mPattern: Pattern =
-        Pattern.compile("[0-9]*((\\.[0-9]{0," + digitsAfterZero + "})?)|(\\.)?")
+        Pattern.compile("[0-9]*((\\.[0-9]{0,8})?)|(\\.)?")
 
     override fun filter(
         source: CharSequence,
@@ -25,7 +25,11 @@ internal class DecimalDigitsInputFilter(digitsAfterZero: Int) :
 
         val result = firstFragment.toString() + changeFragment.toString() + lastFragment.toString()
 
-        val matcher: Matcher = mPattern.matcher(result)
+        if (result == "," || result.endsWith(".,")) {
+            return REJECT_CHANGE
+        }
+
+        val matcher: Matcher = mPattern.matcher(result.replace(",", ""))
         val matches = matcher.matches()
 
         return if (!matches) REJECT_CHANGE else ACCEPT_CHANGE
