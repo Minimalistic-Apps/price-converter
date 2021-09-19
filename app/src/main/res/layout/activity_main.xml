@@ -58,7 +58,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_weight="5"
-                        android:digits="0123456789."
+                        android:digits="0123456789.,"
                         android:inputType="number" />
 
                     <TextView

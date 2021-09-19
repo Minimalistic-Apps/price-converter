@@ -17,6 +17,7 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.minimalisticapps.priceconverter.bitpay.BitpayApiRatesPlugin
 import com.minimalisticapps.priceconverter.blockchaininfo.BlockchainInfoApiRatesPlugin
 import com.minimalisticapps.priceconverter.coingecko.CoingeckoApiRatesPlugin
@@ -24,9 +25,9 @@ import com.minimalisticapps.priceconverter.ratesapiplugin.BITCOIN_PRECISION
 import com.minimalisticapps.priceconverter.ratesapiplugin.BITCOIN_RATE_PRECISION_INTERNAL
 import com.minimalisticapps.priceconverter.ratesapiplugin.Callback
 import com.minimalisticapps.priceconverter.ratesapiplugin.RatesApiPlugin
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.math.BigDecimal
 import java.math.RoundingMode
+
 
 // Because fuel prices are often denominated in 3 decimal places
 const val FIAT_SHITCOIN_PRECISION = 3
@@ -85,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                     val rateText =
                         currencyViews[i].findViewById<TextView>(R.id.rate)
                     val formattedBtcPrice =
-                        formatBtcPrice(ratesBasedInBTC[currencyFromRates])
+                        formatBtcRate(ratesBasedInBTC[currencyFromRates])
                     rateText.text = "1 $currencyFromRates = $formattedBtcPrice BTC"
 
                     val editText =
@@ -128,7 +129,6 @@ class MainActivity : AppCompatActivity() {
                                 )
                     }
 
-                    Log.v(TAG, "" + ratesBasedInBTC)
                     updateUiWithRates()
 
                     stopSpinner()
@@ -161,7 +161,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupBtcSpecialField() {
         val btcEdit = findViewById<EditText>(R.id.btc_number_edit_text)
-        btcEdit.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(BITCOIN_PRECISION))
         btcEdit.setSelectAllOnFocus(true);
 
         btcEdit.addTextChangedListener(object : TextWatcher {
@@ -172,14 +171,31 @@ class MainActivity : AppCompatActivity() {
                 if (!btcEdit.isFocused) {
                     return
                 }
-
-                val value = parseBigDecimalFromString("" + s) ?: return
+                val numberString = s.toString().replace(",", "")
+                val value = parseBigDecimalFromString(numberString) ?: return
                 recalculatePrices(VIRTUAL_BTC_CURRENCY_INDEX, value)
             }
 
             override fun afterTextChanged(s: Editable?) {
-            }
+                var numberString = s.toString().replace(",", "")
 
+                if (numberString.startsWith(".")) {
+                    numberString = "0$numberString"
+                }
+
+                val value = parseBigDecimalFromString(numberString) ?: return
+
+                if (numberString != value.toPlainString()) {
+                    return
+                }
+
+                val formatted = formatBtc(value)
+
+                btcEdit.removeTextChangedListener(this)
+                btcEdit.setText(formatted)
+                btcEdit.setSelection(btcEdit.text.length)
+                btcEdit.addTextChangedListener(this)
+            }
         })
     }
 
@@ -231,13 +247,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun getPrecision(currency: String): Int {
+        return if (currency !== "BTC") FIAT_SHITCOIN_PRECISION else BITCOIN_PRECISION
+    }
+
     private fun updateCurrenciesByChangeOnIndex(
-        currencyIndex: Int,
+        targetCurrencyIndex: Int,
         targetCurrency: String,
         sourceRate: BigDecimal,
         sourceCurrencyValue: BigDecimal
     ) {
-        val currencyView = this.currencyViews[currencyIndex]
+        val currencyView = this.currencyViews[targetCurrencyIndex]
         val editField = currencyView.findViewById<EditText>(R.id.number_edit_text)
         val targetRate = this.ratesBasedInBTC.get(targetCurrency) ?: return
 
@@ -249,7 +269,8 @@ class MainActivity : AppCompatActivity() {
 
         val newValue =
             sourceCurrencyValue.multiply(sourceRate)
-                .divide(targetRate, FIAT_SHITCOIN_PRECISION, RoundingMode.HALF_UP)
+                .divide(targetRate, getPrecision(targetCurrency), RoundingMode.HALF_UP)
+
         editField.text =
             Editable.Factory.getInstance().newEditable(newValue.toPlainString())
     }
@@ -297,16 +318,13 @@ class MainActivity : AppCompatActivity() {
         spinner.setSelection(availableCurrencies.indexOf(currency))
         val rateText = rowView.findViewById<TextView>(R.id.rate)
         val rate = ratesBasedInBTC[currency]
-        val formattedBtcPrice = formatBtcPrice(rate)
+        val formattedBtcPrice = formatBtcRate(rate)
         rateText.text = "1 $currency = $formattedBtcPrice BTC"
 
         val numberEditText = rowView.findViewById<TextView>(R.id.number_edit_text)
         numberEditText.isEnabled = rate != null
-        numberEditText.filters = arrayOf<InputFilter>(
-            DecimalDigitsInputFilter(
-                FIAT_SHITCOIN_PRECISION
-            )
-        )
+        numberEditText.filters =
+            arrayOf<InputFilter>(DecimalDigitsInputFilter(getPrecision(currency)))
         numberEditText.setSelectAllOnFocus(true);
 
         numberEditText.addTextChangedListener(object : TextWatcher {
@@ -318,7 +336,7 @@ class MainActivity : AppCompatActivity() {
                     return
                 }
 
-                val value = parseBigDecimalFromString("" + s) ?: return
+                val value = parseBigDecimalFromString(s.toString()) ?: return
                 recalculatePrices(index, value)
             }
 
@@ -349,7 +367,7 @@ class MainActivity : AppCompatActivity() {
                     (parent.parent as View).findViewById<TextView>(R.id.rate)
 
                 val selectedCurrencyRate = ratesBasedInBTC[selectedCurrency]
-                val selectedFormattedBtcPrice = formatBtcPrice(selectedCurrencyRate)
+                val selectedFormattedBtcPrice = formatBtcRate(selectedCurrencyRate)
                 rateTextToUpdate.text = "1 $selectedCurrency = $selectedFormattedBtcPrice BTC"
 
                 val editText =
@@ -365,7 +383,6 @@ class MainActivity : AppCompatActivity() {
                 // After all new data saved, recalculate prices
                 val focused = editText.requestFocus() // set focus to prevent infinite loop
                 if (focused) {
-                    Log.v(TAG, "focused")
                     val value = parseBigDecimalFromString(editText.text.toString())
                     if (value != null) {
                         recalculatePrices(currencyIndex, value)

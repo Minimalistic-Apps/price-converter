@@ -5,16 +5,12 @@ import java.math.BigDecimal
 
 val ONE_SAT_IN_BTC = BigDecimal(0.00000001);
 
-fun formatBtcPrice(price: BigDecimal?): String {
-    if (price == null) {
-        return "n/a"
+fun formatBtc(value: BigDecimal?): String {
+    if (value == null) {
+        return ""
     }
 
-    if (price < ONE_SAT_IN_BTC) {
-        return price.toString()
-    }
-
-    val s = price.toPlainString()
+    val s = value.toPlainString()
     var result = ""
     var dot = false
     var depth = 0
@@ -38,4 +34,16 @@ fun formatBtcPrice(price: BigDecimal?): String {
     }
 
     return result
+}
+
+fun formatBtcRate(price: BigDecimal?): String {
+    if (price == null) {
+        return "n/a"
+    }
+
+    if (price < ONE_SAT_IN_BTC) {
+        return price.toString()
+    }
+
+    return formatBtc(price)
 }
