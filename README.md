@@ -1,6 +1,6 @@
 # Minimalistic Price Converter
 
-`Minimalistic` | `Free` | `Open Source` | `Private` | `No adds` | `No trackers` | `No Google`
+`Minimalistic` | `Free` | `Open Source` | `Private` | `Bitcoin` | `No adds` | `No trackers` | `No Google`
 
 ![App preview screenshot](doc/preview1.png)
 
