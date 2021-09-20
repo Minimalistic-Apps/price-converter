@@ -1,3 +1,4 @@
 <resources>
     <string name="currencies_key">currencies</string>
+    <string name="rates_key">rates</string>
 </resources>

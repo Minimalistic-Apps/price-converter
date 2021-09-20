@@ -166,8 +166,8 @@ class MainActivity : AppCompatActivity() {
                                 )
                     }
 
+                    saveRates()
                     updateUiWithRates()
-
                     stopSpinner()
                 }
 
@@ -253,7 +253,21 @@ class MainActivity : AppCompatActivity() {
                 addCurrencyToStateAndAddUiViewForIt(currencyIndex, currency)
             }
         }
+    }
 
+    private fun loadAppRatesState() {
+        val rates = this.getPreferences(Context.MODE_PRIVATE)
+            .getString(getString(R.string.rates_key), "")
+
+        if (rates != null && rates != "") {
+            val ratesPairs = rates.split(",")
+
+            for (ratePair in ratesPairs) {
+                val data = ratePair.split(":")
+                ratesBasedInBTC[data[0]] = BigDecimal(data[1])
+
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -277,6 +291,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         loadAppCurrenciesState()
+        loadAppRatesState()
         setupBtcSpecialField()
 
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view -> this.onAdd(view) }
@@ -476,7 +491,25 @@ class MainActivity : AppCompatActivity() {
             apply()
             commit()
         }
+    }
 
+    private fun saveRates() {
+        val _this = this
+
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
+        with(sharedPref.edit()) {
+            val rawPairs: List<String> = _this.ratesBasedInBTC.entries.fold(
+                listOf(),
+                { acc, it -> acc + arrayOf(it.key + ":" + it.value) })
+
+            val data = rawPairs.joinToString(",")
+
+            Log.v(TAG, "saveRates $data")
+
+            putString(getString(R.string.rates_key), data)
+            apply()
+            commit()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
