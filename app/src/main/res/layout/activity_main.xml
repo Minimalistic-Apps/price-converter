@@ -34,13 +34,28 @@
             android:orientation="vertical"
             android:paddingTop="64dp">
 
-            <ProgressBar
-                android:id="@+id/progressBar1"
-                style="?android:attr/progressBarStyleHorizontal"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:visibility="invisible" />
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:id="@+id/progressBar1"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp"
+                    android:indeterminate="true"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/last_updated_ago"
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp"
+                    android:text=""
+                    android:paddingStart="7dp"
+                    android:paddingEnd="7dp"
+                    android:textAlignment="viewEnd"
+                    android:textSize="11sp" />
+            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/btc_layout"
@@ -58,9 +73,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_weight="5"
-                        android:singleLine="true"
                         android:digits="0123456789.,"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:singleLine="true" />
 
                     <TextView
                         android:id="@+id/rate"

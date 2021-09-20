@@ -2,9 +2,12 @@ package com.minimalisticapps.priceconverter
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
@@ -27,6 +30,7 @@ import com.minimalisticapps.priceconverter.ratesapiplugin.Callback
 import com.minimalisticapps.priceconverter.ratesapiplugin.RatesApiPlugin
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.*
 
 
 // Because fuel prices are often denominated in 3 decimal places
@@ -43,11 +47,15 @@ class MainActivity : AppCompatActivity() {
     private var parentLinearLayout: LinearLayout? = null
 
     private var spinner: ProgressBar? = null
+    private var updatedAgoText: TextView? = null
     private var spinnerCounter: Int = 0
 
     private var currencies: MutableList<String> = mutableListOf()
     private var currencyViews: MutableList<View> = mutableListOf()
 
+    lateinit var timerHandler: Handler
+
+    private var ratesUpdatedAt: Date? = null
     private var ratesBasedInBTC: MutableMap<String, BigDecimal> = mutableMapOf()
 
     private var ratePlugins: Map<String, RatesApiPlugin> =
@@ -56,6 +64,24 @@ class MainActivity : AppCompatActivity() {
             "Bitpay" to BitpayApiRatesPlugin(),
             "BlockchainInfo" to BlockchainInfoApiRatesPlugin()
         )
+
+    private val updateTextTask = object : Runnable {
+        override fun run() {
+            if (ratesUpdatedAt != null) {
+                val updatedAgoText = findViewById<TextView>(R.id.last_updated_ago)
+                val now = Calendar.getInstance().time
+                updatedAgoText.text = timeToTimeAgo(ratesUpdatedAt, now)
+
+                if (isDiffLongerThat1hours(ratesUpdatedAt, now)) {
+                    updatedAgoText.setTextColor(Color.RED)
+                } else {
+                    updatedAgoText.setTextColor(Color.BLACK)
+                }
+            }
+
+            timerHandler.postDelayed(this, 1000)
+        }
+    }
 
     private fun isNetworkConnected(): Boolean {
         val connectivityManager =
@@ -98,6 +124,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        timerHandler.removeCallbacks(updateTextTask)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        timerHandler.post(updateTextTask)
+    }
+
     private fun loadRates() {
         val rates: MutableMap<String, MutableList<BigDecimal>> = mutableMapOf()
 
@@ -105,6 +141,7 @@ class MainActivity : AppCompatActivity() {
             startSpinner()
             pluginEntry.value.call("", object : Callback {
                 override fun onSuccess(data: Map<String, BigDecimal>) {
+                    ratesUpdatedAt = Calendar.getInstance().time
 
                     data.forEach {
                         if (rates[it.key] == null) {
@@ -148,6 +185,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startSpinner() {
+        updatedAgoText?.visibility = View.INVISIBLE
         spinnerCounter++
         spinner?.visibility = View.VISIBLE
     }
@@ -156,6 +194,7 @@ class MainActivity : AppCompatActivity() {
         spinnerCounter--
         if (spinnerCounter == 0) {
             spinner?.visibility = View.INVISIBLE
+            updatedAgoText?.visibility = View.VISIBLE
         }
     }
 
@@ -226,8 +265,10 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         parentLinearLayout = findViewById(R.id.parent_linear_layout)
-
         spinner = findViewById(R.id.progressBar1)
+        updatedAgoText = findViewById(R.id.last_updated_ago)
+
+        timerHandler = Handler(Looper.getMainLooper())
 
         val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.refreshLayout)
         swipeRefreshLayout.setOnRefreshListener {
