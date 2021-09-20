@@ -268,6 +268,13 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+
+        val updatedAt = this.getPreferences(Context.MODE_PRIVATE)
+            .getString(getString(R.string.rates_updated_at_key), null)
+
+        if (updatedAt != null) {
+            ratesUpdatedAt = getDateFromTimestampInMillis(updatedAt.toLong())
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -507,6 +514,7 @@ class MainActivity : AppCompatActivity() {
             Log.v(TAG, "saveRates $data")
 
             putString(getString(R.string.rates_key), data)
+            putString(getString(R.string.rates_updated_at_key), ratesUpdatedAt?.time.toString())
             apply()
             commit()
         }
