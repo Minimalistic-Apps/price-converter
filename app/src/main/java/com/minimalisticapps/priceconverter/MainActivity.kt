@@ -65,18 +65,22 @@ class MainActivity : AppCompatActivity() {
             "BlockchainInfo" to BlockchainInfoApiRatesPlugin()
         )
 
+    private fun updateUpdatedAgoText() {
+        val updatedAgoText = findViewById<TextView>(R.id.last_updated_ago)
+        val now = Calendar.getInstance().time
+        updatedAgoText.text = timeToTimeAgo(ratesUpdatedAt, now)
+
+        if (isDiffLongerThat1hours(ratesUpdatedAt, now)) {
+            updatedAgoText.setTextColor(Color.RED)
+        } else {
+            updatedAgoText.setTextColor(Color.BLACK)
+        }
+    }
+
     private val updateTextTask = object : Runnable {
         override fun run() {
             if (ratesUpdatedAt != null) {
-                val updatedAgoText = findViewById<TextView>(R.id.last_updated_ago)
-                val now = Calendar.getInstance().time
-                updatedAgoText.text = timeToTimeAgo(ratesUpdatedAt, now)
-
-                if (isDiffLongerThat1hours(ratesUpdatedAt, now)) {
-                    updatedAgoText.setTextColor(Color.RED)
-                } else {
-                    updatedAgoText.setTextColor(Color.BLACK)
-                }
+                updateUpdatedAgoText()
             }
 
             timerHandler.postDelayed(this, 1000)
@@ -194,6 +198,7 @@ class MainActivity : AppCompatActivity() {
         spinnerCounter--
         if (spinnerCounter == 0) {
             spinner?.visibility = View.INVISIBLE
+            updateUpdatedAgoText()
             updatedAgoText?.visibility = View.VISIBLE
         }
     }
