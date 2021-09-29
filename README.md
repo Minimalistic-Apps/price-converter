@@ -2,7 +2,9 @@
 
 `Minimalistic` | `Free` | `Open Source` | `Private` | `Bitcoin` | `No adds` | `No trackers` | `No Google`
 
-![App preview screenshot](doc/preview1.png)
+Minimalistic app converting prices of fiat shitcoins and Bitcoin
+
+![App preview screenshot](fastlane/metadata/android/en-US/images/phoneScreenshots/1.png)
 
 ## Features
 
