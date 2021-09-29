@@ -213,7 +213,7 @@ class MainActivity : AppCompatActivity() {
                 if (!btcEdit.isFocused) {
                     return
                 }
-                val numberString = s.toString().replace(",", "")
+                val numberString = s.toString()
                 val value = parseBigDecimalFromString(numberString) ?: return
                 recalculatePrices(VIRTUAL_BTC_CURRENCY_INDEX, value)
             }
@@ -463,6 +463,12 @@ class MainActivity : AppCompatActivity() {
         currencies.add(index, currency)
         this.currencyViews.add(index, rowView)
 
+        // after new row is added we need to recalculate
+        val btcEdit = findViewById<EditText>(R.id.btc_number_edit_text)
+        val value = parseBigDecimalFromString(btcEdit.text.toString())
+        if (value != null) {
+            recalculatePrices(VIRTUAL_BTC_CURRENCY_INDEX, value)
+        }
     }
 
     fun onAdd(view: View) {
