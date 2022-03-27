@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.compose.runtime:runtime:1.2.0-alpha06@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/261bbbd723251c305f124e3116d7ff14/transformed/runtime-1.2.0-alpha06/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/261bbbd723251c305f124e3116d7ff14/transformed/runtime-1.2.0-alpha06/res" />
+      <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/261bbbd723251c305f124e3116d7ff14/transformed/runtime-1.2.0-alpha06/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/261bbbd723251c305f124e3116d7ff14/transformed/runtime-1.2.0-alpha06/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/261bbbd723251c305f124e3116d7ff14/transformed/runtime-1.2.0-alpha06/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/261bbbd723251c305f124e3116d7ff14/transformed/runtime-1.2.0-alpha06/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/modules-2/files-2.1/androidx.compose.runtime/runtime/1.2.0-alpha06/298029da1f91c0a2f2371a0f87469db85ec635d8/runtime-1.2.0-alpha06-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/modules-2/files-2.1/androidx.compose.runtime/runtime/1.2.0-alpha06/298029da1f91c0a2f2371a0f87469db85ec635d8/runtime-1.2.0-alpha06-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

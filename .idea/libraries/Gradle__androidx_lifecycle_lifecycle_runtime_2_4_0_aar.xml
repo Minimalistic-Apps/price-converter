@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.lifecycle:lifecycle-runtime:2.4.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/1bfc0d65f30d05b4fb7f6c45098e4beb/transformed/lifecycle-runtime-2.4.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/1bfc0d65f30d05b4fb7f6c45098e4beb/transformed/lifecycle-runtime-2.4.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/1bfc0d65f30d05b4fb7f6c45098e4beb/transformed/lifecycle-runtime-2.4.0/res" />
+      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/1bfc0d65f30d05b4fb7f6c45098e4beb/transformed/lifecycle-runtime-2.4.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/1bfc0d65f30d05b4fb7f6c45098e4beb/transformed/lifecycle-runtime-2.4.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/1bfc0d65f30d05b4fb7f6c45098e4beb/transformed/lifecycle-runtime-2.4.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-runtime/2.4.0/ae7040cf314de81d20ac69f28f5ab6c9a2c0d1ab/lifecycle-runtime-2.4.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-runtime/2.4.0/ae7040cf314de81d20ac69f28f5ab6c9a2c0d1ab/lifecycle-runtime-2.4.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

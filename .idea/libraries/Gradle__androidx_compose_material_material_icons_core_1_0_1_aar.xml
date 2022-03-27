@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="Gradle: androidx.compose.material:material-icons-core:1.0.1@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/3209452e02ba2c049617da0d28b99828/transformed/material-icons-core-1.0.1/res" />
+      <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/3209452e02ba2c049617da0d28b99828/transformed/material-icons-core-1.0.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/3209452e02ba2c049617da0d28b99828/transformed/material-icons-core-1.0.1/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/3209452e02ba2c049617da0d28b99828/transformed/material-icons-core-1.0.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/3209452e02ba2c049617da0d28b99828/transformed/material-icons-core-1.0.1/res" />
+      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/3209452e02ba2c049617da0d28b99828/transformed/material-icons-core-1.0.1/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/modules-2/files-2.1/androidx.compose.material/material-icons-core/1.0.1/f6ebb4e631e995de2b75617bed6175b0fe306294/material-icons-core-1.0.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/modules-2/files-2.1/androidx.compose.material/material-icons-core/1.0.1/f6ebb4e631e995de2b75617bed6175b0fe306294/material-icons-core-1.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
