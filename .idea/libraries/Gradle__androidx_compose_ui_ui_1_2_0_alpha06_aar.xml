@@ -4,14 +4,14 @@
       <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/f39d59af7aa25ff901c14ad7e2ad8daf/transformed/ui-1.2.0-alpha06/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/f39d59af7aa25ff901c14ad7e2ad8daf/transformed/ui-1.2.0-alpha06/res" />
       <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/f39d59af7aa25ff901c14ad7e2ad8daf/transformed/ui-1.2.0-alpha06/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/f39d59af7aa25ff901c14ad7e2ad8daf/transformed/ui-1.2.0-alpha06/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/f39d59af7aa25ff901c14ad7e2ad8daf/transformed/ui-1.2.0-alpha06/res" />
-      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/f39d59af7aa25ff901c14ad7e2ad8daf/transformed/ui-1.2.0-alpha06/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f39d59af7aa25ff901c14ad7e2ad8daf/transformed/ui-1.2.0-alpha06/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/f39d59af7aa25ff901c14ad7e2ad8daf/transformed/ui-1.2.0-alpha06/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/f39d59af7aa25ff901c14ad7e2ad8daf/transformed/ui-1.2.0-alpha06/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/modules-2/files-2.1/androidx.compose.ui/ui/1.2.0-alpha06/d4ad814e8f42e8a7f1d30815e0e31566b993c15f/ui-1.2.0-alpha06-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/modules-2/files-2.1/androidx.compose.ui/ui/1.2.0-alpha06/d4ad814e8f42e8a7f1d30815e0e31566b993c15f/ui-1.2.0-alpha06-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.compose.ui/ui/1.2.0-alpha06/d4ad814e8f42e8a7f1d30815e0e31566b993c15f/ui-1.2.0-alpha06-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

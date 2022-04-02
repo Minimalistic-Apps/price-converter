@@ -1,17 +1,17 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.compose.ui:ui-tooling-data:1.0.1@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/42e282b7838ef3d4184bd4a84fab559d/transformed/ui-tooling-data-1.0.1/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/42e282b7838ef3d4184bd4a84fab559d/transformed/ui-tooling-data-1.0.1/res" />
       <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/42e282b7838ef3d4184bd4a84fab559d/transformed/ui-tooling-data-1.0.1/jars/classes.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/42e282b7838ef3d4184bd4a84fab559d/transformed/ui-tooling-data-1.0.1/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/42e282b7838ef3d4184bd4a84fab559d/transformed/ui-tooling-data-1.0.1/res" />
-      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/42e282b7838ef3d4184bd4a84fab559d/transformed/ui-tooling-data-1.0.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/42e282b7838ef3d4184bd4a84fab559d/transformed/ui-tooling-data-1.0.1/res" />
+      <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/42e282b7838ef3d4184bd4a84fab559d/transformed/ui-tooling-data-1.0.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/42e282b7838ef3d4184bd4a84fab559d/transformed/ui-tooling-data-1.0.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/42e282b7838ef3d4184bd4a84fab559d/transformed/ui-tooling-data-1.0.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/42e282b7838ef3d4184bd4a84fab559d/transformed/ui-tooling-data-1.0.1/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/modules-2/files-2.1/androidx.compose.ui/ui-tooling-data/1.0.1/d662e515728e07a0c647114ec8aa295b0b7600c5/ui-tooling-data-1.0.1-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/modules-2/files-2.1/androidx.compose.ui/ui-tooling-data/1.0.1/d662e515728e07a0c647114ec8aa295b0b7600c5/ui-tooling-data-1.0.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.compose.ui/ui-tooling-data/1.0.1/d662e515728e07a0c647114ec8aa295b0b7600c5/ui-tooling-data-1.0.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

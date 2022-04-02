@@ -9,7 +9,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.codesses.priceconverter"
+        applicationId "com.minimalisticapps.priceconverter"
         minSdk 21
         targetSdk 32
         versionCode 1

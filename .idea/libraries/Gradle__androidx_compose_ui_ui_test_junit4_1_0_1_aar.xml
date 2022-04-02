@@ -1,17 +1,17 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.compose.ui:ui-test-junit4:1.0.1@aar">
     <CLASSES>
+      <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/7ce34014334c0d8bf2492c66f28b14dd/transformed/ui-test-junit4-1.0.1/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/7ce34014334c0d8bf2492c66f28b14dd/transformed/ui-test-junit4-1.0.1/res" />
       <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/7ce34014334c0d8bf2492c66f28b14dd/transformed/ui-test-junit4-1.0.1/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/7ce34014334c0d8bf2492c66f28b14dd/transformed/ui-test-junit4-1.0.1/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/7ce34014334c0d8bf2492c66f28b14dd/transformed/ui-test-junit4-1.0.1/res" />
-      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/7ce34014334c0d8bf2492c66f28b14dd/transformed/ui-test-junit4-1.0.1/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/7ce34014334c0d8bf2492c66f28b14dd/transformed/ui-test-junit4-1.0.1/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/7ce34014334c0d8bf2492c66f28b14dd/transformed/ui-test-junit4-1.0.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7ce34014334c0d8bf2492c66f28b14dd/transformed/ui-test-junit4-1.0.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7ce34014334c0d8bf2492c66f28b14dd/transformed/ui-test-junit4-1.0.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/modules-2/files-2.1/androidx.compose.ui/ui-test-junit4/1.0.1/d19bb81bb96f38e7aa34edee04440bd57f303994/ui-test-junit4-1.0.1-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/modules-2/files-2.1/androidx.compose.ui/ui-test-junit4/1.0.1/d19bb81bb96f38e7aa34edee04440bd57f303994/ui-test-junit4-1.0.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.compose.ui/ui-test-junit4/1.0.1/d19bb81bb96f38e7aa34edee04440bd57f303994/ui-test-junit4-1.0.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

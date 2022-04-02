@@ -4,14 +4,14 @@
       <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/28780269488a0bda76face68e3659c8c/transformed/material-ripple-1.2.0-alpha06/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/28780269488a0bda76face68e3659c8c/transformed/material-ripple-1.2.0-alpha06/res" />
       <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/28780269488a0bda76face68e3659c8c/transformed/material-ripple-1.2.0-alpha06/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/28780269488a0bda76face68e3659c8c/transformed/material-ripple-1.2.0-alpha06/res" />
-      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/28780269488a0bda76face68e3659c8c/transformed/material-ripple-1.2.0-alpha06/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/28780269488a0bda76face68e3659c8c/transformed/material-ripple-1.2.0-alpha06/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/28780269488a0bda76face68e3659c8c/transformed/material-ripple-1.2.0-alpha06/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/28780269488a0bda76face68e3659c8c/transformed/material-ripple-1.2.0-alpha06/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/28780269488a0bda76face68e3659c8c/transformed/material-ripple-1.2.0-alpha06/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/modules-2/files-2.1/androidx.compose.material/material-ripple/1.2.0-alpha06/17dc970b3b9979e18c1401c0d30c381a1d4eeff1/material-ripple-1.2.0-alpha06-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/modules-2/files-2.1/androidx.compose.material/material-ripple/1.2.0-alpha06/17dc970b3b9979e18c1401c0d30c381a1d4eeff1/material-ripple-1.2.0-alpha06-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.compose.material/material-ripple/1.2.0-alpha06/17dc970b3b9979e18c1401c0d30c381a1d4eeff1/material-ripple-1.2.0-alpha06-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

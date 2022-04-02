@@ -4,14 +4,14 @@
       <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/c4f2095cb9ca7033e084002bd65a125b/transformed/animation-core-1.1.0-rc01/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/c4f2095cb9ca7033e084002bd65a125b/transformed/animation-core-1.1.0-rc01/res" />
       <root url="file://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/transforms-3/c4f2095cb9ca7033e084002bd65a125b/transformed/animation-core-1.1.0-rc01/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/c4f2095cb9ca7033e084002bd65a125b/transformed/animation-core-1.1.0-rc01/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/c4f2095cb9ca7033e084002bd65a125b/transformed/animation-core-1.1.0-rc01/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/daemon/7.2/caches/transforms-3/c4f2095cb9ca7033e084002bd65a125b/transformed/animation-core-1.1.0-rc01/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c4f2095cb9ca7033e084002bd65a125b/transformed/animation-core-1.1.0-rc01/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c4f2095cb9ca7033e084002bd65a125b/transformed/animation-core-1.1.0-rc01/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/c4f2095cb9ca7033e084002bd65a125b/transformed/animation-core-1.1.0-rc01/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/StudioProjects/FC-Ranking-Android/.gradle/7.2/caches/modules-2/files-2.1/androidx.compose.animation/animation-core/1.1.0-rc01/f1f925326492810ddf42eb6a84d1890b81d18f84/animation-core-1.1.0-rc01-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/daemon/7.2/caches/modules-2/files-2.1/androidx.compose.animation/animation-core/1.1.0-rc01/f1f925326492810ddf42eb6a84d1890b81d18f84/animation-core-1.1.0-rc01-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.compose.animation/animation-core/1.1.0-rc01/f1f925326492810ddf42eb6a84d1890b81d18f84/animation-core-1.1.0-rc01-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
