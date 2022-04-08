@@ -28,7 +28,6 @@ fiat shitcoins and uses Bitcoin as base currency.**
 Only features that are aligned with the purpose of the app will be considered.
 
 > **No other crypto shitcoins (so called "cryptocurrencies") will be added, unless there will be some *significant* vendor, that is denominating prices in them!**
-
 ## FAQ
 
 1. **Why there are three decimal places for fiat shitcoins?**
