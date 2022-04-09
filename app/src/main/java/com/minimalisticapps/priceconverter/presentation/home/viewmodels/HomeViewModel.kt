@@ -38,29 +38,29 @@ class HomeViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application) {
 
-    //    variables
+    //    Variables
     private var isDataLoaded = false
     private var timeAgo: String = ""
     private var timeAgoLong: Long = 0L
     var ratesUpdatedAt: Date? = null
     var timerHandler: Handler = Handler(Looper.getMainLooper())
 
-    //    mutable states
+    //    Mutable states
     private val _isRefreshing: MutableLiveData<Boolean> = MutableLiveData(false)
     private val _state = mutableStateOf(CoinsState())
     private val _timeAgoState = mutableStateOf("")
-    private val _isDiffLongerThat1hours = mutableStateOf(false)
+    private val _isLongerThan1hour = mutableStateOf(false)
     private val _fiatCoinsList: MutableState<List<Pair<String, BitPayCoinWithFiatCoin>>> =
         mutableStateOf(emptyList())
     private var _textFiledValueBtc: MutableState<TextFieldValue> = mutableStateOf(TextFieldValue())
 
 
-    //    states
+    //    States
     val state: State<CoinsState> = _state
     val fiatCoinsListState: State<List<Pair<String, BitPayCoinWithFiatCoin>>> = _fiatCoinsList
     var isRefreshing: LiveData<Boolean> = _isRefreshing
     val timeAgoState: State<String> = _timeAgoState
-    val isDiffLongerThat1hours: State<Boolean> = _isDiffLongerThat1hours
+    val isLongerThan1hour: State<Boolean> = _isLongerThan1hour
     val textFieldValueBtc: State<TextFieldValue> = _textFiledValueBtc
 
     private val updateTextTask = object : Runnable {
@@ -72,7 +72,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    //    init function
+    //    Init function
     init {
         isDataLoaded = PCSharedStorage.isDataLoaded()
         timeAgoLong = PCSharedStorage.getTimesAgo()
@@ -88,7 +88,7 @@ class HomeViewModel @Inject constructor(
     //    time ago handle function2
     private fun updateUpdatedAgoText(past: Long) {
         val timeAgo = Calendar.getInstance().time.time
-        _isDiffLongerThat1hours.value = timeAgo.isDiffLongerThat1hours(past)
+        _isLongerThan1hour.value = timeAgo.isDiffLongerThat1hours(past)
         this@HomeViewModel.timeAgo = timeAgo.timeToTimeAgo(past)
         _timeAgoState.value = this@HomeViewModel.timeAgo
     }
@@ -101,6 +101,7 @@ class HomeViewModel @Inject constructor(
             getCoinUseCase(isDataLoaded).collect { result ->
                 when (result) {
                     is Resource.Success -> {
+
                         if (!isDataLoaded) {
                             PCSharedStorage.saveDataLoaded(true)
                             PCSharedStorage.saveTimesAgo(Calendar.getInstance().time.time)
@@ -109,6 +110,7 @@ class HomeViewModel @Inject constructor(
                             timerHandler.removeCallbacks(updateTextTask)
                             timerHandler.post(updateTextTask)
                             updateUpdatedAgoText(Calendar.getInstance().time.time)
+
                         }
                         result.data?.collect {
                             _isRefreshing.value = false

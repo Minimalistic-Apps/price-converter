@@ -1,13 +1,21 @@
+/*
+ *
+ * Created by Saad Iftikhar on 23/03/22, 5:19 PM
+ * Copyright (c) 2021. All rights reserved
+ *
+ */
+
 package com.minimalisticapps.priceconverter.presentation.ui.widget
 
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -27,22 +35,18 @@ fun TextInputShitCoin(
     onValueChange: (String) -> Unit,
     btcValue: String
 ) {
-    val searchText = remember {
-        mutableStateOf(TextFieldValue())
-    }
-    val isFocused = remember {
-        mutableStateOf(false)
-    }
+    val searchTextState = remember { mutableStateOf(TextFieldValue()) }
+    val isFocused = remember { mutableStateOf(false) }
 
     if (btcValue.isNotEmpty() && !isFocused.value) {
         var string = btcValue.replace(",", "")
         val double = parseBigDecimalFromString(string)
         if (double != null && rate != null) {
             string = double.toDouble().times(rate).toString()
-            searchText.value = TextFieldValue(string.toSatsFormat(), TextRange(string.length))
+            searchTextState.value = TextFieldValue(string.toSatsFormat(), TextRange(string.length))
         }
     } else if (btcValue.isEmpty()) {
-        searchText.value = TextFieldValue("")
+        searchTextState.value = TextFieldValue("")
     }
 
     OutlinedTextField(
@@ -51,62 +55,78 @@ fun TextInputShitCoin(
             .onFocusChanged {
                 isFocused.value = it.isFocused
                 if (it.isFocused) {
-                    searchText.value = searchText.value.copy(
-                        selection = TextRange(0, searchText.value.text.length)
+                    searchTextState.value = searchTextState.value.copy(
+                        selection = TextRange(0, searchTextState.value.text.length)
                     )
                 }
             }
-            .padding(10.dp)
+            .padding(horizontal = 16.dp)
             .border(
-                width = 1.dp,
-                shape = RoundedCornerShape(10.dp),
+                width = 0.5.dp,
+                shape = CircleShape,
                 brush = Brush.horizontalGradient(
-                    listOf(Color.Black, Color.Black)
-                )),
+                    listOf(MaterialTheme.colors.onBackground, MaterialTheme.colors.onBackground)
+                )
+            ),
         colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.Gray,
+            textColor = MaterialTheme.colors.onBackground,
             backgroundColor = Color.Transparent,
             disabledTextColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent
         ),
-        value = searchText.value,
-        onValueChange = { textFieldValue ->
-            val text = textFieldValue.text
-            if (rate != null) {
-                if (text.isNotEmpty()) {
-                    var numberString = text.replace(",", "")
-                    if (numberString.startsWith(".")) {
-                        numberString = "0$numberString"
-                        Log.d("TextInput", "TextInput: $numberString")
-                    }
-                    val value = parseBigDecimalFromString(numberString)
-                    if (value != null) {
-                        if (numberString == value.toPlainString()) {
-                            numberString = value.toString()
-                            if (numberString.contains(".") && numberString.split(".").size == 2) {
-                                if (value.toString().split(".")[1].length < 4) {
-                                    searchText.value = TextFieldValue(numberString, TextRange(numberString.length))
-                                    onValueChange(value.toString())
-                                }
-                            } else if (!numberString.contains(".")) {
-                                searchText.value = TextFieldValue(numberString, TextRange(numberString.length))
-                                onValueChange(value.toString())
-                            }
-                        } else {
-                            searchText.value = TextFieldValue(numberString, TextRange(numberString.length))
-                            onValueChange(value.toString())
-                        }
-                    } else {
-                        searchText.value = TextFieldValue(numberString, TextRange(numberString.length))
-                    }
-                } else {
-                    searchText.value = textFieldValue
-                }
-            }
+        value = searchTextState.value,
+        onValueChange = { text ->
+            handleConditions(text, rate, searchTextState, onValueChange)
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true,
     )
+}
+
+fun handleConditions(
+    inputFieldValue: TextFieldValue,
+    rate: Double?,
+    searchText: MutableState<TextFieldValue>,
+    onValueChange: (String) -> Unit
+) {
+    val inputText = inputFieldValue.text
+
+    if (rate != null) {
+        if (inputText.isNotEmpty()) {
+            var updatedInput = inputText.replace(",", "")
+            if (updatedInput.startsWith("."))
+                updatedInput = "0$updatedInput"
+
+            val parseValue = parseBigDecimalFromString(updatedInput)
+            val parseString = parseValue.toString()
+
+            if (parseValue != null) {
+                if (updatedInput == parseValue.toPlainString()) {
+                    updatedInput = parseValue.toString()
+
+                    if (updatedInput.contains(".") && updatedInput.split(".").size == 2) {
+                        if (parseString.split(".")[1].length < 4) {
+                            searchText.value = getSearchText(updatedInput)
+                            onValueChange(parseString)
+                        }
+                    } else if (!updatedInput.contains(".")) {
+                        searchText.value = getSearchText(updatedInput)
+                        onValueChange(parseString)
+                    }
+
+                } else {
+                    searchText.value = getSearchText(updatedInput)
+                    onValueChange(parseString)
+                }
+            } else searchText.value = getSearchText(updatedInput)
+
+        } else searchText.value = inputFieldValue
+
+    }
+}
+
+fun getSearchText(value: String): TextFieldValue {
+    return TextFieldValue(value, TextRange(value.length))
 }

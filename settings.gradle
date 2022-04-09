@@ -23,5 +23,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Price Converter"
+rootProject.name = "Minimalistic Apps"
 include ':app'

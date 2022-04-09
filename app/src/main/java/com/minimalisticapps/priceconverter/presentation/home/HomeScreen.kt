@@ -1,3 +1,9 @@
+/*
+ *
+ * Created by Saad Iftikhar on 23/03/22, 5:19 PM
+ * Copyright (c) 2021. All rights reserved
+ *
+ */
 package com.minimalisticapps.priceconverter.presentation.home
 
 import android.app.Activity
@@ -16,8 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.minimalisticapps.priceconverter.R
@@ -29,6 +38,9 @@ import com.minimalisticapps.priceconverter.presentation.ui.widget.*
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
+import com.minimalisticapps.priceconverter.common.dialog.ShowProgressDialog
+import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 
 var coinsStateValue: CoinsState = CoinsState()
 
@@ -42,17 +54,19 @@ fun HomeScreen(
     //    states
     val coinsState = homeViewModel.state.value
     val timeAgo = homeViewModel.timeAgoState.value
-    val isDiffLongerThat1hours = homeViewModel.isDiffLongerThat1hours.value
+    val isLongerThan1hour = homeViewModel.isLongerThan1hour.value
     val isRefreshing by homeViewModel.isRefreshing.observeAsState()
-    val color = if (isDiffLongerThat1hours) Color.Red else Color.Green
+    val colorTimeAgo = if (isLongerThan1hour) Color.Red else Color.Green
     val fiatCoinsListState = homeViewModel.fiatCoinsListState.value
     val isErrorShown = remember { mutableStateOf(false) }
+    val isShownConfirmDialog = remember { mutableStateOf(false) }
+    var selectedFiatCoin = FiatCoinExchange("", "", "")
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                backgroundColor = Color.Red,
+                backgroundColor = Color(ContextCompat.getColor(mContext, R.color.color_app)),
                 icon = {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -72,11 +86,23 @@ fun HomeScreen(
                 }
             )
 
+            // Confirmation dialog
+            if (isShownConfirmDialog.value) {
+                ConfirmationDialog(
+                    onPositiveClick = {
+                        isShownConfirmDialog.value = it
+                        homeViewModel.deleteFiatCoin(fiatCoinExchange = selectedFiatCoin)
+                    },
+                    onNegativeClick = {
+                        isShownConfirmDialog.value = it
+                    }
+                )
+            }
+
         }
     ) {
         SwipeRefresh(state = rememberSwipeRefreshState(
-            isRefreshing = isRefreshing
-                ?: false
+            isRefreshing = isRefreshing ?: false
         ), onRefresh = {
             homeViewModel.refreshData()
             isErrorShown.value = false
@@ -95,8 +121,10 @@ fun HomeScreen(
                         text = timeAgo,
                         style = MaterialTheme.typography.body2,
                         modifier = Modifier
-                            .padding(horizontal = 10.dp),
-                        color = color,
+                            .padding(vertical = 10.dp, horizontal = 16.dp),
+                        color = colorTimeAgo,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Left
                     )
                 }
@@ -105,7 +133,7 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(modifier = Modifier.width(250.dp)) {
+                    Box(modifier = Modifier.width(300.dp)) {
                         TextInputBtc(onValueChange = {
                             homeViewModel.getFiatCoins()
                         })
@@ -113,14 +141,16 @@ fun HomeScreen(
 
                     Text(
                         text = "BTC",
+                        fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Start,
+                        fontSize = 18.sp
                     )
                 }
 
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(top = 10.dp)
+                        .padding(top = 25.dp)
                 ) {
                     items(
                         items = fiatCoinsListState
@@ -128,7 +158,8 @@ fun HomeScreen(
                         FiatCoinItem(
                             pair = pair,
                             onLongPress = {
-                                homeViewModel.deleteFiatCoin(fiatCoinExchange = it)
+                                selectedFiatCoin = it
+                                isShownConfirmDialog.value = true
                             },
                             onValueChanged = object : (BitPayCoinWithFiatCoin, Double) -> Unit {
                                 override fun invoke(
