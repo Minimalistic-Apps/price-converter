@@ -1,20 +1,35 @@
+/*
+ *
+ * Created by Saad Iftikhar on 23/03/22, 5:19 PM
+ * Copyright (c) 2021. All rights reserved
+ *
+ */
 package com.minimalisticapps.priceconverter.presentation.ui.widget
 
+import android.app.Activity
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.common.utils.parseBigDecimalFromString
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
 
@@ -24,6 +39,8 @@ fun TextInputBtc(
     onValueChange: () -> Unit
 ) {
     var searchText = homeViewModel.textFieldValueBtc.value
+    val mContext = LocalContext.current as Activity
+
     OutlinedTextField(
         modifier =
         Modifier
@@ -34,15 +51,16 @@ fun TextInputBtc(
                     )
                 }
             }
-            .padding(10.dp)
+            .padding(16.dp)
             .border(
-                width = 1.dp,
-                shape = RoundedCornerShape(10.dp),
+                width = 0.5.dp,
+                shape = CircleShape,
                 brush = Brush.horizontalGradient(
-                    listOf(Color.Black, Color.Black)
-                )),
+                    listOf(MaterialTheme.colors.onBackground, MaterialTheme.colors.onBackground)
+                )
+            ),
         colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.Gray,
+            textColor = MaterialTheme.colors.onBackground,
             backgroundColor = Color.Transparent,
             disabledTextColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
@@ -60,7 +78,9 @@ fun TextInputBtc(
                 val value = parseBigDecimalFromString(numberString)
                 if (value != null) {
                     if (numberString == value.toPlainString()) {
-                        if (value.toString().contains(".") && value.toString().split(".").size == 2) {
+                        if (value.toString().contains(".") && value.toString()
+                                .split(".").size == 2
+                        ) {
                             if (value.toString().split(".")[1].length < 9) {
                                 homeViewModel.setTextFieldValueBtc(value.toString(), true)
                                 onValueChange()

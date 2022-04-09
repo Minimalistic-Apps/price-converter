@@ -1,6 +1,6 @@
 /*
  *
- * Created by Saad Iftikhar on 10/18/21, 5:19 PM
+ * Created by Saad Iftikhar on 23/03/22, 5:19 PM
  * Copyright (c) 2021. All rights reserved
  *
  */
@@ -8,6 +8,8 @@
 package com.minimalisticapps.priceconverter.common.utils
 
 import android.app.Activity
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.minimalisticapps.priceconverter.common.utils.AppConstants.BIT_COIN_PRECISION
 import com.minimalisticapps.priceconverter.data.remote.dto.BitPayExchangeRate
@@ -113,5 +115,14 @@ fun parseBigDecimalFromString(input: String): BigDecimal? {
         BigDecimal(strippedOfCommas)
     } catch (e: NumberFormatException) {
         null
+    }
+}
+
+fun hideKeyboard(context: Activity) {
+    val inputManager =
+        context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    val view = context.currentFocus
+    if (view != null) {
+        inputManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
