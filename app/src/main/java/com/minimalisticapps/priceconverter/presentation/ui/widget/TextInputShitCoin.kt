@@ -3,8 +3,9 @@ package com.minimalisticapps.priceconverter.presentation.ui.widget
 import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -56,15 +57,16 @@ fun TextInputShitCoin(
                     )
                 }
             }
-            .padding(10.dp)
+            .padding(horizontal = 16.dp)
             .border(
-                width = 1.dp,
-                shape = RoundedCornerShape(10.dp),
+                width = 0.5.dp,
+                shape = CircleShape,
                 brush = Brush.horizontalGradient(
-                    listOf(Color.Black, Color.Black)
-                )),
+                    listOf(MaterialTheme.colors.onBackground, MaterialTheme.colors.onBackground)
+                )
+            ),
         colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.Gray,
+            textColor = MaterialTheme.colors.onBackground,
             backgroundColor = Color.Transparent,
             disabledTextColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
@@ -87,19 +89,23 @@ fun TextInputShitCoin(
                             numberString = value.toString()
                             if (numberString.contains(".") && numberString.split(".").size == 2) {
                                 if (value.toString().split(".")[1].length < 4) {
-                                    searchText.value = TextFieldValue(numberString, TextRange(numberString.length))
+                                    searchText.value =
+                                        TextFieldValue(numberString, TextRange(numberString.length))
                                     onValueChange(value.toString())
                                 }
                             } else if (!numberString.contains(".")) {
-                                searchText.value = TextFieldValue(numberString, TextRange(numberString.length))
+                                searchText.value =
+                                    TextFieldValue(numberString, TextRange(numberString.length))
                                 onValueChange(value.toString())
                             }
                         } else {
-                            searchText.value = TextFieldValue(numberString, TextRange(numberString.length))
+                            searchText.value =
+                                TextFieldValue(numberString, TextRange(numberString.length))
                             onValueChange(value.toString())
                         }
                     } else {
-                        searchText.value = TextFieldValue(numberString, TextRange(numberString.length))
+                        searchText.value =
+                            TextFieldValue(numberString, TextRange(numberString.length))
                     }
                 } else {
                     searchText.value = textFieldValue
