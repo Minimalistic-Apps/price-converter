@@ -1,17 +1,9 @@
-/*
- *
- * Created by Saad Iftikhar on 23/03/22, 5:19 PM
- * Copyright (c) 2021. All rights reserved
- *
- */
-
 package com.minimalisticapps.priceconverter.presentation.ui.widget
 
 import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField

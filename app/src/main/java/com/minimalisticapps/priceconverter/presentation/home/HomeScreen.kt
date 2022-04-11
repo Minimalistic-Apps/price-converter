@@ -1,9 +1,3 @@
-/*
- *
- * Created by Saad Iftikhar on 23/03/22, 5:19 PM
- * Copyright (c) 2021. All rights reserved
- *
- */
 package com.minimalisticapps.priceconverter.presentation.home
 
 import android.app.Activity
@@ -29,18 +23,20 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.minimalisticapps.priceconverter.R
+import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
 import com.minimalisticapps.priceconverter.common.utils.showToast
 import com.minimalisticapps.priceconverter.presentation.Screen
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
-import com.minimalisticapps.priceconverter.presentation.ui.widget.*
+import com.minimalisticapps.priceconverter.presentation.ui.widget.FiatCoinItem
+import com.minimalisticapps.priceconverter.presentation.ui.widget.ShowLinearIndicator
+import com.minimalisticapps.priceconverter.presentation.ui.widget.ShowProgressDialog
+import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputBtc
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
-import java.time.format.TextStyle
 
 var coinsStateValue: CoinsState = CoinsState()
 
