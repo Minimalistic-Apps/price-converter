@@ -1,13 +1,7 @@
-/*
- *
- * Created by Saad Iftikhar on 23/03/22, 5:19 PM
- * Copyright (c) 2021. All rights reserved
- *
- */
-
 package com.minimalisticapps.priceconverter.presentation.ui.widget
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -52,6 +46,7 @@ fun TextInputShitCoin(
     OutlinedTextField(
         modifier =
         Modifier
+            .fillMaxWidth()
             .onFocusChanged {
                 isFocused.value = it.isFocused
                 if (it.isFocused) {

@@ -1,23 +1,14 @@
-/*
- *
- * Created by Saad Iftikhar on 23/03/22, 5:19 PM
- * Copyright (c) 2021. All rights reserved
- *
- */
-
 package com.minimalisticapps.priceconverter.presentation
 
 import android.app.Activity
-import com.minimalisticapps.priceconverter.R
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,15 +18,12 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.minimalisticapps.priceconverter.common.enums.EnumThemeModes
-import com.minimalisticapps.priceconverter.common.models.ThemeData
-import com.minimalisticapps.priceconverter.common.utils.PCSharedStorage
+import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.presentation.coinlist.CoinListScreen
 import com.minimalisticapps.priceconverter.presentation.home.HomeScreen
 import com.minimalisticapps.priceconverter.presentation.home.coinsStateValue
 import com.minimalisticapps.priceconverter.presentation.ui.theme.AppTheme
 import com.minimalisticapps.priceconverter.presentation.ui.widget.SetTitle
-import com.minimalisticapps.priceconverter.presentation.ui.widget.TurnOnDarkMode
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -45,14 +33,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
-            val mode = remember { mutableStateOf(ThemeData(EnumThemeModes.LIGHT.value, false)) }
-            mode.value.isEnable = PCSharedStorage.getDarkMode()
             val navController = rememberNavController()
             val mContext = LocalContext.current as Activity
 
             AppTheme(
-                darkTheme = mode.value.isEnable
+                darkTheme = isSystemInDarkTheme()
             ) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -79,12 +64,6 @@ class MainActivity : ComponentActivity() {
                                     )
                                 )
                             }
-                            Column(
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .fillMaxWidth(),
-                                horizontalAlignment = Alignment.End
-                            ) { TurnOnDarkMode(mode) }
                         }
                         NavHost(
                             navController = navController,

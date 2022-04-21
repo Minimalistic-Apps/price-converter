@@ -1,9 +1,3 @@
-/*
- *
- * Created by Saad Iftikhar on 23/03/22, 5:19 PM
- * Copyright (c) 2021. All rights reserved
- *
- */
 package com.minimalisticapps.priceconverter.presentation.home
 
 import android.app.Activity

@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name="com.minimalisticapps.priceconverter.common.AppController"
+        android:name=".common.AppController"
         android:theme="@style/Theme.PriceConverter">
         <activity
             android:name="com.minimalisticapps.priceconverter.presentation.MainActivity"
