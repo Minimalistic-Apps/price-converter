@@ -27,22 +27,15 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
+import com.minimalisticapps.priceconverter.common.dialog.ShowProgressDialog
 import com.minimalisticapps.priceconverter.common.utils.showToast
 import com.minimalisticapps.priceconverter.presentation.Screen
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.presentation.ui.widget.FiatCoinItem
 import com.minimalisticapps.priceconverter.presentation.ui.widget.ShowLinearIndicator
-import com.minimalisticapps.priceconverter.presentation.ui.widget.ShowProgressDialog
 import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputBtc
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
-<<<<<<< HEAD
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
-import com.minimalisticapps.priceconverter.common.dialog.ShowProgressDialog
-=======
->>>>>>> upstream/jetpack-compose-rework
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 
 var coinsStateValue: CoinsState = CoinsState()
