@@ -6,3 +6,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+.idea/workspace.xml
