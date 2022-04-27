@@ -54,7 +54,7 @@ fun HomeScreen(
     val fiatCoinsListState = homeViewModel.fiatCoinsListState.value
     val isErrorShown = remember { mutableStateOf(false) }
     val isShownConfirmDialog = remember { mutableStateOf(false) }
-    var selectedFiatCoin = FiatCoinExchange("", "", "")
+    var selectedFiatCoin = remember { mutableStateOf(FiatCoinExchange("", "", "")) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -85,7 +85,7 @@ fun HomeScreen(
                 ConfirmationDialog(
                     onPositiveClick = {
                         isShownConfirmDialog.value = it
-                        homeViewModel.deleteFiatCoin(fiatCoinExchange = selectedFiatCoin)
+                        homeViewModel.deleteFiatCoin(fiatCoinExchange = selectedFiatCoin.value)
                     },
                     onNegativeClick = {
                         isShownConfirmDialog.value = it
@@ -152,7 +152,7 @@ fun HomeScreen(
                         FiatCoinItem(
                             pair = pair,
                             onLongPress = {
-                                selectedFiatCoin = it
+                                selectedFiatCoin.value = it
                                 isShownConfirmDialog.value = true
                             },
                             onValueChanged = object : (BitPayCoinWithFiatCoin, Double) -> Unit {
