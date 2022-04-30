@@ -27,13 +27,13 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
+import com.minimalisticapps.priceconverter.common.dialog.ShowProgressDialog
 import com.minimalisticapps.priceconverter.common.utils.showToast
 import com.minimalisticapps.priceconverter.presentation.Screen
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.presentation.ui.widget.FiatCoinItem
 import com.minimalisticapps.priceconverter.presentation.ui.widget.ShowLinearIndicator
-import com.minimalisticapps.priceconverter.presentation.ui.widget.ShowProgressDialog
 import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputBtc
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
@@ -50,13 +50,13 @@ fun HomeScreen(
     //    states
     val coinsState = homeViewModel.state.value
     val timeAgo = homeViewModel.timeAgoState.value
-    val isDiffLongerThat1hours = homeViewModel.isDiffLongerThat1hours.value
+    val isLongerThan1hour = homeViewModel.isLongerThan1hour.value
     val isRefreshing by homeViewModel.isRefreshing.observeAsState()
-    val color = if (isDiffLongerThat1hours) Color.Red else Color.Green
+    val colorTimeAgo = if (isLongerThan1hour) Color.Red else Color.Green
     val fiatCoinsListState = homeViewModel.fiatCoinsListState.value
     val isErrorShown = remember { mutableStateOf(false) }
     val isShownConfirmDialog = remember { mutableStateOf(false) }
-    var selectedFiatCoin = FiatCoinExchange("", "", "")
+    var selectedFiatCoin = remember { mutableStateOf(FiatCoinExchange("", "", "")) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -87,7 +87,7 @@ fun HomeScreen(
                 ConfirmationDialog(
                     onPositiveClick = {
                         isShownConfirmDialog.value = it
-                        homeViewModel.deleteFiatCoin(fiatCoinExchange = selectedFiatCoin)
+                        homeViewModel.deleteFiatCoin(fiatCoinExchange = selectedFiatCoin.value)
                     },
                     onNegativeClick = {
                         isShownConfirmDialog.value = it
@@ -118,7 +118,7 @@ fun HomeScreen(
                         style = MaterialTheme.typography.body2,
                         modifier = Modifier
                             .padding(vertical = 10.dp, horizontal = 16.dp),
-                        color = color,
+                        color = colorTimeAgo,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Left
@@ -154,7 +154,7 @@ fun HomeScreen(
                         FiatCoinItem(
                             pair = pair,
                             onLongPress = {
-                                selectedFiatCoin = it
+                                selectedFiatCoin.value = it
                                 isShownConfirmDialog.value = true
                             },
                             onValueChanged = object : (BitPayCoinWithFiatCoin, Double) -> Unit {
