@@ -58,6 +58,18 @@ fun HomeScreen(
     val isShownConfirmDialog = remember { mutableStateOf(false) }
     var selectedFiatCoin = remember { mutableStateOf(FiatCoinExchange("", "", "")) }
 
+
+    if (coinsState.error.isNotBlank() && !isErrorShown.value) {
+        mContext.showToast(coinsState.error)
+        isErrorShown.value = true
+    }
+
+    if (coinsState.isLoading && isRefreshing == false)
+        ShowProgressDialog()
+
+    if (coinsState.isLoading)
+        homeViewModel.refreshData()
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
@@ -179,14 +191,9 @@ fun HomeScreen(
                         )
                     }
                 }
-            }
 
-            if (coinsState.error.isNotBlank() && !isErrorShown.value) {
-                mContext.showToast(coinsState.error)
-                isErrorShown.value = true
+
             }
-            if (coinsState.isLoading && isRefreshing == false)
-                ShowProgressDialog()
 
         }
 
