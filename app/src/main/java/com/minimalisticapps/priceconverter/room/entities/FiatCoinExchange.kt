@@ -6,9 +6,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "fiat_coin_exchange")
 data class FiatCoinExchange(
-    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "unit")
     val unit: String,
+    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "code")

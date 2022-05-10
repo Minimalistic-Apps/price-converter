@@ -14,18 +14,18 @@ data class BitPayExchangeRate(
     @ColumnInfo(name = "rate")
     @SerializedName("value")
     val rate: Double,
+    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "type")
     val type: String,
-    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "unit")
     @SerializedName("unit")
     val unit: String,
     @ColumnInfo(name = "one_shit_coin_value")
     var oneShitCoinValue: Double,
     @ColumnInfo(name = "one_shit_coin_value_string")
-    var oneShitCoinValueString: String ,
+    var oneShitCoinValueString: String,
 
     ) : Parcelable {
     constructor(parcel: Parcel) : this(
@@ -35,7 +35,8 @@ data class BitPayExchangeRate(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readDouble(),
-        parcel.readString() ?: "")
+        parcel.readString() ?: ""
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(code)
