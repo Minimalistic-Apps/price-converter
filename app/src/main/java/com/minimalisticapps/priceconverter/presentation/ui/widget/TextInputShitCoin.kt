@@ -3,7 +3,6 @@ package com.minimalisticapps.priceconverter.presentation.ui.widget
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -22,6 +21,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.minimalisticapps.priceconverter.common.utils.parseBigDecimalFromString
 import com.minimalisticapps.priceconverter.common.utils.toSatsFormat
+import com.minimalisticapps.priceconverter.presentation.PriceConverterCornerShape
 
 @Composable
 fun TextInputShitCoin(
@@ -58,7 +58,7 @@ fun TextInputShitCoin(
             .padding(horizontal = 16.dp)
             .border(
                 width = 0.5.dp,
-                shape = CircleShape,
+                shape = PriceConverterCornerShape,
                 brush = Brush.horizontalGradient(
                     listOf(MaterialTheme.colors.onBackground, MaterialTheme.colors.onBackground)
                 )

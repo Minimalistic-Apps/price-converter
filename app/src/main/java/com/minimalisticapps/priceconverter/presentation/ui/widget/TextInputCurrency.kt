@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -21,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.minimalisticapps.priceconverter.R
+import com.minimalisticapps.priceconverter.presentation.PriceConverterCornerShape
 
 @Composable
 fun TextInput(
@@ -39,7 +39,7 @@ fun TextInput(
             .padding(16.dp)
             .border(
                 width = 0.5.dp,
-                shape = CircleShape,
+                shape = PriceConverterCornerShape,
                 brush = Brush.horizontalGradient(
                     listOf(MaterialTheme.colors.onBackground, MaterialTheme.colors.onBackground)
                 )
