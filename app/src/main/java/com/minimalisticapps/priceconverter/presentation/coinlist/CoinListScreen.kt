@@ -43,7 +43,8 @@ fun CoinListScreen(
             TextInput { text ->
                 if (text.isNotEmpty()) {
                     coinsList.value = coinsState.coins.filter {
-                        it.name.lowercase().contains(text.lowercase())
+                        it.name.lowercase().contains(text.lowercase()) ||
+                                it.code.lowercase().contains(text.lowercase())
                     }
                 } else {
                     coinsList.value = coinsState.coins

@@ -3,7 +3,7 @@ package com.minimalisticapps.priceconverter.presentation.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val BackgroundColorForLight = Color(0xFFFFFFFF)
-val BackgroundColorForDark = Color(0xFF000000)
+val BackgroundColorForDark = Color(0xFF121212)
 val SurfaceColorForLight = Color(0xFFFFFFFF)
 val SurfaceColorForDark = Color(0xEE000000)
 val SecondaryColorForLight = Color(0xFF3d8c31)
