@@ -98,10 +98,9 @@ fun HomeScreen(
                         isShownConfirmDialog.value = it
                         homeViewModel.deleteFiatCoin(fiatCoinExchange = selectedFiatCoin.value)
                     },
-                    onNegativeClick = {
+                    onDismiss = {
                         isShownConfirmDialog.value = it
-                    }
-                )
+                    })
             }
 
         }
