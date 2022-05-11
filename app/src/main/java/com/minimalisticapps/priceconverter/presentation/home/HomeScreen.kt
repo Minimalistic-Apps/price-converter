@@ -67,9 +67,6 @@ fun HomeScreen(
     if (coinsState.isLoading && isRefreshing == false)
         ShowProgressDialog()
 
-    if (coinsState.isLoading)
-        homeViewModel.refreshData()
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = {

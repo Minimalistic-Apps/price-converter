@@ -102,16 +102,14 @@ class HomeViewModel @Inject constructor(
                 when (result) {
                     is Resource.Success -> {
 
-                        if (!isDataLoaded) {
-                            PCSharedStorage.saveDataLoaded(true)
-                            PCSharedStorage.saveTimesAgo(Calendar.getInstance().time.time)
-                            timeAgoLong = Calendar.getInstance().time.time
-                            ratesUpdatedAt = Date(Calendar.getInstance().time.time)
-                            timerHandler.removeCallbacks(updateTextTask)
-                            timerHandler.post(updateTextTask)
-                            updateUpdatedAgoText(Calendar.getInstance().time.time)
+                        PCSharedStorage.saveDataLoaded(true)
+                        PCSharedStorage.saveTimesAgo(Calendar.getInstance().time.time)
+                        timeAgoLong = Calendar.getInstance().time.time
+                        ratesUpdatedAt = Date(Calendar.getInstance().time.time)
+                        timerHandler.removeCallbacks(updateTextTask)
+                        timerHandler.post(updateTextTask)
+                        updateUpdatedAgoText(Calendar.getInstance().time.time)
 
-                        }
                         result.data?.collect {
                             _isRefreshing.value = false
                             _state.value = CoinsState(coins = it)
