@@ -134,10 +134,16 @@ fun HomeScreen(
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(modifier = Modifier.width(300.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(3.0f)
+                    ) {
                         TextInputBtc(onValueChange = {
                             homeViewModel.getFiatCoins()
                         })
@@ -147,7 +153,8 @@ fun HomeScreen(
                         text = "BTC",
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Start,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        modifier = Modifier.padding(start = 15.dp, end = 5.dp)
                     )
                 }
 
@@ -162,8 +169,7 @@ fun HomeScreen(
                         FiatCoinItem(
                             pair = pair,
                             onLongPress = {
-                                selectedFiatCoin.value = it
-                                isShownConfirmDialog.value = true
+                                TODO("work on orderable")
                             },
                             onValueChanged = object : (BitPayCoinWithFiatCoin, Double) -> Unit {
                                 override fun invoke(
@@ -183,6 +189,10 @@ fun HomeScreen(
                                         homeViewModel.getFiatCoins()
                                     }
                                 }
+                            },
+                            onDeleteClick = {
+                                selectedFiatCoin.value = it
+                                isShownConfirmDialog.value = true
                             }
                         )
                     }

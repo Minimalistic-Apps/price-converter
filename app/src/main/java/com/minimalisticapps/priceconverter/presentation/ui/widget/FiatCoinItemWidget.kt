@@ -1,5 +1,7 @@
 package com.minimalisticapps.priceconverter.presentation.ui.widget
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -7,7 +9,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.minimalisticapps.priceconverter.R
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -20,6 +24,7 @@ fun FiatCoinItem(
     pair: Pair<String, BitPayCoinWithFiatCoin>,
     onValueChanged: (BitPayCoinWithFiatCoin, Double) -> Unit,
     onLongPress: (FiatCoinExchange) -> Unit,
+    onDeleteClick: (FiatCoinExchange) -> Unit,
 ) {
     Column(
         modifier = Modifier.padding(vertical = 10.dp)
@@ -36,7 +41,11 @@ fun FiatCoinItem(
                 },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(modifier = Modifier.width(300.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(3.0f)
+            ) {
                 TextInputShitCoin(
                     onValueChange = { text ->
                         onValueChanged(pair.second, text.toDouble())
@@ -50,7 +59,15 @@ fun FiatCoinItem(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 text = pair.second.fiatCoinExchange.code,
-                textAlign = TextAlign.Start,
+                textAlign = TextAlign.Start
+            )
+
+            Image(
+                painterResource(R.drawable.ic_delete),
+                "content description",
+                modifier = Modifier
+                    .padding(20.dp)
+                    .clickable { onDeleteClick(pair.second.fiatCoinExchange) }
             )
         }
         Text(

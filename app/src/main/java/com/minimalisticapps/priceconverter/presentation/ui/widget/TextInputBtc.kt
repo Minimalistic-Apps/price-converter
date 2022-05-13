@@ -2,6 +2,7 @@ package com.minimalisticapps.priceconverter.presentation.ui.widget
 
 import android.app.Activity
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
@@ -32,6 +33,7 @@ fun TextInputBtc(
     OutlinedTextField(
         modifier =
         Modifier
+            .fillMaxWidth()
             .onFocusChanged {
                 if (it.isFocused) {
                     searchText = searchText.copy(
@@ -39,7 +41,6 @@ fun TextInputBtc(
                     )
                 }
             }
-            .padding(16.dp)
             .border(
                 width = 0.5.dp,
                 shape = PriceConverterCornerShape,
