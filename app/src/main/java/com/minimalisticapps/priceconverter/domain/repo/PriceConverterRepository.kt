@@ -11,6 +11,7 @@ interface PriceConverterRepository {
     suspend fun getCoins(): Flow<List<BitPayExchangeRate>>
     suspend fun getFiatCoins(): Flow<List<BitPayCoinWithFiatCoin>>
     suspend fun saveFiatCoin(fiatCoinExchange: FiatCoinExchange)
+    suspend fun updateFiatCoin(fiatCoinExchange: FiatCoinExchange)
     suspend fun saveCoin(bitPayExchangeRate: BitPayExchangeRate)
     suspend fun deleteFiatCoin(fiatCoinExchange: FiatCoinExchange)
 }

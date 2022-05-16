@@ -56,8 +56,7 @@ fun HomeScreen(
     val fiatCoinsListState = homeViewModel.fiatCoinsListState.value
     val isErrorShown = remember { mutableStateOf(false) }
     val isShownConfirmDialog = remember { mutableStateOf(false) }
-    var selectedFiatCoin = remember { mutableStateOf(FiatCoinExchange("", "", "")) }
-
+    val selectedFiatCoin = remember { mutableStateOf(FiatCoinExchange("", "", "")) }
 
     if (coinsState.error.isNotBlank() && !isErrorShown.value) {
         mContext.showToast(coinsState.error)
@@ -164,12 +163,15 @@ fun HomeScreen(
                         .padding(top = 25.dp)
                 ) {
                     items(
-                        items = fiatCoinsListState
+                        items = fiatCoinsListState,
+                        key = { pair ->
+                            pair.first
+                        }
                     ) { pair ->
                         FiatCoinItem(
-                            pair = pair,
+                            bitPayCoinWithFiatCoin = pair.second,
                             onLongPress = {
-                                TODO("work on orderable")
+                                
                             },
                             onValueChanged = object : (BitPayCoinWithFiatCoin, Double) -> Unit {
                                 override fun invoke(

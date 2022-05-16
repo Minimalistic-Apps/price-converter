@@ -26,6 +26,10 @@ class PriceConverterRepositoryImpl @Inject constructor(
             priceConverterDao.insertFiatCoin(fiatCoinExchange)
         }
 
+    override suspend fun updateFiatCoin(fiatCoinExchange: FiatCoinExchange) {
+        priceConverterDao.updateFiatCoin(fiatCoinExchange)
+    }
+
     override suspend fun saveCoin(bitPayExchangeRate: BitPayExchangeRate) {
         priceConverterDao.insertCoin(bitPayExchangeRate)
     }

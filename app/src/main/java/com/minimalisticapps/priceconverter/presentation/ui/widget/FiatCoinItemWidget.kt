@@ -21,13 +21,14 @@ import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 
 @Composable
 fun FiatCoinItem(
-    pair: Pair<String, BitPayCoinWithFiatCoin>,
+    bitPayCoinWithFiatCoin: BitPayCoinWithFiatCoin,
     onValueChanged: (BitPayCoinWithFiatCoin, Double) -> Unit,
-    onLongPress: (FiatCoinExchange) -> Unit,
+    onLongPress: () -> Unit,
     onDeleteClick: (FiatCoinExchange) -> Unit,
 ) {
     Column(
-        modifier = Modifier.padding(vertical = 10.dp)
+        modifier = Modifier
+            .padding(vertical = 10.dp, horizontal = 10.dp)
     ) {
         Row(
             modifier = Modifier
@@ -35,7 +36,7 @@ fun FiatCoinItem(
                 .pointerInput(Unit) {
                     detectTapGestures(
                         onLongPress = {
-                            onLongPress(pair.second.fiatCoinExchange)
+                            onLongPress()
                         }
                     )
                 },
@@ -48,17 +49,17 @@ fun FiatCoinItem(
             ) {
                 TextInputShitCoin(
                     onValueChange = { text ->
-                        onValueChanged(pair.second, text.toDouble())
+                        onValueChanged(bitPayCoinWithFiatCoin, text.toDouble())
                     },
-                    rate = pair.second.bitPayExchangeRate.rate,
-                    btcValue = pair.first
+                    rate = bitPayCoinWithFiatCoin.bitPayExchangeRate.rate,
+                    fiatCoinExchange = bitPayCoinWithFiatCoin.fiatCoinExchange
                 )
             }
 
             Text(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                text = pair.second.fiatCoinExchange.code,
+                text = bitPayCoinWithFiatCoin.fiatCoinExchange.code,
                 textAlign = TextAlign.Start
             )
 
@@ -67,11 +68,11 @@ fun FiatCoinItem(
                 "content description",
                 modifier = Modifier
                     .padding(20.dp)
-                    .clickable { onDeleteClick(pair.second.fiatCoinExchange) }
+                    .clickable { onDeleteClick(bitPayCoinWithFiatCoin.fiatCoinExchange) }
             )
         }
         Text(
-            text = "1 ${pair.second.fiatCoinExchange.code} = ${pair.second.bitPayExchangeRate.oneShitCoinValueString} BTC",
+            text = "1 ${bitPayCoinWithFiatCoin.fiatCoinExchange.code} = ${bitPayCoinWithFiatCoin.bitPayExchangeRate.oneShitCoinValueString} BTC",
             style = MaterialTheme.typography.body1,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,

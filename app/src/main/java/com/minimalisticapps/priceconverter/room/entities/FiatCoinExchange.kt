@@ -12,5 +12,7 @@ data class FiatCoinExchange(
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "code")
-    val code: String
+    val code: String,
+    @ColumnInfo(name = "shit_coin_value")
+    var shitCoinValue: String = ""
 )

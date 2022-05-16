@@ -24,4 +24,8 @@ interface PriceConverterDao {
     @Delete
     suspend fun deleteFiatCoin(fiatCoinExchange: FiatCoinExchange)
 
+    @Update
+    fun updateFiatCoin(fiatCoinExchange: FiatCoinExchange)
+
+
 }
