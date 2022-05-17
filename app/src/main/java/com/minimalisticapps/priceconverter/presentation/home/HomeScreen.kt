@@ -56,8 +56,7 @@ fun HomeScreen(
     val fiatCoinsListState = homeViewModel.fiatCoinsListState.value
     val isErrorShown = remember { mutableStateOf(false) }
     val isShownConfirmDialog = remember { mutableStateOf(false) }
-    var selectedFiatCoin = remember { mutableStateOf(FiatCoinExchange("", "", "")) }
-
+    val selectedFiatCoin = remember { mutableStateOf(FiatCoinExchange("", "", "")) }
 
     if (coinsState.error.isNotBlank() && !isErrorShown.value) {
         mContext.showToast(coinsState.error)
@@ -66,9 +65,6 @@ fun HomeScreen(
 
     if (coinsState.isLoading && isRefreshing == false)
         ShowProgressDialog()
-
-    if (coinsState.isLoading)
-        homeViewModel.refreshData()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -101,10 +97,9 @@ fun HomeScreen(
                         isShownConfirmDialog.value = it
                         homeViewModel.deleteFiatCoin(fiatCoinExchange = selectedFiatCoin.value)
                     },
-                    onNegativeClick = {
+                    onDismiss = {
                         isShownConfirmDialog.value = it
-                    }
-                )
+                    })
             }
 
         }
@@ -138,10 +133,16 @@ fun HomeScreen(
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(modifier = Modifier.width(300.dp)) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(3.0f)
+                    ) {
                         TextInputBtc(onValueChange = {
                             homeViewModel.getFiatCoins()
                         })
@@ -151,7 +152,8 @@ fun HomeScreen(
                         text = "BTC",
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Start,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        modifier = Modifier.padding(start = 15.dp, end = 5.dp)
                     )
                 }
 
@@ -161,13 +163,15 @@ fun HomeScreen(
                         .padding(top = 25.dp)
                 ) {
                     items(
-                        items = fiatCoinsListState
+                        items = fiatCoinsListState,
+                        key = { pair ->
+                            pair.first
+                        }
                     ) { pair ->
                         FiatCoinItem(
-                            pair = pair,
+                            bitPayCoinWithFiatCoin = pair.second,
                             onLongPress = {
-                                selectedFiatCoin.value = it
-                                isShownConfirmDialog.value = true
+                                
                             },
                             onValueChanged = object : (BitPayCoinWithFiatCoin, Double) -> Unit {
                                 override fun invoke(
@@ -187,6 +191,10 @@ fun HomeScreen(
                                         homeViewModel.getFiatCoins()
                                     }
                                 }
+                            },
+                            onDeleteClick = {
+                                selectedFiatCoin.value = it
+                                isShownConfirmDialog.value = true
                             }
                         )
                     }

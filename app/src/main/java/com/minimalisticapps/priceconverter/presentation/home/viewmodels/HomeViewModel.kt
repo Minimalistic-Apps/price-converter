@@ -21,10 +21,12 @@ import com.minimalisticapps.priceconverter.common.utils.timeToTimeAgo
 import com.minimalisticapps.priceconverter.domain.usecase.DeleteUseCase
 import com.minimalisticapps.priceconverter.domain.usecase.GetCoinsUseCase
 import com.minimalisticapps.priceconverter.domain.usecase.GetFiatCoinsUseCase
+import com.minimalisticapps.priceconverter.domain.usecase.UpdateFiatCoinUseCase
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import java.util.*
@@ -34,6 +36,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getCoinUseCase: GetCoinsUseCase,
     private val getFiatCoinUseCase: GetFiatCoinsUseCase,
+    private val updateFiatCoinUseCase: UpdateFiatCoinUseCase,
     private val deleteUseCase: DeleteUseCase,
     application: Application
 ) : AndroidViewModel(application) {
@@ -50,14 +53,14 @@ class HomeViewModel @Inject constructor(
     private val _state = mutableStateOf(CoinsState())
     private val _timeAgoState = mutableStateOf("")
     private val _isLongerThan1hour = mutableStateOf(false)
-    private val _fiatCoinsList: MutableState<List<Pair<String, BitPayCoinWithFiatCoin>>> =
+    private val _fiatCoinsList: MutableState<List<Pair<Int,BitPayCoinWithFiatCoin>>> =
         mutableStateOf(emptyList())
     private var _textFiledValueBtc: MutableState<TextFieldValue> = mutableStateOf(TextFieldValue())
 
 
     //    States
     val state: State<CoinsState> = _state
-    val fiatCoinsListState: State<List<Pair<String, BitPayCoinWithFiatCoin>>> = _fiatCoinsList
+    val fiatCoinsListState: State<List<Pair<Int,BitPayCoinWithFiatCoin>>> = _fiatCoinsList
     var isRefreshing: LiveData<Boolean> = _isRefreshing
     val timeAgoState: State<String> = _timeAgoState
     val isLongerThan1hour: State<Boolean> = _isLongerThan1hour
@@ -102,16 +105,14 @@ class HomeViewModel @Inject constructor(
                 when (result) {
                     is Resource.Success -> {
 
-                        if (!isDataLoaded) {
-                            PCSharedStorage.saveDataLoaded(true)
-                            PCSharedStorage.saveTimesAgo(Calendar.getInstance().time.time)
-                            timeAgoLong = Calendar.getInstance().time.time
-                            ratesUpdatedAt = Date(Calendar.getInstance().time.time)
-                            timerHandler.removeCallbacks(updateTextTask)
-                            timerHandler.post(updateTextTask)
-                            updateUpdatedAgoText(Calendar.getInstance().time.time)
+                        PCSharedStorage.saveDataLoaded(true)
+                        PCSharedStorage.saveTimesAgo(Calendar.getInstance().time.time)
+                        timeAgoLong = Calendar.getInstance().time.time
+                        ratesUpdatedAt = Date(Calendar.getInstance().time.time)
+                        timerHandler.removeCallbacks(updateTextTask)
+                        timerHandler.post(updateTextTask)
+                        updateUpdatedAgoText(Calendar.getInstance().time.time)
 
-                        }
                         result.data?.collect {
                             _isRefreshing.value = false
                             _state.value = CoinsState(coins = it)
@@ -136,8 +137,9 @@ class HomeViewModel @Inject constructor(
     fun getFiatCoins() {
         viewModelScope.launch {
             getFiatCoinUseCase().collect {
+                var position = -1
                 _fiatCoinsList.value = it.map { bitPayCoinWithFiatCoin ->
-                    Pair(_textFiledValueBtc.value.text, bitPayCoinWithFiatCoin)
+                    Pair(position++, bitPayCoinWithFiatCoin)
                 }
             }
 
@@ -162,12 +164,23 @@ class HomeViewModel @Inject constructor(
             _textFiledValueBtc.value =
                 TextFieldValue(text, TextRange(text.length), TextRange(0, text.length))
         }
-//        getFiatCoins()
     }
 
     fun refreshData() {
         _isRefreshing.value = true
         isDataLoaded = false
         getCoins()
+    }
+
+    fun setBtcSelection() {
+        _textFiledValueBtc.value = _textFiledValueBtc.value.copy(
+            selection = TextRange(0, _textFiledValueBtc.value.text.length)
+        )
+    }
+
+    fun updateFiatCoin(fiatCoinExchange: FiatCoinExchange){
+        viewModelScope.launch(Dispatchers.IO) {
+            updateFiatCoinUseCase.invoke(fiatCoinExchange)
+        }
     }
 }

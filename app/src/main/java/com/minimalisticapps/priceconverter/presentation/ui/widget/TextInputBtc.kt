@@ -1,13 +1,17 @@
 package com.minimalisticapps.priceconverter.presentation.ui.widget
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
@@ -15,31 +19,40 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.minimalisticapps.priceconverter.common.utils.parseBigDecimalFromString
 import com.minimalisticapps.priceconverter.presentation.PriceConverterCornerShape
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun TextInputBtc(
     homeViewModel: HomeViewModel = hiltViewModel(),
     onValueChange: () -> Unit
 ) {
-    var searchText = homeViewModel.textFieldValueBtc.value
-    val mContext = LocalContext.current as Activity
+    val searchText = remember {
+        mutableStateOf(TextFieldValue())
+    }
+    val isFocused = remember {
+        mutableStateOf(false)
+    }
+    if(!isFocused.value)
+        searchText.value = homeViewModel.textFieldValueBtc.value
 
     OutlinedTextField(
         modifier =
         Modifier
+            .fillMaxWidth()
             .onFocusChanged {
                 if (it.isFocused) {
-                    searchText = searchText.copy(
-                        selection = TextRange(0, searchText.text.length)
+                    isFocused.value = it.isFocused
+                    searchText.value = searchText.value.copy(
+                        selection = TextRange(0, searchText.value.text.length)
                     )
                 }
             }
-            .padding(16.dp)
             .border(
                 width = 0.5.dp,
                 shape = PriceConverterCornerShape,
@@ -55,7 +68,7 @@ fun TextInputBtc(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent
         ),
-        value = searchText,
+        value = searchText.value,
         onValueChange = { textFieldValue ->
             val text = textFieldValue.text
             if (text.isNotEmpty()) {
