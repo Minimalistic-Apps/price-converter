@@ -2,9 +2,11 @@ package com.minimalisticapps.priceconverter.presentation.ui.widget
 
 import android.util.Log
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -63,6 +65,7 @@ fun TextInputShitCoin(
     OutlinedTextField(
         modifier =
         Modifier
+            .fillMaxWidth()
             .onFocusChanged {
                 isFocused.value = it.isFocused
                 Log.e("TextInputShitCoin", "OnFocused")
@@ -77,7 +80,7 @@ fun TextInputShitCoin(
                 width = 1.dp,
                 shape = RoundedCornerShape(10.dp),
                 brush = Brush.horizontalGradient(
-                    listOf(Color.Black, Color.Black)
+                    listOf(MaterialTheme.colors.onBackground, MaterialTheme.colors.onBackground)
                 )
             ),
         colors = TextFieldDefaults.textFieldColors(

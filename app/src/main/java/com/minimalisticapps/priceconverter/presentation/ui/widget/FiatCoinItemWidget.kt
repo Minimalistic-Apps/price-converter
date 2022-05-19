@@ -60,14 +60,15 @@ fun FiatCoinItem(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 text = bitPayCoinWithFiatCoin.fiatCoinExchange.code,
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(start = 10.dp)
             )
 
             Image(
                 painterResource(R.drawable.ic_delete),
                 "content description",
                 modifier = Modifier
-                    .padding(20.dp)
+                    .padding(15.dp)
                     .clickable { onDeleteClick(bitPayCoinWithFiatCoin.fiatCoinExchange) }
             )
         }

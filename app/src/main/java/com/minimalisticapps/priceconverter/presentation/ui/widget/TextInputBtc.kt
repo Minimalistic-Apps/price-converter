@@ -38,7 +38,7 @@ fun TextInputBtc(
     val isFocused = remember {
         mutableStateOf(false)
     }
-    if(!isFocused.value)
+    if (!isFocused.value)
         searchText.value = homeViewModel.textFieldValueBtc.value
 
     OutlinedTextField(

@@ -153,7 +153,7 @@ fun HomeScreen(
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Start,
                         fontSize = 18.sp,
-                        modifier = Modifier.padding(start = 15.dp, end = 5.dp)
+                        modifier = Modifier.padding(start = 20.dp, end = 47.dp)
                     )
                 }
 
@@ -171,7 +171,7 @@ fun HomeScreen(
                         FiatCoinItem(
                             bitPayCoinWithFiatCoin = pair.second,
                             onLongPress = {
-                                
+                                TODO("work on orderable")
                             },
                             onValueChanged = object : (BitPayCoinWithFiatCoin, Double) -> Unit {
                                 override fun invoke(
