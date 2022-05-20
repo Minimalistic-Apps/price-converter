@@ -171,7 +171,7 @@ fun HomeScreen(
                         FiatCoinItem(
                             bitPayCoinWithFiatCoin = pair.second,
                             onLongPress = {
-                                TODO("work on orderable")
+//                                TODO("work on orderable")
                             },
                             onValueChanged = object : (BitPayCoinWithFiatCoin, Double) -> Unit {
                                 override fun invoke(
