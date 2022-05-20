@@ -34,7 +34,7 @@ fun TextInputShitCoin(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val searchText = remember {
-        mutableStateOf(TextFieldValue())
+        mutableStateOf(TextFieldValue(fiatCoinExchange.shitCoinValue, TextRange(fiatCoinExchange.shitCoinValue.length)))
     }
     val isFocused = remember {
         mutableStateOf(false)
@@ -68,10 +68,10 @@ fun TextInputShitCoin(
             .fillMaxWidth()
             .onFocusChanged {
                 isFocused.value = it.isFocused
-                Log.e("TextInputShitCoin", "OnFocused")
                 if (it.isFocused) {
-                    searchText.value = searchText.value.copy(
-                        selection = TextRange(0, searchText.value.text.length)
+                    searchText.value = TextFieldValue(
+                        text = fiatCoinExchange.shitCoinValue,
+                        selection = TextRange(0, fiatCoinExchange.shitCoinValue.length)
                     )
                 }
             }
@@ -94,19 +94,28 @@ fun TextInputShitCoin(
         value = searchText.value,
         onValueChange = { textFieldValue ->
             val text = textFieldValue.text
-            Log.e("OnStart", "TextInputShitCoin: ${fiatCoinExchange.shitCoinValue}")
-            if (rate != null) {
-                if (text.isNotEmpty()) {
-                    var numberString = text.replace(",", "")
-                    if (numberString.startsWith(".")) {
-                        numberString = "0$numberString"
-                    }
-                    val value = parseBigDecimalFromString(numberString)
-                    if (value != null) {
-                        if (numberString == value.toPlainString()) {
-                            numberString = value.toString()
-                            if (numberString.contains(".") && numberString.split(".").size == 2) {
-                                if (value.toString().split(".")[1].length < 4) {
+            if (text != searchText.value.text) {
+                if (rate != null) {
+                    if (text.isNotEmpty()) {
+                        var numberString = text.replace(",", "")
+                        if (numberString.startsWith(".")) {
+                            numberString = "0$numberString"
+                        }
+                        val value = parseBigDecimalFromString(numberString)
+                        if (value != null) {
+                            if (numberString == value.toPlainString()) {
+                                numberString = value.toString()
+                                if (numberString.contains(".") && numberString.split(".").size == 2) {
+                                    if (value.toString().split(".")[1].length < 4) {
+                                        fiatCoinExchange.shitCoinValue = numberString
+                                        viewModel.updateFiatCoin(fiatCoinExchange)
+                                        searchText.value = TextFieldValue(
+                                            fiatCoinExchange.shitCoinValue,
+                                            selection = TextRange(fiatCoinExchange.shitCoinValue.length)
+                                        )
+                                        onValueChange(value.toString())
+                                    }
+                                } else if (!numberString.contains(".")) {
                                     fiatCoinExchange.shitCoinValue = numberString
                                     viewModel.updateFiatCoin(fiatCoinExchange)
                                     searchText.value = TextFieldValue(
@@ -115,7 +124,8 @@ fun TextInputShitCoin(
                                     )
                                     onValueChange(value.toString())
                                 }
-                            } else if (!numberString.contains(".")) {
+                            } else {
+                                Log.d("TextInputshdhsdhsgd", "TextInput: $numberString")
                                 fiatCoinExchange.shitCoinValue = numberString
                                 viewModel.updateFiatCoin(fiatCoinExchange)
                                 searchText.value = TextFieldValue(
@@ -124,19 +134,18 @@ fun TextInputShitCoin(
                                 )
                                 onValueChange(value.toString())
                             }
-                        } else {
-                            Log.d("TextInputshdhsdhsgd", "TextInput: $numberString")
-                            fiatCoinExchange.shitCoinValue = numberString
-                            viewModel.updateFiatCoin(fiatCoinExchange)
-                            searchText.value = TextFieldValue(
-                                fiatCoinExchange.shitCoinValue,
-                                selection = TextRange(fiatCoinExchange.shitCoinValue.length)
-                            )
-                            onValueChange(value.toString())
                         }
+                    } else {
+                        Log.d("TextInputladk", "TextInput: ${textFieldValue.text}")
+                        fiatCoinExchange.shitCoinValue = textFieldValue.text
+                        viewModel.updateFiatCoin(fiatCoinExchange)
+                        searchText.value = TextFieldValue(
+                            fiatCoinExchange.shitCoinValue,
+                            selection = TextRange(fiatCoinExchange.shitCoinValue.length)
+                        )
                     }
                 } else {
-                    Log.d("TextInputladk", "TextInput: ${textFieldValue.text}")
+                    Log.d("TextInputEmpty", "TextInput: ${textFieldValue.text}")
                     fiatCoinExchange.shitCoinValue = textFieldValue.text
                     viewModel.updateFiatCoin(fiatCoinExchange)
                     searchText.value = TextFieldValue(
@@ -144,14 +153,6 @@ fun TextInputShitCoin(
                         selection = TextRange(fiatCoinExchange.shitCoinValue.length)
                     )
                 }
-            } else {
-                Log.d("TextInputEmpty", "TextInput: ${textFieldValue.text}")
-                fiatCoinExchange.shitCoinValue = textFieldValue.text
-                viewModel.updateFiatCoin(fiatCoinExchange)
-                searchText.value = TextFieldValue(
-                    fiatCoinExchange.shitCoinValue,
-                    selection = TextRange(fiatCoinExchange.shitCoinValue.length)
-                )
             }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
