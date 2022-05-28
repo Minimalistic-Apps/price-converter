@@ -25,8 +25,7 @@ constructor(
                 it.value.code = it.key.uppercase()
                 val rate = it.value.rate
                 if (rate != null) {
-//                    val oneShitCoinValue = 1.div(rate)
-                    val oneShitCoinValue = 0.000000000000000000000004
+                    val oneShitCoinValue = 1.div(rate)
                     it.value.oneShitCoinValue = oneShitCoinValue
                     it.value.oneShitCoinValueString = when {
                         oneShitCoinValue >= 0.00000001 -> formatBtc(oneShitCoinValue.toBigDecimal())
