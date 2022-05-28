@@ -171,7 +171,7 @@ fun HomeScreen(
                         FiatCoinItem(
                             bitPayCoinWithFiatCoin = pair.second,
                             onLongPress = {
-//                                TODO("work on orderable")
+//                                          work on orderable
                             },
                             onValueChanged = object : (BitPayCoinWithFiatCoin, Double) -> Unit {
                                 override fun invoke(
@@ -183,11 +183,10 @@ fun HomeScreen(
                                             bitPayCoinWithFiatCoin
                                                 .bitPayExchangeRate
                                                 .oneShitCoinValue
-                                                .times(value)
+                                                ?.times(value)
                                                 .toString(),
                                             true
                                         )
-
                                         homeViewModel.getFiatCoins()
                                     }
                                 }

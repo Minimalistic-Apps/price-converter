@@ -53,14 +53,14 @@ class HomeViewModel @Inject constructor(
     private val _state = mutableStateOf(CoinsState())
     private val _timeAgoState = mutableStateOf("")
     private val _isLongerThan1hour = mutableStateOf(false)
-    private val _fiatCoinsList: MutableState<List<Pair<Int,BitPayCoinWithFiatCoin>>> =
+    private val _fiatCoinsList: MutableState<List<Pair<Int, BitPayCoinWithFiatCoin>>> =
         mutableStateOf(emptyList())
     private var _textFiledValueBtc: MutableState<TextFieldValue> = mutableStateOf(TextFieldValue())
 
 
     //    States
     val state: State<CoinsState> = _state
-    val fiatCoinsListState: State<List<Pair<Int,BitPayCoinWithFiatCoin>>> = _fiatCoinsList
+    val fiatCoinsListState: State<List<Pair<Int, BitPayCoinWithFiatCoin>>> = _fiatCoinsList
     var isRefreshing: LiveData<Boolean> = _isRefreshing
     val timeAgoState: State<String> = _timeAgoState
     val isLongerThan1hour: State<Boolean> = _isLongerThan1hour
@@ -101,7 +101,7 @@ class HomeViewModel @Inject constructor(
     @SuppressLint("RestrictedApi")
     fun getCoins() {
         viewModelScope.launch {
-            getCoinUseCase(isDataLoaded).collect { result ->
+            getCoinUseCase().collect { result ->
                 when (result) {
                     is Resource.Success -> {
 
@@ -178,7 +178,7 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun updateFiatCoin(fiatCoinExchange: FiatCoinExchange){
+    fun updateFiatCoin(fiatCoinExchange: FiatCoinExchange) {
         viewModelScope.launch(Dispatchers.IO) {
             updateFiatCoinUseCase.invoke(fiatCoinExchange)
         }

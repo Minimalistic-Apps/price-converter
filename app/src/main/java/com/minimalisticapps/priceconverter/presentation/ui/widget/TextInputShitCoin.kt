@@ -34,7 +34,12 @@ fun TextInputShitCoin(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val searchText = remember {
-        mutableStateOf(TextFieldValue(fiatCoinExchange.shitCoinValue, TextRange(fiatCoinExchange.shitCoinValue.length)))
+        mutableStateOf(
+            TextFieldValue(
+                fiatCoinExchange.shitCoinValue,
+                TextRange(fiatCoinExchange.shitCoinValue.length)
+            )
+        )
     }
     val isFocused = remember {
         mutableStateOf(false)
@@ -43,10 +48,15 @@ fun TextInputShitCoin(
     if (viewModel.textFieldValueBtc.value.text.isNotEmpty() && !isFocused.value) {
         var string = viewModel.textFieldValueBtc.value.text.replace(",", "")
         val double = parseBigDecimalFromString(string)
-        if (double != null && rate != null) {
+        if (double != null && rate != null && rate != 0.0) {
             string = double.toDouble().times(rate).toString()
             fiatCoinExchange.shitCoinValue = string.toSatsFormat()
             viewModel.updateFiatCoin(fiatCoinExchange)
+            searchText.value = TextFieldValue(
+                fiatCoinExchange.shitCoinValue,
+                selection = TextRange(fiatCoinExchange.shitCoinValue.length)
+            )
+        } else if (rate != null && rate == 0.0) {
             searchText.value = TextFieldValue(
                 fiatCoinExchange.shitCoinValue,
                 selection = TextRange(fiatCoinExchange.shitCoinValue.length)
@@ -95,7 +105,7 @@ fun TextInputShitCoin(
         onValueChange = { textFieldValue ->
             val text = textFieldValue.text
             if (text != searchText.value.text) {
-                if (rate != null) {
+                if (rate != null && rate != 0.0) {
                     if (text.isNotEmpty()) {
                         var numberString = text.replace(",", "")
                         if (numberString.startsWith(".")) {
