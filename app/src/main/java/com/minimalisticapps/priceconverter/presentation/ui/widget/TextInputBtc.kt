@@ -3,7 +3,9 @@ package com.minimalisticapps.priceconverter.presentation.ui.widget
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -37,7 +39,6 @@ fun TextInputBtc(
         mutableStateOf(false)
     }
     if (!isFocused.value) {
-        Log.e("TextInputBtc", "first ")
         searchText.value = homeViewModel.textFieldValueBtc.value
     }
 
@@ -46,10 +47,10 @@ fun TextInputBtc(
         modifier =
         Modifier
             .fillMaxWidth()
+            .padding(start = 15.dp, end = 15.dp)
             .onFocusChanged {
                 isFocused.value = it.isFocused
                 if (isFocused.value) {
-                    Log.e("TextInputBtc", "focused")
                     searchText.value = TextFieldValue(
                         text = homeViewModel.textFieldValueBtc.value.text,
                         selection = TextRange(0, homeViewModel.textFieldValueBtc.value.text.length)
@@ -57,7 +58,7 @@ fun TextInputBtc(
                 }
             }
             .border(
-                width = 0.5.dp,
+                width = 1.dp,
                 shape = PriceConverterCornerShape,
                 brush = Brush.horizontalGradient(
                     listOf(MaterialTheme.colors.onBackground, MaterialTheme.colors.onBackground)
@@ -73,7 +74,6 @@ fun TextInputBtc(
         ),
         value = searchText.value,
         onValueChange = { textFieldValue ->
-            Log.e("TextInputBtc", "onValueChange ")
             if (searchText.value.text != textFieldValue.text) {
                 isFocused.value = false
                 val text = textFieldValue.text

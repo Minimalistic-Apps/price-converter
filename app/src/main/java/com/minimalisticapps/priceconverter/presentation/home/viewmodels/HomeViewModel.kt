@@ -88,7 +88,7 @@ class HomeViewModel @Inject constructor(
         getFiatCoins()
     }
 
-    //    time ago handle function2
+    //    time ago handle function
     private fun updateUpdatedAgoText(past: Long) {
         val timeAgo = Calendar.getInstance().time.time
         _isLongerThan1hour.value = timeAgo.isDiffLongerThat1hours(past)
@@ -157,12 +157,11 @@ class HomeViewModel @Inject constructor(
             val formatted = formatBtc(text.toBigDecimal())
             _textFiledValueBtc.value = TextFieldValue(
                 formatted,
-                TextRange(formatted.length),
-                TextRange(0, formatted.length)
+                TextRange(formatted.length)
             )
         } else {
             _textFiledValueBtc.value =
-                TextFieldValue(text, TextRange(text.length), TextRange(0, text.length))
+                TextFieldValue(text, TextRange(text.length))
         }
     }
 

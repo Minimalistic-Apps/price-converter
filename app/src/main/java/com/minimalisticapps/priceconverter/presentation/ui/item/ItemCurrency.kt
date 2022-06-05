@@ -1,4 +1,4 @@
-package com.minimalisticapps.priceconverter.presentation.ui.widget
+package com.minimalisticapps.priceconverter.presentation.ui.item
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PriceConverter">
         <activity
-            android:name="com.minimalisticapps.priceconverter.presentation.MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.PriceConverter">
             <intent-filter>

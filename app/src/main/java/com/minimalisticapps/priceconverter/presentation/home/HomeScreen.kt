@@ -1,6 +1,8 @@
 package com.minimalisticapps.priceconverter.presentation.home
 
 import android.app.Activity
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -28,11 +30,13 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
 import com.minimalisticapps.priceconverter.common.dialog.ShowProgressDialog
+import com.minimalisticapps.priceconverter.common.utils.hideKeyboard
+import com.minimalisticapps.priceconverter.common.utils.noRippleClickable
 import com.minimalisticapps.priceconverter.common.utils.showToast
 import com.minimalisticapps.priceconverter.presentation.Screen
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
-import com.minimalisticapps.priceconverter.presentation.ui.widget.FiatCoinItem
+import com.minimalisticapps.priceconverter.presentation.ui.item.ItemFiatCoin
 import com.minimalisticapps.priceconverter.presentation.ui.widget.ShowLinearIndicator
 import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputBtc
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
@@ -67,7 +71,8 @@ fun HomeScreen(
         ShowProgressDialog()
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 backgroundColor = Color(ContextCompat.getColor(mContext, R.color.color_app)),
@@ -110,10 +115,14 @@ fun HomeScreen(
             homeViewModel.refreshData()
             isErrorShown.value = false
         }) {
-            Column(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier
+                .fillMaxSize()
+            ) {
+
                 if (coinsState.isLoading && isRefreshing == true) {
                     ShowLinearIndicator()
                 }
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -134,8 +143,7 @@ fun HomeScreen(
 
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
@@ -153,14 +161,14 @@ fun HomeScreen(
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Start,
                         fontSize = 18.sp,
-                        modifier = Modifier.padding(start = 20.dp, end = 47.dp)
+                        modifier = Modifier.padding(start = 11.dp, end = 50.dp)
                     )
                 }
 
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(top = 25.dp)
+                        .padding(vertical = 20.dp)
                 ) {
                     items(
                         items = fiatCoinsListState,
@@ -168,7 +176,7 @@ fun HomeScreen(
                             pair.first
                         }
                     ) { pair ->
-                        FiatCoinItem(
+                        ItemFiatCoin(
                             bitPayCoinWithFiatCoin = pair.second,
                             onLongPress = {
 //                                          work on orderable

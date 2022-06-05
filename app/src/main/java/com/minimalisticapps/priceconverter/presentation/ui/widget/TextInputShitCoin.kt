@@ -1,6 +1,5 @@
 package com.minimalisticapps.priceconverter.presentation.ui.widget
 
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -85,7 +84,7 @@ fun TextInputShitCoin(
                     )
                 }
             }
-            .padding(10.dp)
+            .padding(start = 15.dp, end = 0.dp, top = 10.dp, bottom = 10.dp)
             .border(
                 width = 1.dp,
                 shape = RoundedCornerShape(10.dp),
@@ -135,7 +134,6 @@ fun TextInputShitCoin(
                                     onValueChange(value.toString())
                                 }
                             } else {
-                                Log.d("TextInputshdhsdhsgd", "TextInput: $numberString")
                                 fiatCoinExchange.shitCoinValue = numberString
                                 viewModel.updateFiatCoin(fiatCoinExchange)
                                 searchText.value = TextFieldValue(
@@ -146,7 +144,6 @@ fun TextInputShitCoin(
                             }
                         }
                     } else {
-                        Log.d("TextInputladk", "TextInput: ${textFieldValue.text}")
                         fiatCoinExchange.shitCoinValue = textFieldValue.text
                         viewModel.updateFiatCoin(fiatCoinExchange)
                         searchText.value = TextFieldValue(
@@ -155,7 +152,6 @@ fun TextInputShitCoin(
                         )
                     }
                 } else {
-                    Log.d("TextInputEmpty", "TextInput: ${textFieldValue.text}")
                     fiatCoinExchange.shitCoinValue = textFieldValue.text
                     viewModel.updateFiatCoin(fiatCoinExchange)
                     searchText.value = TextFieldValue(
