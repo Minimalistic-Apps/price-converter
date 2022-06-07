@@ -1,8 +1,7 @@
 package com.minimalisticapps.priceconverter.presentation.home
 
 import android.app.Activity
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,13 +29,12 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
 import com.minimalisticapps.priceconverter.common.dialog.ShowProgressDialog
-import com.minimalisticapps.priceconverter.common.utils.hideKeyboard
-import com.minimalisticapps.priceconverter.common.utils.noRippleClickable
 import com.minimalisticapps.priceconverter.common.utils.showToast
 import com.minimalisticapps.priceconverter.presentation.Screen
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.presentation.ui.item.ItemFiatCoin
+import com.minimalisticapps.priceconverter.presentation.ui.widget.SetToolbar
 import com.minimalisticapps.priceconverter.presentation.ui.widget.ShowLinearIndicator
 import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputBtc
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
@@ -69,6 +67,7 @@ fun HomeScreen(
 
     if (coinsState.isLoading && isRefreshing == false)
         ShowProgressDialog()
+
 
     Scaffold(
         modifier = Modifier
@@ -109,106 +108,119 @@ fun HomeScreen(
 
         }
     ) {
-        SwipeRefresh(state = rememberSwipeRefreshState(
-            isRefreshing = isRefreshing ?: false
-        ), onRefresh = {
-            homeViewModel.refreshData()
-            isErrorShown.value = false
-        }) {
-            Column(modifier = Modifier
-                .fillMaxSize()
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Row(
+                modifier = Modifier
+                    .height(60.dp)
+                    .fillMaxWidth()
+                    .background(
+                        Color(
+                            ContextCompat.getColor(
+                                mContext,
+                                R.color.color_app
+                            )
+                        )
+                    )
             ) {
+                SetToolbar(
+                    title = mContext.resources.getString(R.string.app_name),
+                    onReload = {
+                        homeViewModel.refreshData()
+                        isErrorShown.value = false
+                    }
+                )
+            }
 
-                if (coinsState.isLoading && isRefreshing == true) {
-                    ShowLinearIndicator()
-                }
+            if (coinsState.isLoading && isRefreshing == true) {
+                ShowLinearIndicator()
+            }
 
-                Row(
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 5.dp),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                Text(
+                    text = timeAgo,
+                    style = MaterialTheme.typography.body2,
+                    modifier = Modifier
+                        .padding(vertical = 10.dp, horizontal = 16.dp),
+                    color = colorTimeAgo,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Left
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 5.dp),
-                    horizontalArrangement = Arrangement.End,
+                        .weight(3.0f)
                 ) {
-                    Text(
-                        text = timeAgo,
-                        style = MaterialTheme.typography.body2,
-                        modifier = Modifier
-                            .padding(vertical = 10.dp, horizontal = 16.dp),
-                        color = colorTimeAgo,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Left
-                    )
+                    TextInputBtc(onValueChange = {
+                        homeViewModel.getFiatCoins()
+                    })
                 }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(3.0f)
-                    ) {
-                        TextInputBtc(onValueChange = {
-                            homeViewModel.getFiatCoins()
-                        })
-                    }
-
-                    Text(
-                        text = "BTC",
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Start,
-                        fontSize = 18.sp,
-                        modifier = Modifier.padding(start = 11.dp, end = 50.dp)
-                    )
-                }
-
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(vertical = 20.dp)
-                ) {
-                    items(
-                        items = fiatCoinsListState,
-                        key = { pair ->
-                            pair.first
-                        }
-                    ) { pair ->
-                        ItemFiatCoin(
-                            bitPayCoinWithFiatCoin = pair.second,
-                            onLongPress = {
-//                                          work on orderable
-                            },
-                            onValueChanged = object : (BitPayCoinWithFiatCoin, Double) -> Unit {
-                                override fun invoke(
-                                    bitPayCoinWithFiatCoin: BitPayCoinWithFiatCoin,
-                                    value: Double
-                                ) {
-                                    if (value != 0.toDouble()) {
-                                        homeViewModel.setTextFieldValueBtc(
-                                            bitPayCoinWithFiatCoin
-                                                .bitPayExchangeRate
-                                                .oneShitCoinValue
-                                                ?.times(value)
-                                                .toString(),
-                                            true
-                                        )
-                                        homeViewModel.getFiatCoins()
-                                    }
-                                }
-                            },
-                            onDeleteClick = {
-                                selectedFiatCoin.value = it
-                                isShownConfirmDialog.value = true
-                            }
-                        )
-                    }
-                }
-
-
+                Text(
+                    text = "BTC",
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Start,
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(start = 11.dp, end = 50.dp)
+                )
             }
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 20.dp)
+            ) {
+                items(
+                    items = fiatCoinsListState,
+                    key = { pair ->
+                        pair.first
+                    }
+                ) { pair ->
+                    ItemFiatCoin(
+                        bitPayCoinWithFiatCoin = pair.second,
+                        onLongPress = {
+//                                          work on orderable
+                        },
+                        onValueChanged = object : (BitPayCoinWithFiatCoin, Double) -> Unit {
+                            override fun invoke(
+                                bitPayCoinWithFiatCoin: BitPayCoinWithFiatCoin,
+                                value: Double
+                            ) {
+                                if (value != 0.toDouble()) {
+                                    homeViewModel.setTextFieldValueBtc(
+                                        bitPayCoinWithFiatCoin
+                                            .bitPayExchangeRate
+                                            .oneShitCoinValue
+                                            ?.times(value)
+                                            .toString(),
+                                        true
+                                    )
+                                    homeViewModel.getFiatCoins()
+                                }
+                            }
+                        },
+                        onDeleteClick = {
+                            selectedFiatCoin.value = it
+                            isShownConfirmDialog.value = true
+                        }
+                    )
+                }
+            }
+
 
         }
 
