@@ -70,8 +70,10 @@ fun ItemFiatCoin(
                     .clickable { onDeleteClick(bitPayCoinWithFiatCoin.fiatCoinExchange) }
             )
         }
+        val btcValue =
+            bitPayCoinWithFiatCoin.bitPayExchangeRate.oneShitCoinValueString
         Text(
-            text = "1 ${bitPayCoinWithFiatCoin.fiatCoinExchange.code} = ${bitPayCoinWithFiatCoin.bitPayExchangeRate.oneShitCoinValueString} BTC",
+            text = "1 ${bitPayCoinWithFiatCoin.fiatCoinExchange.code} = $btcValue BTC",
             style = MaterialTheme.typography.body1,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,

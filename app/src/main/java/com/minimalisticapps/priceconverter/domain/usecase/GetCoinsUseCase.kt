@@ -2,6 +2,7 @@ package com.minimalisticapps.priceconverter.domain.usecase
 
 import com.minimalisticapps.priceconverter.common.Resource
 import com.minimalisticapps.priceconverter.common.utils.formatBtc
+import com.minimalisticapps.priceconverter.common.utils.to8Decimal
 import com.minimalisticapps.priceconverter.data.remote.dto.BitPayExchangeRate
 import com.minimalisticapps.priceconverter.domain.repo.PriceConverterRepository
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +30,7 @@ constructor(
                     it.value.oneShitCoinValue = oneShitCoinValue
                     it.value.oneShitCoinValueString = when {
                         oneShitCoinValue >= 0.00000001 -> formatBtc(oneShitCoinValue.toBigDecimal())
-                        oneShitCoinValue >= 0.000000000000001 -> oneShitCoinValue.toString()
+                        oneShitCoinValue >= 0.000000000000001 -> oneShitCoinValue.toString().to8Decimal()
                         else -> {
                             it.value.oneShitCoinValue = 0.0
                             it.value.rate = 0.0

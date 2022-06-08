@@ -13,6 +13,7 @@ import com.minimalisticapps.priceconverter.common.utils.AppConstants.BIT_COIN_PR
 import com.minimalisticapps.priceconverter.data.remote.dto.BitPayExchangeRate
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
@@ -67,13 +68,21 @@ fun String.toSatsFormat(): String {
         return if (this.isNotEmpty()) {
             val format: NumberFormat =
                 DecimalFormat("#.###", DecimalFormatSymbols(Locale.ENGLISH))
-
             format.format(this.toDouble())
         } else this
     } catch (ex: NumberFormatException) {
         ex.printStackTrace()
     }
     return ""
+}
+
+fun String.to8Decimal(): String {
+    if (this.isEmpty()) {
+        return ""
+    }
+    val splitNo = this.split("E")
+    val eightDecimal: Double = String.format("%.8f", splitNo[0].toDouble()).toDouble()
+    return "${eightDecimal}E${splitNo[1]}"
 }
 
 fun formatBtc(value: BigDecimal?): String {

@@ -70,7 +70,6 @@ fun TextInputShitCoin(
         )
     }
 
-
     OutlinedTextField(
         modifier =
         Modifier
