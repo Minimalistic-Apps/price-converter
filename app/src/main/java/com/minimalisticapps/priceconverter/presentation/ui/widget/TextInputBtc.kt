@@ -1,7 +1,9 @@
 package com.minimalisticapps.priceconverter.presentation.ui.widget
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -36,9 +38,6 @@ fun TextInputBtc(
     val isFocused = remember {
         mutableStateOf(false)
     }
-    val count = remember {
-        mutableStateOf(0)
-    }
     if (!isFocused.value) {
         searchText.value = homeViewModel.textFieldValueBtc.value
     }
@@ -56,9 +55,6 @@ fun TextInputBtc(
                         text = homeViewModel.textFieldValueBtc.value.text,
                         selection = TextRange(0, homeViewModel.textFieldValueBtc.value.text.length)
                     )
-                    count.value = 1
-                } else {
-                    count.value = 0
                 }
             }
             .border(
@@ -78,7 +74,7 @@ fun TextInputBtc(
         ),
         value = searchText.value,
         onValueChange = { textFieldValue ->
-            if (searchText.value.text != textFieldValue.text || count.value == 0) {
+            if (searchText.value.text != textFieldValue.text) {
                 isFocused.value = false
                 val text = textFieldValue.text
                 if (text.isNotEmpty()) {
@@ -109,8 +105,6 @@ fun TextInputBtc(
                     homeViewModel.setTextFieldValueBtc(text, false)
                     onValueChange()
                 }
-            } else if (count.value == 1) {
-                count.value = 0
             }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
