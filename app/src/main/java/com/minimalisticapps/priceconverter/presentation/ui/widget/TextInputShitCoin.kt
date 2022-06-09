@@ -44,6 +44,10 @@ fun TextInputShitCoin(
         mutableStateOf(false)
     }
 
+    val count = remember {
+        mutableStateOf(0)
+    }
+
     if (viewModel.textFieldValueBtc.value.text.isNotEmpty() && !isFocused.value) {
         var string = viewModel.textFieldValueBtc.value.text.replace(",", "")
         val double = parseBigDecimalFromString(string)
@@ -81,6 +85,9 @@ fun TextInputShitCoin(
                         text = fiatCoinExchange.shitCoinValue,
                         selection = TextRange(0, fiatCoinExchange.shitCoinValue.length)
                     )
+                    count.value = 1
+                } else {
+                    count.value = 0
                 }
             }
             .padding(start = 15.dp, end = 0.dp, top = 10.dp, bottom = 10.dp)
@@ -102,7 +109,7 @@ fun TextInputShitCoin(
         value = searchText.value,
         onValueChange = { textFieldValue ->
             val text = textFieldValue.text
-            if (text != searchText.value.text) {
+            if (text != searchText.value.text || count.value == 0) {
                 if (rate != null && rate != 0.0) {
                     if (text.isNotEmpty()) {
                         var numberString = text.replace(",", "")
@@ -158,6 +165,8 @@ fun TextInputShitCoin(
                         selection = TextRange(fiatCoinExchange.shitCoinValue.length)
                     )
                 }
+            } else if (count.value == 1) {
+                count.value = 0
             }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
