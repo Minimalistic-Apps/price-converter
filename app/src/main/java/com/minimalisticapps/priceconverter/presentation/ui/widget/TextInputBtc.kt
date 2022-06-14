@@ -1,7 +1,6 @@
 package com.minimalisticapps.priceconverter.presentation.ui.widget
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
@@ -9,19 +8,15 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.minimalisticapps.priceconverter.presentation.PriceConverterCornerShape
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
+
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -29,34 +24,10 @@ fun TextInputBtc(
     homeViewModel: HomeViewModel = hiltViewModel(),
     onValueChange: () -> Unit
 ) {
-    val isFocused = remember {
-        mutableStateOf(false)
-    }
-    val wasAlreadyAllSelected = remember {
-        mutableStateOf(false)
-    }
-
     OutlinedTextField(
-        modifier =
-        Modifier
+        modifier = Modifier
+            .onFocusSelectAll(homeViewModel._textFiledValueBtc)
             .fillMaxWidth()
-            .onFocusChanged {
-                Log.e(
-                    "TextInputBtc",
-                    "onFocusChanged ${isFocused.value} && ${it.isFocused}"
-                )
-                if (!isFocused.value && it.isFocused) {
-                    homeViewModel._textFiledValueBtc.value = TextFieldValue(
-                        text = homeViewModel.textFieldValueBtc.value.text,
-                        selection = TextRange(0, homeViewModel.textFieldValueBtc.value.text.length)
-                    )
-                }
-                isFocused.value = it.isFocused
-
-                if (!it.isFocused) {
-                    wasAlreadyAllSelected.value = false
-                }
-            }
             .border(
                 width = 0.5.dp,
                 shape = PriceConverterCornerShape,
@@ -75,32 +46,11 @@ fun TextInputBtc(
         value = homeViewModel._textFiledValueBtc.value,
         onValueChange = {
             val hasTextChanged = it.text != homeViewModel._textFiledValueBtc.value.text
-            val hasSelectionChanged = !it.selection.equals(homeViewModel._textFiledValueBtc.value)
-
-            Log.e(
-                "TextInputBtc",
-                "onValueChange hasTextChanged: $hasTextChanged, " +
-                        "hasSelectionChanged: $hasSelectionChanged, " +
-                        "isFocused.value: ${isFocused.value}"
-            )
-
-            if (!hasTextChanged && hasSelectionChanged && !wasAlreadyAllSelected.value) {
-                homeViewModel._textFiledValueBtc.value = TextFieldValue(
-                    text = homeViewModel.textFieldValueBtc.value.text,
-                    selection = TextRange(0, homeViewModel.textFieldValueBtc.value.text.length)
-                )
-                Log.e(
-                    "TextInputBtc",
-                    "selected"
-                )
-                wasAlreadyAllSelected.value = true
-            } else {
-                homeViewModel._textFiledValueBtc.value = it
-            }
-
+            homeViewModel._textFiledValueBtc.value = it
             if (hasTextChanged) {
                 onValueChange()
             }
+
 //                if (text.isNotEmpty()) {
 //                    var numberString = text.replace(",", "")
 //                    if (numberString.startsWith(".")) {
