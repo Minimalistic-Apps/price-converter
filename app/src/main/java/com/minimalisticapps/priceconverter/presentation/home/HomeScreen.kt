@@ -25,8 +25,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
 import com.minimalisticapps.priceconverter.common.dialog.ShowProgressDialog
@@ -173,35 +171,37 @@ fun HomeScreen(
                 )
             }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(3.0f)
-                ) {
-                    TextInputBtc(onValueChange = {
-                        homeViewModel.getFiatCoins()
-                    })
-                }
-
-                Text(
-                    text = "BTC",
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Start,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(start = 11.dp, end = 50.dp)
-                )
-            }
-
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(vertical = 20.dp)
             ) {
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 20.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(3.0f)
+                        ) {
+                            TextInputBtc(onValueChange = {
+
+                            })
+                        }
+
+                        Text(
+                            text = "BTC",
+                            fontWeight = FontWeight.Bold,
+                            textAlign = TextAlign.Start,
+                            fontSize = 18.sp,
+                            modifier = Modifier.padding(start = 11.dp, end = 50.dp)
+                        )
+                    }
+                }
                 items(
                     items = fiatCoinsListState,
                     key = { pair ->
