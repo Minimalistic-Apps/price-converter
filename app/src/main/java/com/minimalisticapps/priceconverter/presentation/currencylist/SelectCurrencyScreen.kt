@@ -28,12 +28,10 @@ fun CoinListScreen(
     coinsState: CoinsState
 ) {
     val mContext = LocalContext.current as Activity
-    val coinsList = remember {
-        mutableStateOf(coinsState.coins)
-    }
-    val searchText = remember {
-        mutableStateOf("")
-    }
+    val coinsList = remember { mutableStateOf(coinsState.coins) }
+    val searchText = remember { mutableStateOf("") }
+
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -48,17 +46,14 @@ fun CoinListScreen(
                     coinsList.value = coinsState.coins
                 }
             }
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Log.e("SIZEITEM", coinsState.coins.size.toString())
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(coinsList.value) { coin ->
                     CoinItem(
                         coin = coin,
                         onItemClick = { item ->
                             hideKeyboard(mContext)
                             coinListViewModel.insertFiatCoin(item.toFiatCoinsExchange())
-                            navController.navigateUp()
+                            navController.popBackStack()
                         })
                 }
             }
