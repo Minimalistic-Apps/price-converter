@@ -165,9 +165,7 @@ fun HomeScreen(
                         .fillMaxWidth()
                         .weight(3.0f)
                 ) {
-                    TextInputBtc(onValueChange = {
-                        homeViewModel.getFiatCoins()
-                    })
+                    TextInputBtc()
                 }
 
                 Text(

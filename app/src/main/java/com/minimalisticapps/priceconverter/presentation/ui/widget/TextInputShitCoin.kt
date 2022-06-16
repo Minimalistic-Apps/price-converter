@@ -109,7 +109,7 @@ fun TextInputShitCoin(
         value = searchText.value,
         onValueChange = { textFieldValue ->
             val text = textFieldValue.text
-            if (text != searchText.value.text || count.value == 0) {
+            if (text != searchText.value.text) {
                 if (rate != null && rate != 0.0) {
                     if (text.isNotEmpty()) {
                         var numberString = text.replace(",", "")
@@ -167,6 +167,11 @@ fun TextInputShitCoin(
                 }
             } else if (count.value == 1) {
                 count.value = 0
+            } else if (count.value == 0) {
+                searchText.value = TextFieldValue(
+                    searchText.value.text,
+                    selection = TextRange(fiatCoinExchange.shitCoinValue.length)
+                )
             }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

@@ -1,6 +1,7 @@
 package com.minimalisticapps.priceconverter.presentation.ui.widget
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,7 +29,6 @@ import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeView
 @Composable
 fun TextInputBtc(
     homeViewModel: HomeViewModel = hiltViewModel(),
-    onValueChange: () -> Unit
 ) {
     val searchText = remember {
         mutableStateOf(TextFieldValue())
@@ -78,7 +78,7 @@ fun TextInputBtc(
         ),
         value = searchText.value,
         onValueChange = { textFieldValue ->
-            if (searchText.value.text != textFieldValue.text || count.value == 0) {
+            if (searchText.value.text != textFieldValue.text) {
                 isFocused.value = false
                 val text = textFieldValue.text
                 if (text.isNotEmpty()) {
@@ -94,23 +94,24 @@ fun TextInputBtc(
                             ) {
                                 if (value.toString().split(".")[1].length < 9) {
                                     homeViewModel.setTextFieldValueBtc(value.toString(), true)
-                                    onValueChange()
                                 }
                             } else if (!value.toString().contains(".")) {
                                 homeViewModel.setTextFieldValueBtc(value.toString(), true)
-                                onValueChange()
                             }
                         } else {
                             homeViewModel.setTextFieldValueBtc(numberString, false)
-                            onValueChange()
                         }
                     }
                 } else {
                     homeViewModel.setTextFieldValueBtc(text, false)
-                    onValueChange()
                 }
             } else if (count.value == 1) {
                 count.value = 0
+            } else if (count.value == 0) {
+                searchText.value = TextFieldValue(
+                    textFieldValue.text,
+                    TextRange(textFieldValue.text.length)
+                )
             }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
