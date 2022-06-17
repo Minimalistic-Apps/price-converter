@@ -6,7 +6,7 @@ pluginManagement {
     }
     plugins {
         id 'org.jetbrains.kotlin.android' version '1.5.21' apply false
-        id "dagger.hilt.android.plugin" version '2.38.1' apply false
+        id "dagger.hilt.android.plugin" version '2.40.1' apply false
     }
     resolutionStrategy {
         eachPlugin {
