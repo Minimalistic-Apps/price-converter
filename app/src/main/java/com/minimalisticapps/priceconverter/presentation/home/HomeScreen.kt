@@ -24,8 +24,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
 import com.minimalisticapps.priceconverter.common.dialog.ShowProgressDialog
@@ -205,9 +203,7 @@ fun HomeScreen(
                                             .oneShitCoinValue
                                             ?.times(value)
                                             .toString(),
-                                        true
                                     )
-                                    homeViewModel.getFiatCoins()
                                 }
                             }
                         },
