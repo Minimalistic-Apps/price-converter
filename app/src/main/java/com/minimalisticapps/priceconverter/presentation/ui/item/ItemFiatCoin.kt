@@ -1,4 +1,4 @@
-package com.minimalisticapps.priceconverter.presentation.ui.widget
+package com.minimalisticapps.priceconverter.presentation.ui.item
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -12,24 +12,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.minimalisticapps.priceconverter.R
+import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputShitCoin
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 
 @Composable
-fun FiatCoinItem(
+fun ItemFiatCoin(
     bitPayCoinWithFiatCoin: BitPayCoinWithFiatCoin,
     onValueChanged: (BitPayCoinWithFiatCoin, Double) -> Unit,
     onLongPress: () -> Unit,
     onDeleteClick: (FiatCoinExchange) -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .padding(vertical = 10.dp, horizontal = 10.dp)
-    ) {
+    Column {
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -60,20 +57,23 @@ fun FiatCoinItem(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 text = bitPayCoinWithFiatCoin.fiatCoinExchange.code,
-                textAlign = TextAlign.Start,
-                modifier = Modifier.padding(start = 10.dp)
+                modifier = Modifier
+                    .padding(start = 25.dp)
+                    .width(45.dp)
             )
 
             Image(
                 painterResource(R.drawable.ic_delete),
                 "content description",
                 modifier = Modifier
-                    .padding(15.dp)
+                    .padding(start = 0.dp, end = 15.dp)
                     .clickable { onDeleteClick(bitPayCoinWithFiatCoin.fiatCoinExchange) }
             )
         }
+        val btcValue =
+            bitPayCoinWithFiatCoin.bitPayExchangeRate.oneShitCoinValueString
         Text(
-            text = "1 ${bitPayCoinWithFiatCoin.fiatCoinExchange.code} = ${bitPayCoinWithFiatCoin.bitPayExchangeRate.oneShitCoinValueString} BTC",
+            text = "1 ${bitPayCoinWithFiatCoin.fiatCoinExchange.code} = $btcValue BTC",
             style = MaterialTheme.typography.body1,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,

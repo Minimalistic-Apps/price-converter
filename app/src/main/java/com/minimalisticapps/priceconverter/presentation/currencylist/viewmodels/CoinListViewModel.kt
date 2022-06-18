@@ -1,4 +1,4 @@
-package com.minimalisticapps.priceconverter.presentation.coinlist.viewmodels
+package com.minimalisticapps.priceconverter.presentation.currencylist.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
