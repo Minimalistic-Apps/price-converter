@@ -120,6 +120,16 @@ fun formatBtcString(input: String): String {
     return result
 }
 
+fun formatFiatShitcoinString(input: String): String {
+    val x = parseBigDecimalFromString(input)
+
+    return if (x != null) formatFiatShitcoin(x) else ""
+}
+
+fun formatFiatShitcoin(input: BigDecimal): String {
+    return DecimalFormat.getNumberInstance(Locale.ENGLISH).format(input)
+}
+
 fun parseBigDecimalFromString(input: String): BigDecimal? {
     val strippedOfCommas = input.replace(",", "")
     return try {

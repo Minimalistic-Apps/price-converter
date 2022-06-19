@@ -3,7 +3,6 @@ package com.minimalisticapps.priceconverter.presentation.home.viewmodels
 import android.app.Application
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -221,7 +220,7 @@ class HomeViewModel @Inject constructor(
                 )
 
                 shitcoinInputsState[it.first]?.value =
-                    TextFieldValue(text = newValue.toPlainString())
+                    TextFieldValue(text = formatFiatShitcoin(newValue))
             }
         }
     }
@@ -239,13 +238,9 @@ class HomeViewModel @Inject constructor(
                     PRECISION,
                     RoundingMode.HALF_UP
                 )
-                Log.i(
-                    "recalculateByBitcoin",
-                    it.first.toString() + " " + it.second.fiatCoinExchange.code + " " + newAmount.toPlainString()
-                )
 
                 shitcoinInputsState[it.first]?.value =
-                    TextFieldValue(text = newAmount.toPlainString())
+                    TextFieldValue(text = formatFiatShitcoin(newAmount))
             }
         }
 
@@ -259,7 +254,7 @@ class HomeViewModel @Inject constructor(
 
     private fun updateShitcoinWithoutRecalculate(shitcoinIndex: Int, value: BigDecimal) {
         val state = shitcoinInputsState[shitcoinIndex] ?: return
-        state.value = TextFieldValue(text = value.toPlainString())
+        state.value = TextFieldValue(text = formatFiatShitcoin(value))
     }
 
     fun updateShitcoin(shitcoinIndex: Int, input: TextFieldValue) {
