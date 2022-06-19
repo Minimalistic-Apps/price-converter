@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.math.BigDecimal
 import javax.inject.Inject
 
 class GetCoinsUseCase @Inject
@@ -26,14 +27,14 @@ constructor(
                 it.value.code = it.key.uppercase()
                 val rate = it.value.rate
                 if (rate != null) {
-                    val oneShitCoinValue = 1.div(rate)
+                    val oneShitCoinValue = BigDecimal.ONE.div(rate)
                     it.value.oneShitCoinValue = oneShitCoinValue
                     it.value.oneShitCoinValueString = when {
-                        oneShitCoinValue >= 0.00000001 -> formatBtc(oneShitCoinValue.toBigDecimal())
-                        oneShitCoinValue >= 0.000000000000001 -> oneShitCoinValue.toString().to8Decimal()
+                        oneShitCoinValue >= BigDecimal(0.00000001) -> formatBtc(oneShitCoinValue)
+                        oneShitCoinValue >= BigDecimal(0.000000000000001) -> oneShitCoinValue.toString().to8Decimal()
                         else -> {
-                            it.value.oneShitCoinValue = 0.0
-                            it.value.rate = 0.0
+                            it.value.oneShitCoinValue = BigDecimal.ZERO
+                            it.value.rate = BigDecimal.ZERO
                             "0"
                         }
                     }

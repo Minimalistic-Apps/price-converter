@@ -18,10 +18,11 @@ import com.minimalisticapps.priceconverter.common.utils.parseBigDecimalFromStrin
 import com.minimalisticapps.priceconverter.common.utils.toSatsFormat
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
+import java.math.BigDecimal
 
 @Composable
 fun TextInputShitCoin(
-    rate: Double?,
+    rate: BigDecimal?,
     onValueChange: (String) -> Unit,
     fiatCoinExchange: FiatCoinExchange,
     viewModel: HomeViewModel = hiltViewModel(),
@@ -42,24 +43,24 @@ fun TextInputShitCoin(
         mutableStateOf(0)
     }
 
-    if (viewModel.textFieldValueBtc.value.text.isNotEmpty() && !isFocused.value) {
-        var string = viewModel.textFieldValueBtc.value.text.replace(",", "")
+    if (viewModel.textFiledValueBtc.value.text.isNotEmpty() && !isFocused.value) {
+        var string = viewModel.textFiledValueBtc.value.text.replace(",", "")
         val double = parseBigDecimalFromString(string)
-        if (double != null && rate != null && rate != 0.0) {
-            string = double.toDouble().times(rate).toString()
+        if (double != null && rate != null && rate != BigDecimal.ZERO) {
+            string = double.multiply(rate).toString()
             fiatCoinExchange.shitCoinValue = string.toSatsFormat()
             viewModel.updateFiatCoin(fiatCoinExchange)
             searchText.value = searchText.value.copy(
                 fiatCoinExchange.shitCoinValue,
                 selection = TextRange(fiatCoinExchange.shitCoinValue.length)
             )
-        } else if (rate != null && rate == 0.0) {
+        } else if (rate != null && rate == BigDecimal.ZERO) {
             searchText.value = searchText.value.copy(
                 fiatCoinExchange.shitCoinValue,
                 selection = TextRange(fiatCoinExchange.shitCoinValue.length)
             )
         }
-    } else if (viewModel.textFieldValueBtc.value.text.isEmpty()) {
+    } else if (viewModel.textFiledValueBtc.value.text.isEmpty()) {
         fiatCoinExchange.shitCoinValue = ""
         viewModel.updateFiatCoin(fiatCoinExchange)
         searchText.value = searchText.value.copy(
@@ -86,7 +87,7 @@ fun TextInputShitCoin(
             .padding(start = 15.dp, end = 0.dp, top = 10.dp, bottom = 10.dp),
         value = searchText.value,
         onValueChange = { textFieldValue ->
-            if (rate != null && rate != 0.0) {
+            if (rate != null && rate != BigDecimal.ZERO) {
                 val text = textFieldValue.text
                 if (text != searchText.value.text) {
                     if (text.isNotEmpty()) {

@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,6 +40,7 @@ import com.minimalisticapps.priceconverter.presentation.ui.widget.ShowLinearIndi
 import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputBtc
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
+import java.math.BigDecimal
 
 var coinsStateValue: CoinsState = CoinsState()
 
@@ -194,18 +196,20 @@ fun HomeScreen(
                         onLongPress = {
 //                                          work on orderable
                         },
-                        onValueChanged = object : (BitPayCoinWithFiatCoin, Double) -> Unit {
+                        onValueChanged = object : (BitPayCoinWithFiatCoin, BigDecimal) -> Unit {
                             override fun invoke(
                                 bitPayCoinWithFiatCoin: BitPayCoinWithFiatCoin,
-                                value: Double
+                                value: BigDecimal
                             ) {
-                                if (value != 0.toDouble()) {
+                                if (value > BigDecimal.ZERO) {
                                     homeViewModel.setTextFieldValueBtc(
-                                        bitPayCoinWithFiatCoin
-                                            .bitPayExchangeRate
-                                            .oneShitCoinValue
-                                            ?.times(value)
-                                            .toString()
+                                        TextFieldValue(
+                                            text = bitPayCoinWithFiatCoin
+                                                .bitPayExchangeRate
+                                                .oneShitCoinValue
+                                                ?.multiply(value)
+                                                ?.toPlainString() ?: ""
+                                        )
                                     )
                                 }
                             }

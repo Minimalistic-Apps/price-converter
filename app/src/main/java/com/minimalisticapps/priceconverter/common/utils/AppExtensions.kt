@@ -13,7 +13,6 @@ import com.minimalisticapps.priceconverter.common.utils.AppConstants.BIT_COIN_PR
 import com.minimalisticapps.priceconverter.data.remote.dto.BitPayExchangeRate
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 import java.math.BigDecimal
-import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
@@ -90,7 +89,12 @@ fun formatBtc(value: BigDecimal?): String {
         return ""
     }
 
-    val s = value.toPlainString()
+    return formatBtcString(value.toPlainString())
+}
+
+fun formatBtcString(input: String): String {
+    val s = input.replace(",", "")
+
     var result = ""
     var dot = false
     var depth = 0

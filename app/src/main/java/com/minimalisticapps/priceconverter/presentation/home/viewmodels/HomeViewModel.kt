@@ -1,6 +1,5 @@
 package com.minimalisticapps.priceconverter.presentation.home.viewmodels
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Handler
 import android.os.Looper
@@ -15,7 +14,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.minimalisticapps.priceconverter.common.Resource
 import com.minimalisticapps.priceconverter.common.utils.PCSharedStorage
-import com.minimalisticapps.priceconverter.common.utils.formatBtc
+import com.minimalisticapps.priceconverter.common.utils.formatBtcString
 import com.minimalisticapps.priceconverter.common.utils.isDiffLongerThat1hours
 import com.minimalisticapps.priceconverter.common.utils.timeToTimeAgo
 import com.minimalisticapps.priceconverter.domain.usecase.DeleteUseCase
@@ -31,6 +30,8 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+import kotlin.math.max
+import kotlin.math.min
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -55,7 +56,7 @@ class HomeViewModel @Inject constructor(
     private val _isLongerThan1hour = mutableStateOf(false)
     private val _fiatCoinsList: MutableState<List<Pair<Int, BitPayCoinWithFiatCoin>>> =
         mutableStateOf(emptyList())
-    private var _textFiledValueBtc: MutableState<TextFieldValue> = mutableStateOf(TextFieldValue())
+    var textFiledValueBtc: MutableState<TextFieldValue> = mutableStateOf(TextFieldValue())
 
 
     //    States
@@ -64,7 +65,6 @@ class HomeViewModel @Inject constructor(
     var isRefreshing: LiveData<Boolean> = _isRefreshing
     val timeAgoState: State<String> = _timeAgoState
     val isLongerThan1hour: State<Boolean> = _isLongerThan1hour
-    val textFieldValueBtc: State<TextFieldValue> = _textFiledValueBtc
 
     private val updateTextTask = object : Runnable {
         override fun run() {
@@ -98,7 +98,6 @@ class HomeViewModel @Inject constructor(
 
     //    function for getting or inserting coins
     @OptIn(InternalCoroutinesApi::class)
-    @SuppressLint("RestrictedApi")
     fun getCoins() {
         viewModelScope.launch {
             getCoinUseCase().collect { result ->
@@ -152,28 +151,43 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun setTextFieldValueBtc(text: String) {
-        val formatted = formatBtc(text.toBigDecimal())
-        _textFiledValueBtc.value = TextFieldValue(
-            formatted,
-            TextRange(formatted.length)
-        )
-    }
+    fun setTextFieldValueBtc(it: TextFieldValue) {
+        // when we deleted just a comma we want to move cursor
+        val normalizedState = textFiledValueBtc.value.text.replace(",", "")
+        val normalizedNewValue = it.text.replace(",", "")
+        if (normalizedState == normalizedNewValue) {
+            textFiledValueBtc.value = TextFieldValue(
+                text = textFiledValueBtc.value.text,
+                selection = TextRange(
+                    max(0, it.selection.start),
+                    max(0, min(textFiledValueBtc.value.text.length, it.selection.end))
+                )
+            )
 
-    fun setTextFieldValueBtc(textFieldValue: TextFieldValue) {
-        _textFiledValueBtc.value = textFieldValue
+            return
+        }
+
+        // When actual number is changed, we have to adjust the selection
+        // in case some comma was added
+        val commasBefore = it.text.count { it == ',' }
+        val formatted = formatBtcString(it.text)
+        val commasAfter = formatted.count { it == ',' }
+
+        val diff = commasAfter - commasBefore
+
+        textFiledValueBtc.value = TextFieldValue(
+            text = formatted,
+            selection = TextRange(
+                max(0, it.selection.start + diff),
+                max(0, min(formatted.length, it.selection.end + diff))
+            )
+        )
     }
 
     fun refreshData() {
         _isRefreshing.value = true
         isDataLoaded = false
         getCoins()
-    }
-
-    fun setBtcSelection() {
-        _textFiledValueBtc.value = _textFiledValueBtc.value.copy(
-            selection = TextRange(0, _textFiledValueBtc.value.text.length)
-        )
     }
 
     fun updateFiatCoin(fiatCoinExchange: FiatCoinExchange) {
