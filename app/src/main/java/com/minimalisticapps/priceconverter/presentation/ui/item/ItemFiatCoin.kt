@@ -16,7 +16,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.minimalisticapps.priceconverter.R
-import com.minimalisticapps.priceconverter.common.utils.parseBigDecimalFromString
 import com.minimalisticapps.priceconverter.presentation.ui.theme.FadedColorDark
 import com.minimalisticapps.priceconverter.presentation.ui.theme.FadedColorLight
 import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputShitCoin
@@ -27,7 +26,7 @@ import java.math.BigDecimal
 @Composable
 fun ItemFiatCoin(
     bitPayCoinWithFiatCoin: BitPayCoinWithFiatCoin,
-    onValueChanged: (BitPayCoinWithFiatCoin, BigDecimal) -> Unit,
+    onValueChanged: (BigDecimal?) -> Unit,
     onLongPress: () -> Unit,
     onDeleteClick: (FiatCoinExchange) -> Unit,
 ) {
@@ -50,13 +49,7 @@ fun ItemFiatCoin(
                     .weight(3.0f)
             ) {
                 TextInputShitCoin(
-                    onValueChange = { text ->
-                        onValueChanged(
-                            bitPayCoinWithFiatCoin,
-                            parseBigDecimalFromString(text) ?: BigDecimal.ZERO
-                        )
-                    },
-                    rate = bitPayCoinWithFiatCoin.bitPayExchangeRate.rate,
+                    onValueChange = onValueChanged,
                     fiatCoinExchange = bitPayCoinWithFiatCoin.fiatCoinExchange
                 )
             }

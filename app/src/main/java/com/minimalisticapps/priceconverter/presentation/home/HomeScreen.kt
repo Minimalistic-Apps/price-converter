@@ -38,7 +38,6 @@ import com.minimalisticapps.priceconverter.presentation.ui.theme.SecondaryColorF
 import com.minimalisticapps.priceconverter.presentation.ui.widget.SetToolbar
 import com.minimalisticapps.priceconverter.presentation.ui.widget.ShowLinearIndicator
 import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputBtc
-import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 import java.math.BigDecimal
 
@@ -196,22 +195,16 @@ fun HomeScreen(
                         onLongPress = {
 //                                          work on orderable
                         },
-                        onValueChanged = object : (BitPayCoinWithFiatCoin, BigDecimal) -> Unit {
-                            override fun invoke(
-                                bitPayCoinWithFiatCoin: BitPayCoinWithFiatCoin,
-                                value: BigDecimal
-                            ) {
-                                if (value > BigDecimal.ZERO) {
-                                    homeViewModel.setTextFieldValueBtc(
-                                        TextFieldValue(
-                                            text = bitPayCoinWithFiatCoin
-                                                .bitPayExchangeRate
-                                                .oneShitCoinValue
-                                                ?.multiply(value)
-                                                ?.toPlainString() ?: ""
-                                        )
-                                    )
-                                }
+                        onValueChanged = {
+                            val oneShitCoinValue = pair.second.bitPayExchangeRate.oneShitCoinValue
+                            pair.second.fiatCoinExchange.shitCoinValue = it?.toPlainString() ?: ""
+                            homeViewModel.updateFiatCoin(pair.second.fiatCoinExchange)
+
+                            if (it != null && it > BigDecimal.ZERO) {
+                                val bitcoinPrice = oneShitCoinValue?.multiply(it)
+                                homeViewModel.setTextFieldValueBtc(
+                                    TextFieldValue(text = bitcoinPrice?.toPlainString() ?: "")
+                                )
                             }
                         },
                         onDeleteClick = {

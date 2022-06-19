@@ -20,11 +20,12 @@ class PriceConverterRepositoryImpl @Inject constructor(
     override suspend fun getCoins(): Flow<List<BitPayExchangeRate>> =
         priceConverterDao.fetchAllCoins()
 
-    override suspend fun getFiatCoins(): Flow<List<BitPayCoinWithFiatCoin>> = priceConverterDao.fetchAllFiatCoins()
+    override suspend fun getFiatCoins(): Flow<List<BitPayCoinWithFiatCoin>> =
+        priceConverterDao.fetchAllFiatCoins()
 
-        override suspend fun saveFiatCoin(fiatCoinExchange: FiatCoinExchange) {
-            priceConverterDao.insertFiatCoin(fiatCoinExchange)
-        }
+    override suspend fun saveFiatCoin(fiatCoinExchange: FiatCoinExchange) {
+        priceConverterDao.insertFiatCoin(fiatCoinExchange)
+    }
 
     override suspend fun updateFiatCoin(fiatCoinExchange: FiatCoinExchange) {
         priceConverterDao.updateFiatCoin(fiatCoinExchange)
@@ -34,5 +35,6 @@ class PriceConverterRepositoryImpl @Inject constructor(
         priceConverterDao.insertCoin(bitPayExchangeRate)
     }
 
-    override suspend fun deleteFiatCoin(fiatCoinExchange: FiatCoinExchange) = priceConverterDao.deleteFiatCoin(fiatCoinExchange)
+    override suspend fun deleteFiatCoin(fiatCoinExchange: FiatCoinExchange) =
+        priceConverterDao.deleteFiatCoin(fiatCoinExchange)
 }
