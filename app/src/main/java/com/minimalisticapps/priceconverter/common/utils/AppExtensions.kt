@@ -121,13 +121,20 @@ fun formatBtcString(input: String): String {
 }
 
 fun formatFiatShitcoinString(input: String): String {
-    val x = parseBigDecimalFromString(input)
+    if (input.trim() == "." || input.trim() == "") {
+        return input
+    }
 
-    return if (x != null) formatFiatShitcoin(x) else ""
+    val parts = input.replace(",", "").split('.')
+    val beforeDot = parts[0].reversed().chunked(3).joinToString(",").reversed()
+    val afterDot =
+        if (parts.size > 1) if (parts[1].length > 3) parts[1].substring(0, 3) else parts[1] else ""
+
+    return beforeDot + (if (afterDot.isNotEmpty() || input.contains('.')) ".$afterDot" else "")
 }
 
 fun formatFiatShitcoin(input: BigDecimal): String {
-    return DecimalFormat.getNumberInstance(Locale.ENGLISH).format(input)
+    return formatFiatShitcoinString(input.toPlainString())
 }
 
 fun parseBigDecimalFromString(input: String): BigDecimal? {

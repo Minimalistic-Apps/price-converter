@@ -6,7 +6,6 @@ import android.os.Looper
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -27,8 +26,6 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.max
-import kotlin.math.min
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -154,37 +151,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun updateBitcoinAmount(it: TextFieldValue) {
-        // when we deleted just a comma we want to move cursor
-        val normalizedState = textFiledValueBtc.value.text.replace(",", "")
-        val normalizedNewValue = it.text.replace(",", "")
-        if (normalizedState == normalizedNewValue) {
-            textFiledValueBtc.value = TextFieldValue(
-                text = textFiledValueBtc.value.text,
-                selection = TextRange(
-                    max(0, it.selection.start),
-                    max(0, min(textFiledValueBtc.value.text.length, it.selection.end))
-                )
-            )
-
-            return
-        }
-
-        // When actual number is changed, we have to adjust the selection
-        // in case some comma was added
-        val commasBefore = it.text.count { it == ',' }
-        val formatted = formatBtcString(it.text)
-        val commasAfter = formatted.count { it == ',' }
-
-        val diff = commasAfter - commasBefore
-
-        textFiledValueBtc.value = TextFieldValue(
-            text = formatted,
-            selection = TextRange(
-                max(0, it.selection.start + diff),
-                max(0, min(formatted.length, it.selection.end + diff))
-            )
-        )
+    fun updateBitcoinAmount(value: TextFieldValue) {
+        textFiledValueBtc.value =
+            updateTextFieldModelWithCommas(textFiledValueBtc.value, value) { formatBtcString(it) }
 
         recalculateByBitcoin()
     }
@@ -252,18 +221,11 @@ class HomeViewModel @Inject constructor(
         getCoins()
     }
 
-    private fun updateShitcoinWithoutRecalculate(shitcoinIndex: Int, value: BigDecimal) {
-        val state = shitcoinInputsState[shitcoinIndex] ?: return
-        state.value = TextFieldValue(text = formatFiatShitcoin(value))
-    }
-
     fun updateShitcoin(shitcoinIndex: Int, input: TextFieldValue) {
         val state = shitcoinInputsState[shitcoinIndex] ?: return
-        state.value = input
+        state.value =
+            updateTextFieldModelWithCommas(state.value, input) { formatFiatShitcoinString(it) }
 
-        val value = parseBigDecimalFromString(input.text) ?: return
-
-        updateShitcoinWithoutRecalculate(shitcoinIndex, value)
         recalculateByShitcoin(shitcoinIndex)
     }
 }
