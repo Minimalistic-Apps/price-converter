@@ -98,7 +98,7 @@ fun TextInputShitCoin(
                 )
             ),
         colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.Gray,
+            textColor = MaterialTheme.colors.onBackground,
             backgroundColor = Color.Transparent,
             disabledTextColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
