@@ -1,7 +1,6 @@
 package com.minimalisticapps.priceconverter.presentation.home
 
 import android.app.Activity
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,11 +27,8 @@ import androidx.navigation.NavController
 import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
 import com.minimalisticapps.priceconverter.common.dialog.ShowProgressDialog
-import com.minimalisticapps.priceconverter.common.utils.PCSharedStorage
 import com.minimalisticapps.priceconverter.common.utils.showToast
-import com.minimalisticapps.priceconverter.common.utils.toFiatCoinsExchange
 import com.minimalisticapps.priceconverter.presentation.Screen
-import com.minimalisticapps.priceconverter.presentation.currencylist.viewmodels.CoinListViewModel
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.presentation.ui.item.ItemFiatCoin
@@ -61,9 +57,6 @@ fun HomeScreen(
     val isErrorShown = remember { mutableStateOf(false) }
     val isShownConfirmDialog = remember { mutableStateOf(false) }
     val selectedFiatCoin = remember { mutableStateOf(FiatCoinExchange("", "", "")) }
-    val coinListViewModel: CoinListViewModel = hiltViewModel()
-
-
 
     if (coinsState.error.isNotBlank() && !isErrorShown.value) {
         mContext.showToast(coinsState.error)
@@ -73,17 +66,6 @@ fun HomeScreen(
     if (coinsState.isLoading && isRefreshing == false)
         ShowProgressDialog()
 
-    // Default usd currency added once app launch
-    if (!PCSharedStorage.isUsdAddDefault()) {
-        val usdCurrency = coinsState.coins.filter {
-            it.name.lowercase().contains("US Dollar") ||
-                    it.code.lowercase().contains("USD".lowercase())
-        }.elementAtOrNull(0)
-        usdCurrency?.let {
-            coinListViewModel.insertFiatCoin(it.toFiatCoinsExchange())
-            PCSharedStorage.saveUsdAsDefault(true)
-        }
-    }
 
     Scaffold(
         modifier = Modifier
@@ -188,9 +170,7 @@ fun HomeScreen(
                                 .fillMaxWidth()
                                 .weight(3.0f)
                         ) {
-                            TextInputBtc(onValueChange = {
-
-                            })
+                            TextInputBtc()
                         }
 
                         Text(
@@ -224,10 +204,8 @@ fun HomeScreen(
                                             .bitPayExchangeRate
                                             .oneShitCoinValue
                                             ?.times(value)
-                                            .toString(),
-                                        true
+                                            .toString()
                                     )
-                                    homeViewModel.getFiatCoins()
                                 }
                             }
                         },

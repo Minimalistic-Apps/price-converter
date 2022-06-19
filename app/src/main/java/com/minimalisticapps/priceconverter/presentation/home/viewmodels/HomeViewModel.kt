@@ -152,17 +152,16 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun setTextFieldValueBtc(text: String, bool: Boolean = false) {
-        if (bool) {
-            val formatted = formatBtc(text.toBigDecimal())
-            _textFiledValueBtc.value = TextFieldValue(
-                formatted,
-                TextRange(formatted.length)
-            )
-        } else {
-            _textFiledValueBtc.value =
-                TextFieldValue(text, TextRange(text.length))
-        }
+    fun setTextFieldValueBtc(text: String) {
+        val formatted = formatBtc(text.toBigDecimal())
+        _textFiledValueBtc.value = TextFieldValue(
+            formatted,
+            TextRange(formatted.length)
+        )
+    }
+
+    fun setTextFieldValueBtc(textFieldValue: TextFieldValue) {
+        _textFiledValueBtc.value = textFieldValue
     }
 
     fun refreshData() {
