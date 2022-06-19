@@ -1,7 +1,6 @@
 package com.minimalisticapps.priceconverter.presentation.home
 
 import android.app.Activity
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,14 +24,13 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
 import com.minimalisticapps.priceconverter.common.dialog.ShowProgressDialog
-import com.minimalisticapps.priceconverter.common.utils.PCSharedStorage
 import com.minimalisticapps.priceconverter.common.utils.showToast
-import com.minimalisticapps.priceconverter.common.utils.toFiatCoinsExchange
 import com.minimalisticapps.priceconverter.presentation.Screen
-import com.minimalisticapps.priceconverter.presentation.currencylist.viewmodels.CoinListViewModel
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.presentation.ui.item.ItemFiatCoin
@@ -61,9 +59,6 @@ fun HomeScreen(
     val isErrorShown = remember { mutableStateOf(false) }
     val isShownConfirmDialog = remember { mutableStateOf(false) }
     val selectedFiatCoin = remember { mutableStateOf(FiatCoinExchange("", "", "")) }
-    val coinListViewModel: CoinListViewModel = hiltViewModel()
-
-
 
     if (coinsState.error.isNotBlank() && !isErrorShown.value) {
         mContext.showToast(coinsState.error)
@@ -73,17 +68,6 @@ fun HomeScreen(
     if (coinsState.isLoading && isRefreshing == false)
         ShowProgressDialog()
 
-    // Default usd currency added once app launch
-    if (!PCSharedStorage.isUsdAddDefault()) {
-        val usdCurrency = coinsState.coins.filter {
-            it.name.lowercase().contains("US Dollar") ||
-                    it.code.lowercase().contains("USD".lowercase())
-        }.elementAtOrNull(0)
-        usdCurrency?.let {
-            coinListViewModel.insertFiatCoin(it.toFiatCoinsExchange())
-            PCSharedStorage.saveUsdAsDefault(true)
-        }
-    }
 
     Scaffold(
         modifier = Modifier
@@ -171,37 +155,35 @@ fun HomeScreen(
                 )
             }
 
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(3.0f)
+                ) {
+                    TextInputBtc(onValueChange = {
+                        homeViewModel.getFiatCoins()
+                    })
+                }
+
+                Text(
+                    text = "BTC",
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Start,
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(start = 11.dp, end = 50.dp)
+                )
+            }
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(vertical = 20.dp)
             ) {
-                item {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 20.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(3.0f)
-                        ) {
-                            TextInputBtc(onValueChange = {
-
-                            })
-                        }
-
-                        Text(
-                            text = "BTC",
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Start,
-                            fontSize = 18.sp,
-                            modifier = Modifier.padding(start = 11.dp, end = 50.dp)
-                        )
-                    }
-                }
                 items(
                     items = fiatCoinsListState,
                     key = { pair ->

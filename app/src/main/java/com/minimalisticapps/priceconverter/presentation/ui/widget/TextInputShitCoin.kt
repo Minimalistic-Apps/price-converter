@@ -44,6 +44,10 @@ fun TextInputShitCoin(
         mutableStateOf(false)
     }
 
+    val count = remember {
+        mutableStateOf(0)
+    }
+
     if (viewModel.textFieldValueBtc.value.text.isNotEmpty() && !isFocused.value) {
         var string = viewModel.textFieldValueBtc.value.text.replace(",", "")
         val double = parseBigDecimalFromString(string)
@@ -51,12 +55,12 @@ fun TextInputShitCoin(
             string = double.toDouble().times(rate).toString()
             fiatCoinExchange.shitCoinValue = string.toSatsFormat()
             viewModel.updateFiatCoin(fiatCoinExchange)
-            searchText.value = TextFieldValue(
+            searchText.value = searchText.value.copy(
                 fiatCoinExchange.shitCoinValue,
                 selection = TextRange(fiatCoinExchange.shitCoinValue.length)
             )
         } else if (rate != null && rate == 0.0) {
-            searchText.value = TextFieldValue(
+            searchText.value = searchText.value.copy(
                 fiatCoinExchange.shitCoinValue,
                 selection = TextRange(fiatCoinExchange.shitCoinValue.length)
             )
@@ -64,7 +68,7 @@ fun TextInputShitCoin(
     } else if (viewModel.textFieldValueBtc.value.text.isEmpty()) {
         fiatCoinExchange.shitCoinValue = ""
         viewModel.updateFiatCoin(fiatCoinExchange)
-        searchText.value = TextFieldValue(
+        searchText.value = searchText.value.copy(
             fiatCoinExchange.shitCoinValue,
             selection = TextRange(fiatCoinExchange.shitCoinValue.length)
         )
@@ -77,10 +81,12 @@ fun TextInputShitCoin(
             .onFocusChanged {
                 isFocused.value = it.isFocused
                 if (it.isFocused) {
-                    searchText.value = TextFieldValue(
-                        text = fiatCoinExchange.shitCoinValue,
-                        selection = TextRange(0, fiatCoinExchange.shitCoinValue.length)
+                    searchText.value = searchText.value.copy(
+                        selection = TextRange(0, searchText.value.text.length)
                     )
+                    count.value = 1
+                } else {
+                    count.value = 0
                 }
             }
             .padding(start = 15.dp, end = 0.dp, top = 10.dp, bottom = 10.dp)
@@ -101,9 +107,9 @@ fun TextInputShitCoin(
         ),
         value = searchText.value,
         onValueChange = { textFieldValue ->
-            val text = textFieldValue.text
-            if (text != searchText.value.text) {
-                if (rate != null && rate != 0.0) {
+            if (rate != null && rate != 0.0) {
+                val text = textFieldValue.text
+                if (text != searchText.value.text) {
                     if (text.isNotEmpty()) {
                         var numberString = text.replace(",", "")
                         if (numberString.startsWith(".")) {
@@ -117,25 +123,22 @@ fun TextInputShitCoin(
                                     if (value.toString().split(".")[1].length < 4) {
                                         fiatCoinExchange.shitCoinValue = numberString
                                         viewModel.updateFiatCoin(fiatCoinExchange)
-                                        searchText.value = TextFieldValue(
-                                            fiatCoinExchange.shitCoinValue,
-                                            selection = TextRange(fiatCoinExchange.shitCoinValue.length)
+                                        searchText.value = textFieldValue.copy(
+                                            value.toString(),
+                                            TextRange(value.toString().length)
                                         )
                                         onValueChange(value.toString())
                                     }
                                 } else if (!numberString.contains(".")) {
                                     fiatCoinExchange.shitCoinValue = numberString
                                     viewModel.updateFiatCoin(fiatCoinExchange)
-                                    searchText.value = TextFieldValue(
-                                        fiatCoinExchange.shitCoinValue,
-                                        selection = TextRange(fiatCoinExchange.shitCoinValue.length)
-                                    )
+                                    searchText.value = textFieldValue
                                     onValueChange(value.toString())
                                 }
                             } else {
                                 fiatCoinExchange.shitCoinValue = numberString
                                 viewModel.updateFiatCoin(fiatCoinExchange)
-                                searchText.value = TextFieldValue(
+                                searchText.value = textFieldValue.copy(
                                     fiatCoinExchange.shitCoinValue,
                                     selection = TextRange(fiatCoinExchange.shitCoinValue.length)
                                 )
@@ -145,18 +148,16 @@ fun TextInputShitCoin(
                     } else {
                         fiatCoinExchange.shitCoinValue = textFieldValue.text
                         viewModel.updateFiatCoin(fiatCoinExchange)
-                        searchText.value = TextFieldValue(
+                        searchText.value = textFieldValue.copy(
                             fiatCoinExchange.shitCoinValue,
                             selection = TextRange(fiatCoinExchange.shitCoinValue.length)
                         )
                     }
-                } else {
-                    fiatCoinExchange.shitCoinValue = textFieldValue.text
-                    viewModel.updateFiatCoin(fiatCoinExchange)
-                    searchText.value = TextFieldValue(
-                        fiatCoinExchange.shitCoinValue,
-                        selection = TextRange(fiatCoinExchange.shitCoinValue.length)
-                    )
+
+                } else if (count.value == 1) {
+                    count.value = 0
+                } else if (count.value == 0) {
+                    searchText.value = textFieldValue
                 }
             }
         },
