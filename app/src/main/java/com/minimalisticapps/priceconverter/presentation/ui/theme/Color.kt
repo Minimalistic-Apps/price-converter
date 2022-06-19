@@ -14,3 +14,6 @@ val PrimaryColor = Color(0xFF087d89)
 val PrimaryVariantColor = Color(0xFF087d89)
 val OnBackgroundColor = Color(0xFFFFFFFF)
 val ErrorColor = Color(0xFFed2b2b)
+
+val FadedColorLight = Color(0xFF999999)
+val FadedColorDark = Color(0xFFCCCCCC)

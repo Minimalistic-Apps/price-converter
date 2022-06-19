@@ -1,20 +1,14 @@
 package com.minimalisticapps.priceconverter.presentation.ui.widget
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -74,7 +68,7 @@ fun TextInputShitCoin(
         )
     }
 
-    OutlinedTextField(
+    TextField(
         modifier =
         Modifier
             .fillMaxWidth()
@@ -89,22 +83,7 @@ fun TextInputShitCoin(
                     count.value = 0
                 }
             }
-            .padding(start = 15.dp, end = 0.dp, top = 10.dp, bottom = 10.dp)
-            .border(
-                width = 1.dp,
-                shape = RoundedCornerShape(10.dp),
-                brush = Brush.horizontalGradient(
-                    listOf(MaterialTheme.colors.onBackground, MaterialTheme.colors.onBackground)
-                )
-            ),
-        colors = TextFieldDefaults.textFieldColors(
-            textColor = MaterialTheme.colors.onBackground,
-            backgroundColor = Color.Transparent,
-            disabledTextColor = Color.Transparent,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent
-        ),
+            .padding(start = 15.dp, end = 0.dp, top = 10.dp, bottom = 10.dp),
         value = searchText.value,
         onValueChange = { textFieldValue ->
             if (rate != null && rate != 0.0) {

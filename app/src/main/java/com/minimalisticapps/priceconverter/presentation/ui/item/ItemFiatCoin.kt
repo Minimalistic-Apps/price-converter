@@ -3,6 +3,7 @@ package com.minimalisticapps.priceconverter.presentation.ui.item
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -11,10 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.minimalisticapps.priceconverter.R
+import com.minimalisticapps.priceconverter.presentation.ui.theme.FadedColorDark
+import com.minimalisticapps.priceconverter.presentation.ui.theme.FadedColorLight
 import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputShitCoin
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
@@ -54,8 +57,7 @@ fun ItemFiatCoin(
             }
 
             Text(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
                 text = bitPayCoinWithFiatCoin.fiatCoinExchange.code,
                 modifier = Modifier
                     .padding(start = 25.dp)
@@ -73,13 +75,14 @@ fun ItemFiatCoin(
         val btcValue =
             bitPayCoinWithFiatCoin.bitPayExchangeRate.oneShitCoinValueString
         Text(
+            color = if (isSystemInDarkTheme()) FadedColorDark else FadedColorLight,
+            fontFamily = FontFamily.Monospace,
             text = "1 ${bitPayCoinWithFiatCoin.fiatCoinExchange.code} = $btcValue BTC",
             style = MaterialTheme.typography.body1,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Medium,
+            fontSize = 13.sp,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 3.dp, horizontal = 40.dp)
+                .padding(vertical = 1.dp, horizontal = 40.dp)
         )
     }
 }

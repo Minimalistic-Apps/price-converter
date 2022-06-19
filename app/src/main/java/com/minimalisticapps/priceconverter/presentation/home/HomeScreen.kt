@@ -32,6 +32,8 @@ import com.minimalisticapps.priceconverter.presentation.Screen
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.presentation.ui.item.ItemFiatCoin
+import com.minimalisticapps.priceconverter.presentation.ui.theme.ErrorColor
+import com.minimalisticapps.priceconverter.presentation.ui.theme.SecondaryColorForDark
 import com.minimalisticapps.priceconverter.presentation.ui.widget.SetToolbar
 import com.minimalisticapps.priceconverter.presentation.ui.widget.ShowLinearIndicator
 import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputBtc
@@ -52,7 +54,7 @@ fun HomeScreen(
     val timeAgo = homeViewModel.timeAgoState.value
     val isLongerThan1hour = homeViewModel.isLongerThan1hour.value
     val isRefreshing by homeViewModel.isRefreshing.observeAsState()
-    val colorTimeAgo = if (isLongerThan1hour) Color.Red else Color.Green
+    val colorTimeAgo = if (isLongerThan1hour) ErrorColor else SecondaryColorForDark
     val fiatCoinsListState = homeViewModel.fiatCoinsListState.value
     val isErrorShown = remember { mutableStateOf(false) }
     val isShownConfirmDialog = remember { mutableStateOf(false) }
@@ -138,7 +140,7 @@ fun HomeScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 5.dp),
+                    .padding(vertical = 0.dp),
                 horizontalArrangement = Arrangement.End,
             ) {
                 Text(
@@ -156,7 +158,7 @@ fun HomeScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(vertical = 20.dp)
+                    .padding(vertical = 0.dp)
             ) {
                 item {
                     Row(
@@ -175,7 +177,6 @@ fun HomeScreen(
 
                         Text(
                             text = "BTC",
-                            fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Start,
                             fontSize = 18.sp,
                             modifier = Modifier.padding(start = 11.dp, end = 50.dp)
