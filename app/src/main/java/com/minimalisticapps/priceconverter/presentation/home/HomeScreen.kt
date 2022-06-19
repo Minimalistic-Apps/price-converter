@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,8 +37,6 @@ import com.minimalisticapps.priceconverter.presentation.ui.theme.SecondaryColorF
 import com.minimalisticapps.priceconverter.presentation.ui.widget.SetToolbar
 import com.minimalisticapps.priceconverter.presentation.ui.widget.ShowLinearIndicator
 import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputBtc
-import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
-import java.math.BigDecimal
 
 var coinsStateValue: CoinsState = CoinsState()
 
@@ -56,10 +53,10 @@ fun HomeScreen(
     val isLongerThan1hour = homeViewModel.isLongerThan1hour.value
     val isRefreshing by homeViewModel.isRefreshing.observeAsState()
     val colorTimeAgo = if (isLongerThan1hour) ErrorColor else SecondaryColorForDark
-    val fiatCoinsListState = homeViewModel.fiatCoinsListState.value
+    val fiatCoinsListState = homeViewModel.shitcoinListState.value
     val isErrorShown = remember { mutableStateOf(false) }
     val isShownConfirmDialog = remember { mutableStateOf(false) }
-    val selectedFiatCoin = remember { mutableStateOf(FiatCoinExchange("", "", "")) }
+    val selectedFiatCoin = remember { mutableStateOf<Int?>(null) }
 
     if (coinsState.error.isNotBlank() && !isErrorShown.value) {
         mContext.showToast(coinsState.error)
@@ -100,7 +97,7 @@ fun HomeScreen(
                 ConfirmationDialog(
                     onPositiveClick = {
                         isShownConfirmDialog.value = it
-                        homeViewModel.deleteFiatCoin(fiatCoinExchange = selectedFiatCoin.value)
+                        homeViewModel.deleteFiatCoin(index = selectedFiatCoin.value)
                     },
                     onDismiss = {
                         isShownConfirmDialog.value = it
@@ -190,22 +187,16 @@ fun HomeScreen(
                         pair.first
                     }
                 ) { pair ->
+                    val state = homeViewModel.shitcoinInputsState[pair.first]!!
+
                     ItemFiatCoin(
-                        bitPayCoinWithFiatCoin = pair.second,
+                        index = pair.first,
+                        code = pair.second.fiatCoinExchange.code,
+                        oneUnitOfShitcoinInBTC = pair.second.bitPayExchangeRate.oneUnitOfShitcoinInBTC,
+                        state = state,
+                        onValueChange = { homeViewModel.updateShitcoin(pair.first, it) },
                         onLongPress = {
 //                                          work on orderable
-                        },
-                        onValueChanged = {
-                            val oneShitCoinValue = pair.second.bitPayExchangeRate.oneShitCoinValue
-                            pair.second.fiatCoinExchange.shitCoinValue = it?.toPlainString() ?: ""
-                            homeViewModel.updateFiatCoin(pair.second.fiatCoinExchange)
-
-                            if (it != null && it > BigDecimal.ZERO) {
-                                val bitcoinPrice = oneShitCoinValue?.multiply(it)
-                                homeViewModel.setTextFieldValueBtc(
-                                    TextFieldValue(text = bitcoinPrice?.toPlainString() ?: "")
-                                )
-                            }
                         },
                         onDeleteClick = {
                             selectedFiatCoin.value = it

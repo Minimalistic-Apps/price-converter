@@ -27,8 +27,5 @@ data class BitPayExchangeRate(
     val unit: String,
 
     @ColumnInfo(name = "one_shit_coin_value")
-    var oneShitCoinValue: BigDecimal?,
-
-    @ColumnInfo(name = "one_shit_coin_value_string")
-    var oneShitCoinValueString: String
+    var oneUnitOfShitcoinInBTC: BigDecimal?,
 )

@@ -24,7 +24,7 @@ fun TextInputBtc(
             .padding(start = 15.dp, end = 15.dp)
             .onFocusSelectAll(homeViewModel.textFiledValueBtc),
         value = homeViewModel.textFiledValueBtc.value,
-        onValueChange = homeViewModel::setTextFieldValueBtc,
+        onValueChange = homeViewModel::updateBitcoinAmount,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         singleLine = true,
     )
