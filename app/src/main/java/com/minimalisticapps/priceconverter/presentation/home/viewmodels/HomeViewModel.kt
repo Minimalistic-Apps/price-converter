@@ -55,7 +55,7 @@ class HomeViewModel @Inject constructor(
     private val _isLongerThan1hour = mutableStateOf(false)
     private val _fiatCoinsList: MutableState<List<Pair<Int, BitPayCoinWithFiatCoin>>> =
         mutableStateOf(emptyList())
-    private var _textFiledValueBtc: MutableState<TextFieldValue> = mutableStateOf(TextFieldValue())
+    var _textFiledValueBtc: MutableState<TextFieldValue> = mutableStateOf(TextFieldValue())
 
 
     //    States

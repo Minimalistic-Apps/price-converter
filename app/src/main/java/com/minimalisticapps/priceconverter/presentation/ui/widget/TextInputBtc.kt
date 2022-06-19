@@ -1,9 +1,7 @@
 package com.minimalisticapps.priceconverter.presentation.ui.widget
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -11,20 +9,15 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.minimalisticapps.priceconverter.common.utils.parseBigDecimalFromString
 import com.minimalisticapps.priceconverter.presentation.PriceConverterCornerShape
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
+
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -32,31 +25,11 @@ fun TextInputBtc(
     homeViewModel: HomeViewModel = hiltViewModel(),
     onValueChange: () -> Unit
 ) {
-    val searchText = remember {
-        mutableStateOf(TextFieldValue())
-    }
-    val isFocused = remember {
-        mutableStateOf(false)
-    }
-    if (!isFocused.value) {
-        searchText.value = homeViewModel.textFieldValueBtc.value
-    }
-
-
     OutlinedTextField(
-        modifier =
-        Modifier
+        modifier = Modifier
+            .onFocusSelectAll(homeViewModel._textFiledValueBtc)
             .fillMaxWidth()
             .padding(start = 15.dp, end = 15.dp)
-            .onFocusChanged {
-                isFocused.value = it.isFocused
-                if (isFocused.value) {
-                    searchText.value = TextFieldValue(
-                        text = homeViewModel.textFieldValueBtc.value.text,
-                        selection = TextRange(0, homeViewModel.textFieldValueBtc.value.text.length)
-                    )
-                }
-            }
             .border(
                 width = 1.dp,
                 shape = PriceConverterCornerShape,
@@ -72,39 +45,12 @@ fun TextInputBtc(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent
         ),
-        value = searchText.value,
-        onValueChange = { textFieldValue ->
-            if (searchText.value.text != textFieldValue.text) {
-                isFocused.value = false
-                val text = textFieldValue.text
-                if (text.isNotEmpty()) {
-                    var numberString = text.replace(",", "")
-                    if (numberString.startsWith(".")) {
-                        numberString = "0$numberString"
-                    }
-                    val value = parseBigDecimalFromString(numberString)
-                    if (value != null) {
-                        if (numberString == value.toPlainString()) {
-                            if (value.toString().contains(".") && value.toString()
-                                    .split(".").size == 2
-                            ) {
-                                if (value.toString().split(".")[1].length < 9) {
-                                    homeViewModel.setTextFieldValueBtc(value.toString(), true)
-                                    onValueChange()
-                                }
-                            } else if (!value.toString().contains(".")) {
-                                homeViewModel.setTextFieldValueBtc(value.toString(), true)
-                                onValueChange()
-                            }
-                        } else {
-                            homeViewModel.setTextFieldValueBtc(numberString, false)
-                            onValueChange()
-                        }
-                    }
-                } else {
-                    homeViewModel.setTextFieldValueBtc(text, false)
-                    onValueChange()
-                }
+        value = homeViewModel._textFiledValueBtc.value,
+        onValueChange = {
+            val hasTextChanged = it.text != homeViewModel._textFiledValueBtc.value.text
+            homeViewModel._textFiledValueBtc.value = it
+            if (hasTextChanged) {
+                onValueChange()
             }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
