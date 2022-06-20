@@ -152,6 +152,13 @@ class HomeViewModel @Inject constructor(
     }
 
     fun updateBitcoinAmount(value: TextFieldValue) {
+        // if only selection changed don't do any magic, just change selection
+        // do NOT recalculate, it would cumulate rounding error
+        if (textFiledValueBtc.value.text == value.text) {
+            textFiledValueBtc.value = value
+            return
+        }
+
         textFiledValueBtc.value =
             updateTextFieldModelWithCommas(textFiledValueBtc.value, value) { formatBtcString(it) }
 
@@ -223,6 +230,14 @@ class HomeViewModel @Inject constructor(
 
     fun updateShitcoin(shitcoinIndex: Int, input: TextFieldValue) {
         val state = shitcoinInputsState[shitcoinIndex] ?: return
+
+        // if only selection changed don't do any magic, just change selection
+        // do NOT recalculate, it would cumulate rounding error
+        if (state.value.text == input.text) {
+            state.value = input
+            return
+        }
+
         state.value =
             updateTextFieldModelWithCommas(state.value, input) { formatFiatShitcoinString(it) }
 
