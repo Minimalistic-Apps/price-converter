@@ -34,17 +34,18 @@ fun updateTextFieldModelWithCommas(
 
     // When actual number is changed, we have to adjust the selection
     // in case some comma was added
-    val commasBefore = new.text.count { it == ',' }
+    val commasBeforeInFrontOfCursor = new.text.substring(0, new.selection.start).count { it == ',' }
     val formatted = formatFunction(new.text)
-    val commasAfter = formatted.count { it == ',' }
+    val commasAfterInFrontOfCursor =
+        formatted.substring(0, min(formatted.length, new.selection.start + 1)).count { it == ',' }
 
-    val diff = commasAfter - commasBefore
+    val moveCursorBy = commasAfterInFrontOfCursor - commasBeforeInFrontOfCursor
 
     return TextFieldValue(
         text = formatted,
         selection = TextRange(
-            max(0, new.selection.start + diff),
-            max(0, min(formatted.length, new.selection.end + diff))
+            max(0, new.selection.start + moveCursorBy),
+            max(0, min(formatted.length, new.selection.end + moveCursorBy))
         )
     )
 }
