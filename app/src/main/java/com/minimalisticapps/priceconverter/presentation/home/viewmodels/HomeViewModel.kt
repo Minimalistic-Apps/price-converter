@@ -51,7 +51,9 @@ class HomeViewModel @Inject constructor(
         mutableStateOf(emptyList())
     var textFiledValueBtc: MutableState<TextFieldValue> = mutableStateOf(TextFieldValue())
 
-    var shitcoinInputsState: Map<Int, MutableState<TextFieldValue>> = emptyMap()
+    var shitcoinInputsState: Map<String, MutableState<TextFieldValue>> = emptyMap()
+
+    var selectedCoin: MutableState<String> = mutableStateOf("BTC")
 
     //    States
     val state: State<CoinsState> = _state
@@ -130,13 +132,29 @@ class HomeViewModel @Inject constructor(
     fun getFiatCoins() {
         viewModelScope.launch {
             getFiatCoinUseCase().collect { it ->
-                var position = 0
-                _shitcoinListState.value = it.map { bitPayCoinWithFiatCoin ->
-                    Pair(position++, bitPayCoinWithFiatCoin)
+                val listStateValue: MutableList<Pair<Int, BitPayCoinWithFiatCoin>> = mutableListOf()
+                val shitcoinInputsStateValue: MutableMap<String, MutableState<TextFieldValue>> =
+                    mutableMapOf()
+
+                it.forEachIndexed { index, shitcoin ->
+                    listStateValue.add(Pair(index, shitcoin))
+
+                    val code = shitcoin.fiatCoinExchange.code
+                    shitcoinInputsStateValue[code] = shitcoinInputsState[code]
+                        ?: mutableStateOf(TextFieldValue())
                 }
 
-                shitcoinInputsState = _shitcoinListState.value.associate { it2 ->
-                    it2.first to mutableStateOf(TextFieldValue())
+                _shitcoinListState.value = listStateValue
+                shitcoinInputsState = shitcoinInputsStateValue
+
+                if (selectedCoin.value == "BTC") {
+                    recalculateByBitcoin()
+                } else {
+                    val index =
+                        _shitcoinListState.value.find { it2 -> it2.second.fiatCoinExchange.code == selectedCoin.value }?.first
+                    if (index != null) {
+                        recalculateByShitcoin(index)
+                    }
                 }
             }
 
@@ -172,7 +190,8 @@ class HomeViewModel @Inject constructor(
     private fun recalculateByShitcoin(shitcoinIndex: Int) {
         val shitcoin =
             shitcoinListState.value.find { it.first == shitcoinIndex }?.second ?: return
-        val shitcoinInput = shitcoinInputsState[shitcoinIndex]?.value?.text ?: return
+        val shitcoinInput =
+            shitcoinInputsState[shitcoin.fiatCoinExchange.code]?.value?.text ?: return
 
         val shitcoinAmount =
             parseBigDecimalFromString(shitcoinInput) ?: return
@@ -195,7 +214,7 @@ class HomeViewModel @Inject constructor(
                     )
                 )
 
-                shitcoinInputsState[it.first]?.value =
+                shitcoinInputsState[it.second.fiatCoinExchange.code]?.value =
                     TextFieldValue(text = formatFiatShitcoin(newValue))
             }
         }
@@ -215,7 +234,7 @@ class HomeViewModel @Inject constructor(
                     RoundingMode.HALF_UP
                 )
 
-                shitcoinInputsState[it.first]?.value =
+                shitcoinInputsState[it.second.fiatCoinExchange.code]?.value =
                     TextFieldValue(text = formatFiatShitcoin(newAmount))
             }
         }
@@ -229,7 +248,8 @@ class HomeViewModel @Inject constructor(
     }
 
     fun updateShitcoin(shitcoinIndex: Int, input: TextFieldValue) {
-        val state = shitcoinInputsState[shitcoinIndex] ?: return
+        val code = _shitcoinListState.value[shitcoinIndex].second.fiatCoinExchange.code
+        val state = shitcoinInputsState[code] ?: return
 
         // if only selection changed don't do any magic, just change selection
         // do NOT recalculate, it would cumulate rounding error

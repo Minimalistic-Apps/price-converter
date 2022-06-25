@@ -187,16 +187,20 @@ fun HomeScreen(
                         pair.first
                     }
                 ) { pair ->
-                    val state = homeViewModel.shitcoinInputsState[pair.first]!!
+                    val code = pair.second.fiatCoinExchange.code
+                    val state = homeViewModel.shitcoinInputsState[code]!!
 
                     ItemFiatCoin(
                         index = pair.first,
-                        code = pair.second.fiatCoinExchange.code,
+                        code = code,
                         oneUnitOfShitcoinInBTC = pair.second.bitPayExchangeRate.oneUnitOfShitcoinInBTC,
                         state = state,
                         onValueChange = { homeViewModel.updateShitcoin(pair.first, it) },
                         onLongPress = {
 //                                          work on orderable
+                        },
+                        onSelected = {
+                            homeViewModel.selectedCoin.value = code
                         },
                         onDeleteClick = {
                             selectedFiatCoin.value = it

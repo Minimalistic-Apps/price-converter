@@ -33,6 +33,7 @@ fun ItemFiatCoin(
     onValueChange: (TextFieldValue) -> Unit,
     onLongPress: () -> Unit,
     onDeleteClick: (index: Int) -> Unit,
+    onSelected: () -> Unit
 ) {
     Column {
         Row(
@@ -52,7 +53,7 @@ fun ItemFiatCoin(
                     .fillMaxWidth()
                     .weight(3.0f)
             ) {
-                TextInputShitCoin(state, onValueChange)
+                TextInputShitCoin(state, onValueChange, onSelected)
             }
 
             Text(

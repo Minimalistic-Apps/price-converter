@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,7 +23,12 @@ fun TextInputBtc(
         Modifier
             .fillMaxWidth()
             .padding(start = 15.dp, end = 15.dp)
-            .onFocusSelectAll(homeViewModel.textFiledValueBtc),
+            .onFocusSelectAll(homeViewModel.textFiledValueBtc)
+            .onFocusEvent {
+                if (it.isFocused) {
+                    homeViewModel.selectedCoin.value = "BTC"
+                }
+            },
         value = homeViewModel.textFiledValueBtc.value,
         onValueChange = homeViewModel::updateBitcoinAmount,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

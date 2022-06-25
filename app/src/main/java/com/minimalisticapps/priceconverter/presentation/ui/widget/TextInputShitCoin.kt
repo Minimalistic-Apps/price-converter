@@ -7,6 +7,7 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -15,12 +16,18 @@ import androidx.compose.ui.unit.dp
 fun TextInputShitCoin(
     state: MutableState<TextFieldValue>,
     onValueChange: (TextFieldValue) -> Unit,
+    onSelected: () -> Unit
 ) {
     TextField(
         modifier =
         Modifier
             .fillMaxWidth()
             .onFocusSelectAll(state)
+            .onFocusEvent {
+                if (it.isFocused) {
+                    onSelected()
+                }
+            }
             .padding(start = 15.dp, end = 0.dp, top = 10.dp, bottom = 10.dp),
         value = state.value,
         onValueChange = onValueChange,
