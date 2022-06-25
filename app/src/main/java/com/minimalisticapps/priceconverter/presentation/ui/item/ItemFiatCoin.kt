@@ -8,26 +8,32 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.presentation.ui.theme.FadedColorDark
 import com.minimalisticapps.priceconverter.presentation.ui.theme.FadedColorLight
 import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputShitCoin
-import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
-import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
+import com.minimalisticapps.priceconverter.presentation.ui.widget.formatUnitOfShitcoinPrice
+import java.math.BigDecimal
 
 @Composable
 fun ItemFiatCoin(
-    bitPayCoinWithFiatCoin: BitPayCoinWithFiatCoin,
-    onValueChanged: (BitPayCoinWithFiatCoin, Double) -> Unit,
+    index: Int,
+    code: String,
+    oneUnitOfShitcoinInBTC: BigDecimal?,
+    state: MutableState<TextFieldValue>,
+    onValueChange: (TextFieldValue) -> Unit,
     onLongPress: () -> Unit,
-    onDeleteClick: (FiatCoinExchange) -> Unit,
+    onDeleteClick: (index: Int) -> Unit,
+    onSelected: () -> Unit
 ) {
     Column {
         Row(
@@ -47,18 +53,12 @@ fun ItemFiatCoin(
                     .fillMaxWidth()
                     .weight(3.0f)
             ) {
-                TextInputShitCoin(
-                    onValueChange = { text ->
-                        onValueChanged(bitPayCoinWithFiatCoin, text.toDouble())
-                    },
-                    rate = bitPayCoinWithFiatCoin.bitPayExchangeRate.rate,
-                    fiatCoinExchange = bitPayCoinWithFiatCoin.fiatCoinExchange
-                )
+                TextInputShitCoin(state, onValueChange, onSelected)
             }
 
             Text(
                 fontSize = 18.sp,
-                text = bitPayCoinWithFiatCoin.fiatCoinExchange.code,
+                text = code,
                 modifier = Modifier
                     .padding(start = 25.dp)
                     .width(45.dp)
@@ -69,15 +69,15 @@ fun ItemFiatCoin(
                 "content description",
                 modifier = Modifier
                     .padding(start = 0.dp, end = 15.dp)
-                    .clickable { onDeleteClick(bitPayCoinWithFiatCoin.fiatCoinExchange) }
+                    .clickable { onDeleteClick(index) }
             )
         }
-        val btcValue =
-            bitPayCoinWithFiatCoin.bitPayExchangeRate.oneShitCoinValueString
+        val unitOfShitcoinInBtcFormatted =
+            formatUnitOfShitcoinPrice(oneUnitOfShitcoinInBTC)
         Text(
             color = if (isSystemInDarkTheme()) FadedColorDark else FadedColorLight,
             fontFamily = FontFamily.Monospace,
-            text = "1 ${bitPayCoinWithFiatCoin.fiatCoinExchange.code} = $btcValue BTC",
+            text = "1 $code = $unitOfShitcoinInBtcFormatted BTC",
             style = MaterialTheme.typography.body1,
             fontSize = 13.sp,
             modifier = Modifier

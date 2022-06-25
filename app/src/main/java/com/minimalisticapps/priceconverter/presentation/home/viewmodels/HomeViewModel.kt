@@ -1,34 +1,29 @@
 package com.minimalisticapps.priceconverter.presentation.home.viewmodels
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.minimalisticapps.priceconverter.common.Resource
-import com.minimalisticapps.priceconverter.common.utils.PCSharedStorage
-import com.minimalisticapps.priceconverter.common.utils.formatBtc
-import com.minimalisticapps.priceconverter.common.utils.isDiffLongerThat1hours
-import com.minimalisticapps.priceconverter.common.utils.timeToTimeAgo
+import com.minimalisticapps.priceconverter.common.utils.*
 import com.minimalisticapps.priceconverter.domain.usecase.DeleteUseCase
 import com.minimalisticapps.priceconverter.domain.usecase.GetCoinsUseCase
 import com.minimalisticapps.priceconverter.domain.usecase.GetFiatCoinsUseCase
-import com.minimalisticapps.priceconverter.domain.usecase.UpdateFiatCoinUseCase
+import com.minimalisticapps.priceconverter.domain.usecase.PRECISION
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
-import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 import javax.inject.Inject
 
@@ -36,7 +31,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getCoinUseCase: GetCoinsUseCase,
     private val getFiatCoinUseCase: GetFiatCoinsUseCase,
-    private val updateFiatCoinUseCase: UpdateFiatCoinUseCase,
     private val deleteUseCase: DeleteUseCase,
     application: Application
 ) : AndroidViewModel(application) {
@@ -53,18 +47,20 @@ class HomeViewModel @Inject constructor(
     private val _state = mutableStateOf(CoinsState())
     private val _timeAgoState = mutableStateOf("")
     private val _isLongerThan1hour = mutableStateOf(false)
-    private val _fiatCoinsList: MutableState<List<Pair<Int, BitPayCoinWithFiatCoin>>> =
+    private val _shitcoinListState: MutableState<List<Pair<Int, BitPayCoinWithFiatCoin>>> =
         mutableStateOf(emptyList())
-    private var _textFiledValueBtc: MutableState<TextFieldValue> = mutableStateOf(TextFieldValue())
+    var textFiledValueBtc: MutableState<TextFieldValue> = mutableStateOf(TextFieldValue())
 
+    var shitcoinInputsState: Map<String, MutableState<TextFieldValue>> = emptyMap()
+
+    var selectedCoin: MutableState<String> = mutableStateOf("BTC")
 
     //    States
     val state: State<CoinsState> = _state
-    val fiatCoinsListState: State<List<Pair<Int, BitPayCoinWithFiatCoin>>> = _fiatCoinsList
+    val shitcoinListState: State<List<Pair<Int, BitPayCoinWithFiatCoin>>> = _shitcoinListState
     var isRefreshing: LiveData<Boolean> = _isRefreshing
     val timeAgoState: State<String> = _timeAgoState
     val isLongerThan1hour: State<Boolean> = _isLongerThan1hour
-    val textFieldValueBtc: State<TextFieldValue> = _textFiledValueBtc
 
     private val updateTextTask = object : Runnable {
         override fun run() {
@@ -98,7 +94,6 @@ class HomeViewModel @Inject constructor(
 
     //    function for getting or inserting coins
     @OptIn(InternalCoroutinesApi::class)
-    @SuppressLint("RestrictedApi")
     fun getCoins() {
         viewModelScope.launch {
             getCoinUseCase().collect { result ->
@@ -136,32 +131,114 @@ class HomeViewModel @Inject constructor(
     //    function for getting fiat coins
     fun getFiatCoins() {
         viewModelScope.launch {
-            getFiatCoinUseCase().collect {
-                var position = -1
-                _fiatCoinsList.value = it.map { bitPayCoinWithFiatCoin ->
-                    Pair(position++, bitPayCoinWithFiatCoin)
+            getFiatCoinUseCase().collect { it ->
+                val listStateValue: MutableList<Pair<Int, BitPayCoinWithFiatCoin>> = mutableListOf()
+                val shitcoinInputsStateValue: MutableMap<String, MutableState<TextFieldValue>> =
+                    mutableMapOf()
+
+                it.forEachIndexed { index, shitcoin ->
+                    listStateValue.add(Pair(index, shitcoin))
+
+                    val code = shitcoin.fiatCoinExchange.code
+                    shitcoinInputsStateValue[code] = shitcoinInputsState[code]
+                        ?: mutableStateOf(TextFieldValue())
+                }
+
+                _shitcoinListState.value = listStateValue
+                shitcoinInputsState = shitcoinInputsStateValue
+
+                if (selectedCoin.value == "BTC") {
+                    recalculateByBitcoin()
+                } else {
+                    val index =
+                        _shitcoinListState.value.find { it2 -> it2.second.fiatCoinExchange.code == selectedCoin.value }?.first
+                    if (index != null) {
+                        recalculateByShitcoin(index)
+                    }
                 }
             }
 
         }
     }
 
-    fun deleteFiatCoin(fiatCoinExchange: FiatCoinExchange) {
+    fun deleteFiatCoin(index: Int?) {
+        val shitcoin = _shitcoinListState.value.find { it.first == index } ?: return
+
         viewModelScope.launch {
-            deleteUseCase.invoke(fiatCoinExchange)
+            deleteUseCase.invoke(shitcoin.second.fiatCoinExchange)
         }
     }
 
-    fun setTextFieldValueBtc(text: String) {
-        val formatted = formatBtc(text.toBigDecimal())
-        _textFiledValueBtc.value = TextFieldValue(
-            formatted,
-            TextRange(formatted.length)
-        )
+    fun updateBitcoinAmount(value: TextFieldValue) {
+        // if only selection changed don't do any magic, just change selection
+        // do NOT recalculate, it would cumulate rounding error
+        if (textFiledValueBtc.value.text == value.text) {
+            textFiledValueBtc.value = value
+            return
+        }
+
+        textFiledValueBtc.value =
+            updateTextFieldModelWithCommas(textFiledValueBtc.value, value) { formatBtcString(it) }
+
+        recalculateByBitcoin()
     }
 
-    fun setTextFieldValueBtc(textFieldValue: TextFieldValue) {
-        _textFiledValueBtc.value = textFieldValue
+    private fun updateBitcoinAmountWithoutRecalculate(value: BigDecimal) {
+        textFiledValueBtc.value = TextFieldValue(text = formatBtc(value))
+    }
+
+    private fun recalculateByShitcoin(shitcoinIndex: Int) {
+        val shitcoin =
+            shitcoinListState.value.find { it.first == shitcoinIndex }?.second ?: return
+        val shitcoinInput =
+            shitcoinInputsState[shitcoin.fiatCoinExchange.code]?.value?.text ?: return
+
+        val shitcoinAmount =
+            parseBigDecimalFromString(shitcoinInput) ?: return
+        val oneUnitOfShitcoinInBTC =
+            shitcoin.bitPayExchangeRate.oneUnitOfShitcoinInBTC ?: return
+        val bitcoinPrice = oneUnitOfShitcoinInBTC.multiply(shitcoinAmount)
+        updateBitcoinAmountWithoutRecalculate(bitcoinPrice)
+
+
+        shitcoinListState.value.forEach {
+            if (shitcoinIndex != it.first) {
+                val itOneUnitOfShitcoinInBtc =
+                    it.second.bitPayExchangeRate.oneUnitOfShitcoinInBTC ?: return
+
+                val newValue = shitcoinAmount.multiply(
+                    oneUnitOfShitcoinInBTC.divide(
+                        itOneUnitOfShitcoinInBtc,
+                        PRECISION,
+                        RoundingMode.HALF_UP
+                    )
+                )
+
+                shitcoinInputsState[it.second.fiatCoinExchange.code]?.value =
+                    TextFieldValue(text = formatFiatShitcoin(newValue))
+            }
+        }
+    }
+
+    private fun recalculateByBitcoin() {
+        val amountBitcoin = parseBigDecimalFromString(textFiledValueBtc.value.text) ?: return
+
+        shitcoinListState.value.forEach {
+            val itOneUnitOfShitcoinInBtc =
+                it.second.bitPayExchangeRate.oneUnitOfShitcoinInBTC
+
+            if (itOneUnitOfShitcoinInBtc != null) {
+                val newAmount = amountBitcoin.divide(
+                    itOneUnitOfShitcoinInBtc,
+                    PRECISION,
+                    RoundingMode.HALF_UP
+                )
+
+                shitcoinInputsState[it.second.fiatCoinExchange.code]?.value =
+                    TextFieldValue(text = formatFiatShitcoin(newAmount))
+            }
+        }
+
     }
 
     fun refreshData() {
@@ -170,15 +247,20 @@ class HomeViewModel @Inject constructor(
         getCoins()
     }
 
-    fun setBtcSelection() {
-        _textFiledValueBtc.value = _textFiledValueBtc.value.copy(
-            selection = TextRange(0, _textFiledValueBtc.value.text.length)
-        )
-    }
+    fun updateShitcoin(shitcoinIndex: Int, input: TextFieldValue) {
+        val code = _shitcoinListState.value[shitcoinIndex].second.fiatCoinExchange.code
+        val state = shitcoinInputsState[code] ?: return
 
-    fun updateFiatCoin(fiatCoinExchange: FiatCoinExchange) {
-        viewModelScope.launch(Dispatchers.IO) {
-            updateFiatCoinUseCase.invoke(fiatCoinExchange)
+        // if only selection changed don't do any magic, just change selection
+        // do NOT recalculate, it would cumulate rounding error
+        if (state.value.text == input.text) {
+            state.value = input
+            return
         }
+
+        state.value =
+            updateTextFieldModelWithCommas(state.value, input) { formatFiatShitcoinString(it) }
+
+        recalculateByShitcoin(shitcoinIndex)
     }
 }

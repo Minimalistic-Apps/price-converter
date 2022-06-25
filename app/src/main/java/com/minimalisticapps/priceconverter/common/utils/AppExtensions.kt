@@ -13,7 +13,6 @@ import com.minimalisticapps.priceconverter.common.utils.AppConstants.BIT_COIN_PR
 import com.minimalisticapps.priceconverter.data.remote.dto.BitPayExchangeRate
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 import java.math.BigDecimal
-import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
@@ -90,7 +89,12 @@ fun formatBtc(value: BigDecimal?): String {
         return ""
     }
 
-    val s = value.toPlainString()
+    return formatBtcString(value.toPlainString())
+}
+
+fun formatBtcString(input: String): String {
+    val s = input.replace(",", "")
+
     var result = ""
     var dot = false
     var depth = 0
@@ -114,6 +118,23 @@ fun formatBtc(value: BigDecimal?): String {
     }
 
     return result
+}
+
+fun formatFiatShitcoinString(input: String): String {
+    if (input.trim() == "." || input.trim() == "") {
+        return input
+    }
+
+    val parts = input.replace(",", "").split('.')
+    val beforeDot = parts[0].reversed().chunked(3).joinToString(",").reversed()
+    val afterDot =
+        if (parts.size > 1) if (parts[1].length > 3) parts[1].substring(0, 3) else parts[1] else ""
+
+    return beforeDot + (if (afterDot.isNotEmpty() || input.contains('.')) ".$afterDot" else "")
+}
+
+fun formatFiatShitcoin(input: BigDecimal): String {
+    return formatFiatShitcoinString(input.toPlainString())
 }
 
 fun parseBigDecimalFromString(input: String): BigDecimal? {
