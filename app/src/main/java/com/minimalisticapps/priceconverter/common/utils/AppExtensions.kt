@@ -93,31 +93,32 @@ fun formatBtc(value: BigDecimal?): String {
 }
 
 fun formatBtcString(input: String): String {
-    val s = input.replace(",", "")
-
-    var result = ""
-    var dot = false
-    var depth = 0
-
-    for (ch in s) {
-        if (ch == '.') {
-            dot = true
-        } else if (dot) {
-            if (depth >= BIT_COIN_PRECISION) {
-                break
-            }
-
-            if (depth == 2 || (depth - 2) % 3 == 0) {
-                result += ","
-            }
-            depth++
-
-        }
-
-        result += ch
+    if (input.trim() == "." || input.trim() == "") {
+        return input
     }
 
-    return result
+    val parts = input.replace(",", "").split('.')
+    val beforeDot = parts[0].reversed().chunked(3).joinToString(",").reversed()
+    val afterDot =
+        if (parts.size > 1) if (parts[1].length > 8) parts[1].substring(0, 8) else parts[1] else ""
+
+    var formattedAfterDot = ""
+    var depth = 0
+
+    for (ch in afterDot) {
+        if (depth >= BIT_COIN_PRECISION) {
+            break
+        }
+
+        if (depth == 2 || (depth - 2) % 3 == 0) {
+            formattedAfterDot += ","
+        }
+        depth++
+
+        formattedAfterDot += ch
+    }
+
+    return beforeDot + (if (formattedAfterDot.isNotEmpty() || input.contains('.')) ".$formattedAfterDot" else "")
 }
 
 fun formatFiatShitcoinString(input: String): String {
