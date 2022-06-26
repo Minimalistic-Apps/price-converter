@@ -149,7 +149,7 @@ fun formatSats(input: BigDecimal): String {
 }
 
 fun formatSatsString(input: String): String {
-    return formatNumberString(input, 0).replace(".", "")
+    return formatNumberString(input, 3)
 }
 
 fun formatFiatShitcoin(input: BigDecimal): String {

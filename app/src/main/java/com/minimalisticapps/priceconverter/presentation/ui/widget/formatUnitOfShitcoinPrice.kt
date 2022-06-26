@@ -20,7 +20,7 @@ fun formatUnitOfShitcoinPrice(
 
     if (btcOrSats === "Sats") {
         return formatSats(value.multiply(SATS_IN_BTC))
-            .padStart(12) + " Sats"
+            .padStart(16) + " Sats"
     }
 
     return when {
