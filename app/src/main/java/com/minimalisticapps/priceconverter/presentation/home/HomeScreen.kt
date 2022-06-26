@@ -209,7 +209,8 @@ fun HomeScreen(
                         onDeleteClick = {
                             selectedFiatCoin.value = it
                             isShownConfirmDialog.value = true
-                        }
+                        },
+                        btcOrSats = homeViewModel.btcOrSats.value
                     )
                 }
             }

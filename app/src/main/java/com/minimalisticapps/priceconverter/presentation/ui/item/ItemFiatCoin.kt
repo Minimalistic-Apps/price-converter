@@ -33,7 +33,8 @@ fun ItemFiatCoin(
     onValueChange: (TextFieldValue) -> Unit,
     onLongPress: () -> Unit,
     onDeleteClick: (index: Int) -> Unit,
-    onSelected: () -> Unit
+    onSelected: () -> Unit,
+    btcOrSats: String,
 ) {
     Column {
         Row(
@@ -74,11 +75,11 @@ fun ItemFiatCoin(
             )
         }
         val unitOfShitcoinInBtcFormatted =
-            formatUnitOfShitcoinPrice(oneUnitOfShitcoinInBTC)
+            formatUnitOfShitcoinPrice(oneUnitOfShitcoinInBTC, btcOrSats)
         Text(
             color = if (isSystemInDarkTheme()) FadedColorDark else FadedColorLight,
             fontFamily = FontFamily.Monospace,
-            text = "1 $code = $unitOfShitcoinInBtcFormatted BTC",
+            text = "1 $code = $unitOfShitcoinInBtcFormatted",
             style = MaterialTheme.typography.body1,
             fontSize = 13.sp,
             modifier = Modifier
