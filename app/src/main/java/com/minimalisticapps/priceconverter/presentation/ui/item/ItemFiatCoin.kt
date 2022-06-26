@@ -68,8 +68,9 @@ fun ItemFiatCoin(
                 painterResource(R.drawable.ic_delete),
                 "content description",
                 modifier = Modifier
-                    .padding(start = 0.dp, end = 15.dp)
+                    .padding(start = 0.dp, end = 5.dp)
                     .clickable { onDeleteClick(index) }
+                    .width(45.dp)
             )
         }
         val unitOfShitcoinInBtcFormatted =

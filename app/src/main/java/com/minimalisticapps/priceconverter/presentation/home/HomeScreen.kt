@@ -127,7 +127,9 @@ fun HomeScreen(
                     onReload = {
                         homeViewModel.refreshData()
                         isErrorShown.value = false
-                    }
+                    },
+                    onBtcOrSatsChange = { homeViewModel.switchBtcOrSats() },
+                    btcOrSats = homeViewModel.btcOrSats.value
                 )
             }
 
@@ -174,10 +176,12 @@ fun HomeScreen(
                         }
 
                         Text(
-                            text = "BTC",
+                            text = if (homeViewModel.btcOrSats.value == "BTC") "BTC" else "Sats",
                             textAlign = TextAlign.Start,
                             fontSize = 18.sp,
-                            modifier = Modifier.padding(start = 11.dp, end = 50.dp)
+                            modifier = Modifier
+                                .padding(start = 11.dp, end = 50.dp)
+                                .width(45.dp)
                         )
                     }
                 }

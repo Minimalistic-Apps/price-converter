@@ -54,6 +54,7 @@ class HomeViewModel @Inject constructor(
     var shitcoinInputsState: Map<String, MutableState<TextFieldValue>> = emptyMap()
 
     var selectedCoin: MutableState<String> = mutableStateOf("BTC")
+    var btcOrSats: MutableState<String> = mutableStateOf("BTC") // "BTC" or "Sats"
 
     //    States
     val state: State<CoinsState> = _state
@@ -74,6 +75,7 @@ class HomeViewModel @Inject constructor(
     //    Init function
     init {
         isDataLoaded = PCSharedStorage.isDataLoaded()
+        btcOrSats.value = PCSharedStorage.getBtcOrSats()
         timeAgoLong = PCSharedStorage.getTimesAgo()
         if (timeAgoLong != 0L) {
             _timeAgoState.value = Calendar.getInstance().time.time.timeToTimeAgo(timeAgoLong)
@@ -262,5 +264,9 @@ class HomeViewModel @Inject constructor(
             updateTextFieldModelWithCommas(state.value, input) { formatFiatShitcoinString(it) }
 
         recalculateByShitcoin(shitcoinIndex)
+    }
+
+    fun switchBtcOrSats() {
+        btcOrSats.value = if (btcOrSats.value == "BTC") "Sats" else "BTC"
     }
 }
