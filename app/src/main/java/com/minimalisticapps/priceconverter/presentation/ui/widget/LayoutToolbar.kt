@@ -13,15 +13,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.minimalisticapps.priceconverter.R
+import com.minimalisticapps.priceconverter.presentation.ui.theme.WhiteColor
 
 @Composable
 fun SetToolbar(
     title: String,
-    onReload: () -> Unit
+    onReload: () -> Unit,
+    btcOrSats: String,
+    onBtcOrSatsChange: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -41,6 +45,30 @@ fun SetToolbar(
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .weight(3.0f)
+        )
+        Text(
+            text = "₿",
+            color = Color.White,
+            fontWeight = if (btcOrSats == "BTC") FontWeight.Bold else FontWeight.Normal,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+        )
+        Switch(
+            checked = btcOrSats == "Sats",
+            onCheckedChange = { onBtcOrSatsChange() },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = WhiteColor,
+                uncheckedThumbColor = WhiteColor,
+                checkedTrackColor = WhiteColor,
+                uncheckedTrackColor = WhiteColor,
+            )
+        )
+        Text(
+            text = "丰",
+            color = Color.White,
+            fontWeight = if (btcOrSats == "Sats") FontWeight.Bold else FontWeight.Normal,
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
         )
         Image(
             painterResource(R.drawable.ic_refresh),

@@ -121,21 +121,39 @@ fun formatBtcString(input: String): String {
     return beforeDot + (if (formattedAfterDot.isNotEmpty() || input.contains('.')) ".$formattedAfterDot" else "")
 }
 
-fun formatFiatShitcoinString(input: String): String {
+const val SHITCOIN_PRECISION = 3
+
+const val COMMA_SEPARATORS_DISTANCE = 3
+
+val SATS_IN_BTC = BigDecimal("100000000")
+
+fun formatNumberString(input: String, precision: Int): String {
     if (input.trim() == "." || input.trim() == "") {
         return input
     }
 
     val parts = input.replace(",", "").split('.')
-    val beforeDot = parts[0].reversed().chunked(3).joinToString(",").reversed()
+    val beforeDot =
+        parts[0].reversed().chunked(COMMA_SEPARATORS_DISTANCE).joinToString(",").reversed()
     val afterDot =
-        if (parts.size > 1) if (parts[1].length > 3) parts[1].substring(0, 3) else parts[1] else ""
+        if (parts.size > 1) if (parts[1].length > precision) parts[1].substring(
+            0,
+            precision
+        ) else parts[1] else ""
 
     return beforeDot + (if (afterDot.isNotEmpty() || input.contains('.')) ".$afterDot" else "")
 }
 
+fun formatSats(input: BigDecimal): String {
+    return formatSatsString(input.toPlainString())
+}
+
+fun formatSatsString(input: String): String {
+    return formatNumberString(input, 0).replace(".", "")
+}
+
 fun formatFiatShitcoin(input: BigDecimal): String {
-    return formatFiatShitcoinString(input.toPlainString())
+    return formatNumberString(input.toPlainString(), SHITCOIN_PRECISION)
 }
 
 fun parseBigDecimalFromString(input: String): BigDecimal? {

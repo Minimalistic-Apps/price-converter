@@ -54,6 +54,7 @@ class HomeViewModel @Inject constructor(
     var shitcoinInputsState: Map<String, MutableState<TextFieldValue>> = emptyMap()
 
     var selectedCoin: MutableState<String> = mutableStateOf("BTC")
+    var btcOrSats: MutableState<String> = mutableStateOf("BTC") // "BTC" or "Sats"
 
     //    States
     val state: State<CoinsState> = _state
@@ -74,6 +75,7 @@ class HomeViewModel @Inject constructor(
     //    Init function
     init {
         isDataLoaded = PCSharedStorage.isDataLoaded()
+        btcOrSats.value = PCSharedStorage.getBtcOrSats()
         timeAgoLong = PCSharedStorage.getTimesAgo()
         if (timeAgoLong != 0L) {
             _timeAgoState.value = Calendar.getInstance().time.time.timeToTimeAgo(timeAgoLong)
@@ -178,13 +180,21 @@ class HomeViewModel @Inject constructor(
         }
 
         textFiledValueBtc.value =
-            updateTextFieldModelWithCommas(textFiledValueBtc.value, value) { formatBtcString(it) }
+            updateTextFieldModelWithCommas(
+                textFiledValueBtc.value,
+                value
+            ) { if (btcOrSats.value == "BTC") formatBtcString(it) else formatSatsString(it) }
 
         recalculateByBitcoin()
     }
 
-    private fun updateBitcoinAmountWithoutRecalculate(value: BigDecimal) {
-        textFiledValueBtc.value = TextFieldValue(text = formatBtc(value))
+    private fun updateBitcoinAmountWithoutRecalculate(amount: BigDecimal) {
+        if (btcOrSats.value == "BTC") {
+            textFiledValueBtc.value = TextFieldValue(text = formatBtc(amount))
+        } else {
+            textFiledValueBtc.value =
+                TextFieldValue(text = formatSats(amount.multiply(SATS_IN_BTC)))
+        }
     }
 
     private fun recalculateByShitcoin(shitcoinIndex: Int) {
@@ -221,7 +231,8 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun recalculateByBitcoin() {
-        val amountBitcoin = parseBigDecimalFromString(textFiledValueBtc.value.text) ?: return
+        val amount = parseBigDecimalFromString(textFiledValueBtc.value.text) ?: return
+        val amountBitcoin = if (btcOrSats.value == "BTC") amount else amount.divide(SATS_IN_BTC)
 
         shitcoinListState.value.forEach {
             val itOneUnitOfShitcoinInBtc =
@@ -259,8 +270,34 @@ class HomeViewModel @Inject constructor(
         }
 
         state.value =
-            updateTextFieldModelWithCommas(state.value, input) { formatFiatShitcoinString(it) }
+            updateTextFieldModelWithCommas(state.value, input) {
+                formatNumberString(
+                    it,
+                    SHITCOIN_PRECISION
+                )
+            }
 
         recalculateByShitcoin(shitcoinIndex)
+    }
+
+    fun switchBtcOrSats() {
+        val original = btcOrSats.value
+        btcOrSats.value = if (btcOrSats.value == "BTC") "Sats" else "BTC"
+        PCSharedStorage.saveBtcOrSats(btcOrSats.value)
+
+        if (original == "BTC" && btcOrSats.value == "Sats") {
+            val bitcoinValue =
+                parseBigDecimalFromString(textFiledValueBtc.value.text) ?: BigDecimal.ZERO
+
+            updateBitcoinAmountWithoutRecalculate(bitcoinValue)
+        }
+
+        if (original == "Sats" && btcOrSats.value == "BTC") {
+            val satsValue =
+                parseBigDecimalFromString(textFiledValueBtc.value.text) ?: BigDecimal.ZERO
+
+            updateBitcoinAmountWithoutRecalculate(satsValue.divide(SATS_IN_BTC))
+        }
+
     }
 }

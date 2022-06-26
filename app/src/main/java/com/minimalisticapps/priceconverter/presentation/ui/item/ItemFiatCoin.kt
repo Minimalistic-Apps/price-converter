@@ -33,7 +33,8 @@ fun ItemFiatCoin(
     onValueChange: (TextFieldValue) -> Unit,
     onLongPress: () -> Unit,
     onDeleteClick: (index: Int) -> Unit,
-    onSelected: () -> Unit
+    onSelected: () -> Unit,
+    btcOrSats: String,
 ) {
     Column {
         Row(
@@ -68,16 +69,17 @@ fun ItemFiatCoin(
                 painterResource(R.drawable.ic_delete),
                 "content description",
                 modifier = Modifier
-                    .padding(start = 0.dp, end = 15.dp)
+                    .padding(start = 0.dp, end = 5.dp)
                     .clickable { onDeleteClick(index) }
+                    .width(45.dp)
             )
         }
         val unitOfShitcoinInBtcFormatted =
-            formatUnitOfShitcoinPrice(oneUnitOfShitcoinInBTC)
+            formatUnitOfShitcoinPrice(oneUnitOfShitcoinInBTC, btcOrSats)
         Text(
             color = if (isSystemInDarkTheme()) FadedColorDark else FadedColorLight,
             fontFamily = FontFamily.Monospace,
-            text = "1 $code = $unitOfShitcoinInBtcFormatted BTC",
+            text = "1 $code = $unitOfShitcoinInBtcFormatted",
             style = MaterialTheme.typography.body1,
             fontSize = 13.sp,
             modifier = Modifier
