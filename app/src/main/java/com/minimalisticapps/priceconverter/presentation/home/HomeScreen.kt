@@ -27,7 +27,9 @@ import androidx.navigation.NavController
 import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
 import com.minimalisticapps.priceconverter.common.dialog.ShowProgressDialog
+import com.minimalisticapps.priceconverter.common.utils.PCSharedStorage
 import com.minimalisticapps.priceconverter.common.utils.showToast
+import com.minimalisticapps.priceconverter.common.utils.toFiatCoinsExchange
 import com.minimalisticapps.priceconverter.presentation.Screen
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
@@ -66,6 +68,17 @@ fun HomeScreen(
     if (coinsState.isLoading && isRefreshing == false)
         ShowProgressDialog()
 
+    // Default usd currency added once app launch
+    if (!PCSharedStorage.isUsdAddDefault()) {
+        val usdCurrency = coinsState.coins.filter {
+            it.name.lowercase().contains("US Dollar") ||
+                    it.code.lowercase().contains("USD".lowercase())
+        }.elementAtOrNull(0)
+        usdCurrency?.let {
+            homeViewModel.insertFiatCoin(it.toFiatCoinsExchange())
+            PCSharedStorage.saveUsdAsDefault(true)
+        }
+    }
 
     Scaffold(
         modifier = Modifier

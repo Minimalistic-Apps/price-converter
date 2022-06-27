@@ -13,12 +13,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.minimalisticapps.priceconverter.common.Resource
 import com.minimalisticapps.priceconverter.common.utils.*
-import com.minimalisticapps.priceconverter.domain.usecase.DeleteUseCase
-import com.minimalisticapps.priceconverter.domain.usecase.GetCoinsUseCase
-import com.minimalisticapps.priceconverter.domain.usecase.GetFiatCoinsUseCase
-import com.minimalisticapps.priceconverter.domain.usecase.PRECISION
+import com.minimalisticapps.priceconverter.domain.usecase.*
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
+import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -32,6 +30,7 @@ class HomeViewModel @Inject constructor(
     private val getCoinUseCase: GetCoinsUseCase,
     private val getFiatCoinUseCase: GetFiatCoinsUseCase,
     private val deleteUseCase: DeleteUseCase,
+    private val saveFiatCoinUseCase: SaveFiatCoinUseCase,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -299,5 +298,11 @@ class HomeViewModel @Inject constructor(
             updateBitcoinAmountWithoutRecalculate(satsValue.divide(SATS_IN_BTC))
         }
 
+    }
+
+    fun insertFiatCoin(fiatCoinExchange: FiatCoinExchange) {
+        viewModelScope.launch {
+            saveFiatCoinUseCase.invoke(fiatCoinExchange)
+        }
     }
 }
