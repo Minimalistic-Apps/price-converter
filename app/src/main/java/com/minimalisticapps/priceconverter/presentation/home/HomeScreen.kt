@@ -187,9 +187,7 @@ fun HomeScreen(
                 }
                 items(
                     items = fiatCoinsListState,
-                    key = { pair ->
-                        pair.first
-                    }
+                    key = { pair -> pair.first }
                 ) { pair ->
                     val code = pair.second.fiatCoinExchange.code
                     val state = homeViewModel.shitcoinInputsState[code]!!
