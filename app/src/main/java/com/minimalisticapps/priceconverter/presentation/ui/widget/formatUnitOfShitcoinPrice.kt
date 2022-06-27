@@ -18,15 +18,14 @@ fun formatUnitOfShitcoinPrice(
         return "n/a"
     }
 
-    if (btcOrSats === "Sats") {
+    if (btcOrSats == "Sats") {
         return formatSats(value.multiply(SATS_IN_BTC))
             .padStart(16) + " Sats"
     }
 
     return when {
         value >= EIGHT_DECIMAL_PLACES -> formatBtc(value) + " BTC"
-        value >= SIXTEEN_DECIMAL_PLACES -> value.toString() + " BTC"
-            .to8Decimal()
+        value >= SIXTEEN_DECIMAL_PLACES -> value.toString().to8Decimal() + " BTC"
         else -> {
             return "0"
         }
