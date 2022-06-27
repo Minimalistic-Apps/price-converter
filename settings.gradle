@@ -1,2 +1,27 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+    plugins {
+        id 'org.jetbrains.kotlin.android' version '1.6.10' apply false
+        id "dagger.hilt.android.plugin" version '2.40.1' apply false
+    }
+    resolutionStrategy {
+        eachPlugin {
+            if( requested.id.id == 'dagger.hilt.android.plugin') {
+                useModule("com.google.dagger:hilt-android-gradle-plugin:2.38.1")
+            }
+        }
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "Price Converter"
 include ':app'
-rootProject.name = "Minimalistic Price Converter"

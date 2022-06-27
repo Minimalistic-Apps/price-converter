@@ -1,12 +1,11 @@
 # Minimalistic Price Converter
 
-`Minimalistic` | `Free` | `Open Source` | `Private` | `Bitcoin` | `No adds` | `No trackers` | `No Google`
+`Minimalistic` | `Free` | `Open Source` | `Private` | `Bitcoin` | `No adds` | `No trackers`
+| `No Google`
 
 Minimalistic app converting prices of fiat shitcoins and Bitcoin
 
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
-     alt="Get it on F-Droid"
-     height="80">](https://f-droid.org/packages/com.minimalisticapps.priceconverter/)
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/com.minimalisticapps.priceconverter/)
 
 ## Screenshot
 
@@ -15,10 +14,17 @@ Minimalistic app converting prices of fiat shitcoins and Bitcoin
 ## Features
 
 - [x] Uses Bitcoin as base currency
-- [x] Use rates as average from Bitpay, Blockchain.info and Coingecko
+- Use rates as average from
+    - [x] Coingecko
+    - [ ] Bitpay
+    - [ ] Blockchain.info
 - [x] Supports Bitcoin and most of ISO fiat shitcoins
-- [x] Swipe down refreshes rates 
-- [x] Displays rates in sats-friendy format (`0.00,001,000`)
+- [x] Refresh button for current rates
+- [x] Displays rates in sats-friendly format (`0.00,001,000`)
+- [x] BTC and Sats mode, Sats has three decimal precision
+- [x] When the input is selected, whole text is preselected to easily insert new value
+- [ ] Ordering
+- [x] Dark-mode
 
 ## Feature requests
 
@@ -43,8 +49,8 @@ Only features that are aligned with the purpose of the app will be considered.
    won't work.
 
 3. **What is the source of rates?** The app calculate averages of rates from those endpoints:
-    - https://bitpay.com/rates
-    - https://blockchain.info/ticker
+    - ~https://bitpay.com/ratesa~ (currently suspended)
+    - ~https://blockchain.info/ticker~ (currently suspended)
     - https://api.coingecko.com/api/v3/exchange_rates
 
 ## Verify APK
