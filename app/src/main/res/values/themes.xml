@@ -2,6 +2,6 @@
 <resources>
 
     <style name="Theme.PriceConverter" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
+        <item name="android:windowBackground">#1e1e1e</item>
     </style>
 </resources>

@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.minimalisticapps.priceconverter.R
@@ -35,6 +34,7 @@ import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeView
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.presentation.ui.item.ItemFiatCoin
 import com.minimalisticapps.priceconverter.presentation.ui.theme.ErrorColor
+import com.minimalisticapps.priceconverter.presentation.ui.theme.PrimaryColor
 import com.minimalisticapps.priceconverter.presentation.ui.theme.SecondaryColorForDark
 import com.minimalisticapps.priceconverter.presentation.ui.widget.SetToolbar
 import com.minimalisticapps.priceconverter.presentation.ui.widget.ShowLinearIndicator
@@ -85,7 +85,7 @@ fun HomeScreen(
             .fillMaxSize(),
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                backgroundColor = Color(ContextCompat.getColor(mContext, R.color.color_app)),
+                backgroundColor = PrimaryColor,
                 icon = {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -126,14 +126,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .height(60.dp)
                     .fillMaxWidth()
-                    .background(
-                        Color(
-                            ContextCompat.getColor(
-                                mContext,
-                                R.color.color_app
-                            )
-                        )
-                    )
+                    .background(PrimaryColor)
             ) {
                 SetToolbar(
                     title = mContext.resources.getString(R.string.app_name),
