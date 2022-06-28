@@ -53,3 +53,5 @@ Only features that are aligned with the purpose of the app will be considered.
     - ~https://blockchain.info/ticker~ (currently suspended)
     - https://api.coingecko.com/api/v3/exchange_rates
 
+## More
+- [Verify APK signature](https://github.com/Minimalistic-Apps/knowledge-base/blob/main/README.md#verify-apk)
