@@ -30,6 +30,7 @@ import com.minimalisticapps.priceconverter.common.utils.PCSharedStorage
 import com.minimalisticapps.priceconverter.common.utils.showToast
 import com.minimalisticapps.priceconverter.common.utils.toFiatCoinsExchange
 import com.minimalisticapps.priceconverter.presentation.Screen
+import com.minimalisticapps.priceconverter.presentation.currencylist.viewmodels.CoinListViewModel
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.presentation.ui.item.ItemFiatCoin
@@ -58,6 +59,7 @@ fun HomeScreen(
     val fiatCoinsListState = homeViewModel.shitcoinListState.value
     val isErrorShown = remember { mutableStateOf(false) }
     val isShownConfirmDialog = remember { mutableStateOf(false) }
+    val coinListViewModel: CoinListViewModel = hiltViewModel()
     val selectedFiatCoin = remember { mutableStateOf<Int?>(null) }
 
     if (coinsState.error.isNotBlank() && !isErrorShown.value) {
@@ -75,7 +77,7 @@ fun HomeScreen(
                     it.code.lowercase().contains("USD".lowercase())
         }.elementAtOrNull(0)
         usdCurrency?.let {
-            homeViewModel.insertFiatCoin(it.toFiatCoinsExchange())
+            coinListViewModel.insertFiatCoin(it.toFiatCoinsExchange())
             PCSharedStorage.saveUsdAsDefault(true)
         }
     }
