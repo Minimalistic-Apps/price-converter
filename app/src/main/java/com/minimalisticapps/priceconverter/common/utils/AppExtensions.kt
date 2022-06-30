@@ -13,7 +13,6 @@ import com.minimalisticapps.priceconverter.common.utils.AppConstants.BIT_COIN_PR
 import com.minimalisticapps.priceconverter.data.remote.dto.BitPayExchangeRate
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 import java.math.BigDecimal
-import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
@@ -90,30 +89,71 @@ fun formatBtc(value: BigDecimal?): String {
         return ""
     }
 
-    val s = value.toPlainString()
-    var result = ""
-    var dot = false
-    var depth = 0
+    return formatBtcString(value.toPlainString())
+}
 
-    for (ch in s) {
-        if (ch == '.') {
-            dot = true
-        } else if (dot) {
-            if (depth >= BIT_COIN_PRECISION) {
-                break
-            }
-
-            if (depth == 2 || (depth - 2) % 3 == 0) {
-                result += ","
-            }
-            depth++
-
-        }
-
-        result += ch
+fun formatBtcString(input: String): String {
+    if (input.trim() == "." || input.trim() == "") {
+        return input
     }
 
-    return result
+    val parts = input.replace(",", "").split('.')
+    val beforeDot = parts[0].reversed().chunked(3).joinToString(",").reversed()
+    val afterDot =
+        if (parts.size > 1) if (parts[1].length > 8) parts[1].substring(0, 8) else parts[1] else ""
+
+    var formattedAfterDot = ""
+    var depth = 0
+
+    for (ch in afterDot) {
+        if (depth >= BIT_COIN_PRECISION) {
+            break
+        }
+
+        if (depth == 2 || (depth - 2) % 3 == 0) {
+            formattedAfterDot += ","
+        }
+        depth++
+
+        formattedAfterDot += ch
+    }
+
+    return beforeDot + (if (formattedAfterDot.isNotEmpty() || input.contains('.')) ".$formattedAfterDot" else "")
+}
+
+const val SHITCOIN_PRECISION = 3
+
+const val COMMA_SEPARATORS_DISTANCE = 3
+
+val SATS_IN_BTC = BigDecimal("100000000")
+
+fun formatNumberString(input: String, precision: Int): String {
+    if (input.trim() == "." || input.trim() == "") {
+        return input
+    }
+
+    val parts = input.replace(",", "").split('.')
+    val beforeDot =
+        parts[0].reversed().chunked(COMMA_SEPARATORS_DISTANCE).joinToString(",").reversed()
+    val afterDot =
+        if (parts.size > 1) if (parts[1].length > precision) parts[1].substring(
+            0,
+            precision
+        ) else parts[1] else ""
+
+    return beforeDot + (if (afterDot.isNotEmpty() || input.contains('.')) ".$afterDot" else "")
+}
+
+fun formatSats(input: BigDecimal): String {
+    return formatSatsString(input.toPlainString())
+}
+
+fun formatSatsString(input: String): String {
+    return formatNumberString(input, 3)
+}
+
+fun formatFiatShitcoin(input: BigDecimal): String {
+    return formatNumberString(input.toPlainString(), SHITCOIN_PRECISION)
 }
 
 fun parseBigDecimalFromString(input: String): BigDecimal? {

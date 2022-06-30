@@ -2,6 +2,7 @@ package com.minimalisticapps.priceconverter.presentation.ui.widget
 
 import android.app.Activity
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,12 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.presentation.PriceConverterCornerShape
+import com.minimalisticapps.priceconverter.presentation.ui.theme.FadedColorDark
+import com.minimalisticapps.priceconverter.presentation.ui.theme.FadedColorLight
 
 @Composable
 fun TextInput(
@@ -63,7 +64,7 @@ fun TextInput(
             Text(
                 text = mContext.getString(R.string.search_currency),
                 fontSize = 14.sp,
-                color = Color(ContextCompat.getColor(mContext, R.color.color_grey_ce))
+                color = if (isSystemInDarkTheme()) FadedColorDark else FadedColorLight
             )
         }
     )
