@@ -134,6 +134,9 @@ fun HomeScreen(
                         homeViewModel.refreshData()
                         isErrorShown.value = false
                     },
+                    onDonateClick = {
+                        navController.navigate(Screen.DonationScreen.route)
+                    },
                     onBtcOrSatsChange = { homeViewModel.switchBtcOrSats() },
                     btcOrSats = homeViewModel.btcOrSats.value
                 )

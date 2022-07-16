@@ -2,6 +2,7 @@ package com.minimalisticapps.priceconverter.presentation.ui.widget
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,7 @@ import com.minimalisticapps.priceconverter.presentation.ui.theme.WhiteColor
 fun SetToolbar(
     title: String,
     onReload: () -> Unit,
+    onDonateClick: () -> Unit,
     btcOrSats: String,
     onBtcOrSatsChange: () -> Unit
 ) {
@@ -37,46 +39,67 @@ fun SetToolbar(
                 bottom = 10.dp
             )
     ) {
-        Text(
-            textAlign = TextAlign.Start,
-            text = title,
-            color = Color.White,
-            fontSize = 20.sp,
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .weight(3.0f)
-        )
-        Text(
-            text = "₿",
-            color = Color.White,
-            fontWeight = if (btcOrSats == "BTC") FontWeight.Bold else FontWeight.Normal,
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-        )
-        Switch(
-            checked = btcOrSats == "Sats",
-            onCheckedChange = { onBtcOrSatsChange() },
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = WhiteColor,
-                uncheckedThumbColor = WhiteColor,
-                checkedTrackColor = WhiteColor,
-                uncheckedTrackColor = WhiteColor,
+        Box(
+            modifier = Modifier.align(Alignment.CenterVertically)
+        ) {
+            Text(
+                textAlign = TextAlign.Start,
+                text = title,
+                color = Color.White,
+                fontSize = 20.sp,
             )
-        )
-        Text(
-            text = "丰",
-            color = Color.White,
-            fontWeight = if (btcOrSats == "Sats") FontWeight.Bold else FontWeight.Normal,
+        }
+        Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
-        )
-        Image(
-            painterResource(R.drawable.ic_refresh),
-            "content description",
-            modifier = Modifier
-                .padding(start = 15.dp)
-                .align(Alignment.CenterVertically)
-                .clickable { onReload() }
-        )
+                .weight(2.0f, fill = true)
+        ) {
+            Image(
+                painterResource(R.drawable.ic_donate),
+                "Donate",
+                modifier = Modifier.clickable { onDonateClick() }
+            )
+        }
+        Box(
+            modifier = Modifier.align(Alignment.CenterVertically)
+        ) {
+            Row() {
+                Text(
+                    text = "₿",
+                    color = Color.White,
+                    fontWeight = if (btcOrSats == "BTC") FontWeight.Bold else FontWeight.Normal,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                )
+                Switch(
+                    checked = btcOrSats == "Sats",
+                    onCheckedChange = { onBtcOrSatsChange() },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = WhiteColor,
+                        uncheckedThumbColor = WhiteColor,
+                        checkedTrackColor = WhiteColor,
+                        uncheckedTrackColor = WhiteColor,
+                    ),
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                )
+                Text(
+                    text = "丰",
+                    color = Color.White,
+                    fontWeight = if (btcOrSats == "Sats") FontWeight.Bold else FontWeight.Normal,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                )
+                Image(
+                    painterResource(R.drawable.ic_refresh),
+                    "Refresh",
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(start = 15.dp)
+                        .clickable { onReload() }
+                )
+            }
+        }
     }
 }

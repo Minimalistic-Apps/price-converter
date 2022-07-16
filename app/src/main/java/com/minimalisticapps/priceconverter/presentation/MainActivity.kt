@@ -5,7 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
@@ -16,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.minimalisticapps.priceconverter.common.utils.hideKeyboard
 import com.minimalisticapps.priceconverter.common.utils.noRippleClickable
 import com.minimalisticapps.priceconverter.presentation.currencylist.CoinListScreen
+import com.minimalisticapps.priceconverter.presentation.donate.DonationScreen
 import com.minimalisticapps.priceconverter.presentation.home.HomeScreen
 import com.minimalisticapps.priceconverter.presentation.home.coinsStateValue
 import com.minimalisticapps.priceconverter.presentation.ui.theme.AppTheme
@@ -24,7 +26,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -54,6 +55,9 @@ class MainActivity : ComponentActivity() {
                                     navController = navController,
                                     coinsState = coinsStateValue
                                 )
+                            }
+                            composable(route = Screen.DonationScreen.route) {
+                                DonationScreen()
                             }
                         }
                     }
