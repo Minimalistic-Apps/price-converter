@@ -25,7 +25,7 @@ import com.minimalisticapps.priceconverter.presentation.ui.theme.FadedColorDark
 import com.minimalisticapps.priceconverter.presentation.ui.theme.FadedColorLight
 
 @Composable
-fun TextInput(
+fun TextInputCurrency(
     onValueChange: (String) -> Unit,
 ) {
     val searchText = remember {

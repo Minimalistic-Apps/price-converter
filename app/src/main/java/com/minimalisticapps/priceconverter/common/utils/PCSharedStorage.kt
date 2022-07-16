@@ -1,13 +1,15 @@
 package com.minimalisticapps.priceconverter.common.utils
 
+import java.util.*
+
 
 object PCSharedStorage : SharedPrefHelper(PCSharedConfig.PREF_NAME) {
-
     private const val IS_DATA_LOADED = "is_data_loaded"
     private const val TIMES_AGO = "time_ago"
     private const val USD_ADD_ONCE_ON_APP_LAUNCH = "usd_add_once_on_app_launch"
     private const val BTC_OR_SATS = "btc_or_sats"
-
+    private const val DONATION_CLAIM = "donation_claim"
+    private const val DONATION_TOKEN = "donation_token"
 
     fun saveDataLoaded(value: Boolean) {
         saveBoolean(IS_DATA_LOADED, value)
@@ -23,6 +25,32 @@ object PCSharedStorage : SharedPrefHelper(PCSharedConfig.PREF_NAME) {
 
     fun saveBtcOrSats(value: String) {
         saveString(BTC_OR_SATS, value)
+    }
+
+    fun getDonationClaim(): String {
+        val token = getString(DONATION_CLAIM, "")
+        if (token != "") {
+            return token
+        }
+
+        val newToken = UUID.randomUUID().toString()
+        saveDonationClaim(newToken)
+
+        return newToken
+    }
+
+    private fun saveDonationClaim(token: String) {
+        saveString(DONATION_CLAIM, token)
+    }
+
+    fun getDonationToken(): String? {
+        val token = getString(DONATION_TOKEN, "")
+
+        return if (token != "") token else null
+    }
+
+    fun saveDonationToken(token: String) {
+        saveString(DONATION_TOKEN, token)
     }
 
     fun saveTimesAgo(value: Long) {
