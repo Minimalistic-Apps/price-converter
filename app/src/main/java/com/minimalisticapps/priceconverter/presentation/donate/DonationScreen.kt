@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -23,6 +24,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun DonationScreen(donationViewModel: DonationViewModel = hiltViewModel()) {
     val mContext = LocalContext.current as Activity
+
+    donationViewModel.error.observe(LocalLifecycleOwner.current) { it ->
+        it.getContentIfNotHandled()?.let {
+            Toast.makeText(mContext, it, Toast.LENGTH_LONG).show()
+        }
+    }
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -79,38 +86,39 @@ fun DonationScreen(donationViewModel: DonationViewModel = hiltViewModel()) {
                 text = "We accept donations in BTC over Lightning Network.",
             )
         }
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Button(onClick = { donationViewModel.userClickedDonate() }) {
-                Text(text = "Donate⚡", fontSize = 25.sp)
-            }
-        }
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 25.dp, start = 25.dp, end = 25.dp)
-        ) {
-            val link =
-                "lightning://LNURL1DP68GURN8GHJ7MRWW4EXCTNRDAKJ7MRWW4EXCUP0V9CXJTMKXYHKCMN4WFKZ7VFEXUMSACFRSN"
-            val mUriHandler = LocalUriHandler.current
-
-            Button(onClick = {
-                try {
-                    mUriHandler.openUri(link)
-                } catch (e: ActivityNotFoundException) {
-                    Toast.makeText(
-                        mContext,
-                        "No wallet supporting LNURL found.",
-                        10f.toInt()
-                    ).show()
+        if (donationViewModel.lnUrl.value == null) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(onClick = { donationViewModel.userClickedDonate() }) {
+                    Text(text = "Donate⚡", fontSize = 25.sp)
                 }
-            }) {
-                Text(text = "Pay⚡", fontSize = 25.sp)
             }
+        } else {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 25.dp, start = 25.dp, end = 25.dp)
+            ) {
+                val link = "lightning://${donationViewModel.lnUrl.value}"
+                val mUriHandler = LocalUriHandler.current
 
+                Button(onClick = {
+                    try {
+                        mUriHandler.openUri(link)
+                    } catch (e: ActivityNotFoundException) {
+                        Toast.makeText(
+                            mContext,
+                            "No wallet supporting LNURL found.",
+                            10f.toInt()
+                        ).show()
+                    }
+                }) {
+                    Text(text = "Pay⚡", fontSize = 25.sp)
+                }
+            }
         }
     }
 }

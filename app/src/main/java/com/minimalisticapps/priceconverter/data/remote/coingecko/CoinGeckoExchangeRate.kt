@@ -1,4 +1,4 @@
-package com.minimalisticapps.priceconverter.data.remote.dto
+package com.minimalisticapps.priceconverter.data.remote.coingecko
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
 
 @Entity(tableName = "Coins")
-data class BitPayExchangeRate(
+data class CoinGeckoExchangeRate(
     @ColumnInfo(name = "code")
     var code: String,
 

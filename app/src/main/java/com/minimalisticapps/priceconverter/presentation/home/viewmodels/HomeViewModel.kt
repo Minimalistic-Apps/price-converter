@@ -13,7 +13,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.minimalisticapps.priceconverter.common.Resource
 import com.minimalisticapps.priceconverter.common.utils.*
-import com.minimalisticapps.priceconverter.domain.usecase.*
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.*
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
@@ -205,7 +205,7 @@ class HomeViewModel @Inject constructor(
         val shitcoinAmount =
             parseBigDecimalFromString(shitcoinInput) ?: return
         val oneUnitOfShitcoinInBTC =
-            shitcoin.bitPayExchangeRate.oneUnitOfShitcoinInBTC ?: return
+            shitcoin.exchangeRate.oneUnitOfShitcoinInBTC ?: return
         val bitcoinPrice = oneUnitOfShitcoinInBTC.multiply(shitcoinAmount)
         updateBitcoinAmountWithoutRecalculate(bitcoinPrice)
 
@@ -213,7 +213,7 @@ class HomeViewModel @Inject constructor(
         shitcoinListState.value.forEach {
             if (shitcoinIndex != it.first) {
                 val itOneUnitOfShitcoinInBtc =
-                    it.second.bitPayExchangeRate.oneUnitOfShitcoinInBTC ?: return
+                    it.second.exchangeRate.oneUnitOfShitcoinInBTC ?: return
 
                 val newValue = shitcoinAmount.multiply(
                     oneUnitOfShitcoinInBTC.divide(
@@ -235,7 +235,7 @@ class HomeViewModel @Inject constructor(
 
         shitcoinListState.value.forEach {
             val itOneUnitOfShitcoinInBtc =
-                it.second.bitPayExchangeRate.oneUnitOfShitcoinInBTC
+                it.second.exchangeRate.oneUnitOfShitcoinInBTC
 
             if (itOneUnitOfShitcoinInBtc != null) {
                 val newAmount = amountBitcoin.divide(

@@ -2,11 +2,11 @@ package com.minimalisticapps.priceconverter.presentation.states
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.minimalisticapps.priceconverter.data.remote.dto.BitPayExchangeRate
+import com.minimalisticapps.priceconverter.data.remote.coingecko.CoinGeckoExchangeRate
 
 data class CoinsState(
     val isLoading: Boolean = false,
-    val coins: List<BitPayExchangeRate> = emptyList(),
+    val coins: List<CoinGeckoExchangeRate> = emptyList(),
     val error: String = "",
     val isRefreshing: Boolean = false
 ): Parcelable {

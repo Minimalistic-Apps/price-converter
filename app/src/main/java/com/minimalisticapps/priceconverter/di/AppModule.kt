@@ -3,9 +3,11 @@ package com.minimalisticapps.priceconverter.di
 import android.content.Context
 import androidx.room.Room
 import com.minimalisticapps.priceconverter.common.utils.AppConstants
-import com.minimalisticapps.priceconverter.data.remote.ApiInterface
-import com.minimalisticapps.priceconverter.data.repo.PriceConverterRepositoryImpl
-import com.minimalisticapps.priceconverter.domain.repo.PriceConverterRepository
+import com.minimalisticapps.priceconverter.data.remote.coingecko.CoinGeckoApiInterface
+import com.minimalisticapps.priceconverter.data.remote.donationserver.DonationServerApiInterface
+import com.minimalisticapps.priceconverter.data.repository.DonationRepository
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.PriceConverterRepository
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.PriceConverterRepositoryImpl
 import com.minimalisticapps.priceconverter.room.dao.PriceConverterDao
 import com.minimalisticapps.priceconverter.room.database.AppDatabase
 import dagger.Module
@@ -38,10 +40,8 @@ object AppModule {
         return try {
             OkHttpClient.Builder()
                 .addInterceptor(Interceptor { chain: Interceptor.Chain ->
-
                     val builder: Request.Builder = chain.request().newBuilder()
                     chain.proceed(builder.build())
-
                 }).addInterceptor(httpLoggingInterceptor).build()
 
         } catch (e: Exception) {
@@ -51,11 +51,22 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideApiInterface(client: OkHttpClient): ApiInterface = Retrofit.Builder()
-        .baseUrl(AppConstants.BIT_PAY_BASE_URL)
+    fun provideCoinGeckoApi(client: OkHttpClient): CoinGeckoApiInterface = Retrofit.Builder()
+        .baseUrl(AppConstants.COINGECTKO_BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
-        .build().create(ApiInterface::class.java)
+        .build()
+        .create(CoinGeckoApiInterface::class.java)
+
+    @Provides
+    @Singleton
+    fun provideCDonationServerApi(client: OkHttpClient): DonationServerApiInterface =
+        Retrofit.Builder()
+            .baseUrl(AppConstants.DONATION_SERVER_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build()
+            .create(DonationServerApiInterface::class.java)
 
     @Provides
     @Singleton
@@ -75,9 +86,20 @@ object AppModule {
     @Provides
     @Singleton
     fun provideCoinRepository(
-        api: ApiInterface,
+        coinGeckoApi: CoinGeckoApiInterface,
         priceConverterDao: PriceConverterDao
     ): PriceConverterRepository {
-        return PriceConverterRepositoryImpl(api = api, priceConverterDao = priceConverterDao)
+        return PriceConverterRepositoryImpl(
+            coinGeckoApi = coinGeckoApi,
+            priceConverterDao = priceConverterDao
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideDonationRepository(
+        donationServerApi: DonationServerApiInterface,
+    ): DonationRepository {
+        return DonationRepository(donationServerApi = donationServerApi)
     }
 }

@@ -1,6 +1,5 @@
-package com.minimalisticapps.priceconverter.domain.usecase
+package com.minimalisticapps.priceconverter.data.repository.priceconverter
 
-import com.minimalisticapps.priceconverter.domain.repo.PriceConverterRepository
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 import javax.inject.Inject
 

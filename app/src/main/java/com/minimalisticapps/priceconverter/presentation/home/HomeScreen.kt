@@ -204,7 +204,7 @@ fun HomeScreen(
                     ItemFiatCoin(
                         index = pair.first,
                         code = code,
-                        oneUnitOfShitcoinInBTC = pair.second.bitPayExchangeRate.oneUnitOfShitcoinInBTC,
+                        oneUnitOfShitcoinInBTC = pair.second.exchangeRate.oneUnitOfShitcoinInBTC,
                         state = state,
                         onValueChange = { homeViewModel.updateShitcoin(pair.first, it) },
                         onLongPress = {

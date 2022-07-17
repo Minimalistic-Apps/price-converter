@@ -2,7 +2,7 @@ package com.minimalisticapps.priceconverter.room.entities
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.minimalisticapps.priceconverter.data.remote.dto.BitPayExchangeRate
+import com.minimalisticapps.priceconverter.data.remote.coingecko.CoinGeckoExchangeRate
 
 data class BitPayCoinWithFiatCoin(
     @Embedded
@@ -10,9 +10,9 @@ data class BitPayCoinWithFiatCoin(
 
     @Relation(
         parentColumn = "unit",
-        entity = BitPayExchangeRate::class,
+        entity = CoinGeckoExchangeRate::class,
         entityColumn = "unit"
     )
-    val bitPayExchangeRate: BitPayExchangeRate,
+    val exchangeRate: CoinGeckoExchangeRate,
 
-)
+    )

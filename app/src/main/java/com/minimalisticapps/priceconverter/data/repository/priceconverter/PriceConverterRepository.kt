@@ -1,17 +1,17 @@
-package com.minimalisticapps.priceconverter.domain.repo
+package com.minimalisticapps.priceconverter.data.repository.priceconverter
 
-import com.minimalisticapps.priceconverter.data.remote.dto.BitPayExchangeRate
-import com.minimalisticapps.priceconverter.data.remote.dto.BitPayExchangeRatesResponse
+import com.minimalisticapps.priceconverter.data.remote.coingecko.CoinGeckoExchangeRate
+import com.minimalisticapps.priceconverter.data.remote.coingecko.CoinGeckoExchangeRatesResponse
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 import kotlinx.coroutines.flow.Flow
 
 interface PriceConverterRepository {
-    suspend fun getExchangeRates(): BitPayExchangeRatesResponse
-    suspend fun getCoins(): Flow<List<BitPayExchangeRate>>
+    suspend fun getExchangeRates(): CoinGeckoExchangeRatesResponse
+    suspend fun getCoins(): Flow<List<CoinGeckoExchangeRate>>
     suspend fun getFiatCoins(): Flow<List<BitPayCoinWithFiatCoin>>
     suspend fun saveFiatCoin(fiatCoinExchange: FiatCoinExchange)
     suspend fun updateFiatCoin(fiatCoinExchange: FiatCoinExchange)
-    suspend fun saveCoin(bitPayExchangeRate: BitPayExchangeRate)
+    suspend fun saveCoin(bitPayExchangeRate: CoinGeckoExchangeRate)
     suspend fun deleteFiatCoin(fiatCoinExchange: FiatCoinExchange)
 }
