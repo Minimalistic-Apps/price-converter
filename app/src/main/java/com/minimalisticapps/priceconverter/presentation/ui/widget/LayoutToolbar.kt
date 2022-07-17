@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.minimalisticapps.priceconverter.R
+import com.minimalisticapps.priceconverter.common.utils.PCSharedStorage
 import com.minimalisticapps.priceconverter.presentation.ui.theme.PrimaryColorLight
 import com.minimalisticapps.priceconverter.presentation.ui.theme.WhiteColor
 
@@ -25,6 +26,8 @@ fun SetToolbar(
     btcOrSats: String,
     onBtcOrSatsChange: () -> Unit
 ) {
+    val donationToken = PCSharedStorage.getDonationToken()
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,8 +56,23 @@ fun SetToolbar(
         ) {
             Button(
                 onClick = { onDonateClick() },
-                content = { Text(text = "⚡Donate⚡") },
-                colors = ButtonDefaults.buttonColors(backgroundColor = PrimaryColorLight),
+                content = {
+                    if (donationToken != null) {
+                        Image(
+                            painterResource(R.drawable.ic_hearth),
+                            "Thank you!",
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                        )
+                    } else {
+                        Text(text = "⚡Donate⚡")
+                    }
+
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor =
+                    PrimaryColorLight
+                ),
                 contentPadding = PaddingValues(
                     start = 4.dp,
                     top = 0.dp,

@@ -10,6 +10,7 @@ object PCSharedStorage : SharedPrefHelper(PCSharedConfig.PREF_NAME) {
     private const val BTC_OR_SATS = "btc_or_sats"
     private const val DONATION_CLAIM = "donation_claim"
     private const val DONATION_TOKEN = "donation_token"
+    private const val DONATION_LNURL = "donation_lnurl"
 
     fun saveDataLoaded(value: Boolean) {
         saveBoolean(IS_DATA_LOADED, value)
@@ -46,11 +47,28 @@ object PCSharedStorage : SharedPrefHelper(PCSharedConfig.PREF_NAME) {
     fun getDonationToken(): String? {
         val token = getString(DONATION_TOKEN, "")
 
-        return if (token != "") token else null
+        return "toto"
+
+        return if (token != "") {
+            // Todo: validate token against public key!
+            token
+        } else {
+            null
+        }
     }
 
     fun saveDonationToken(token: String) {
         saveString(DONATION_TOKEN, token)
+    }
+
+    fun getDonationLnurl(): String? {
+        val lnurl = getString(DONATION_LNURL, "")
+
+        return if (lnurl != "") lnurl else null
+    }
+
+    fun saveDonationLnurl(token: String) {
+        saveString(DONATION_LNURL, token)
     }
 
     fun saveTimesAgo(value: Long) {
