@@ -12,9 +12,9 @@ data class ClaimBody(
 )
 
 interface DonationServerApiInterface {
-    @POST("api/donation/key/claim")
+    @POST("api/key/claim")
     suspend fun makeClaim(@Body dataModal: ClaimBody): DonationServerMakeClaimResponse
 
-    @GET("api/donation/key/claim/{claim}")
+    @GET("api/key/claim/{claim}")
     suspend fun getClaim(@Path("claim") claim: String): DonationServerGetClaimResponse
 }

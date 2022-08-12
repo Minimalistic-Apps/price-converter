@@ -46,8 +46,7 @@ object PCSharedStorage : SharedPrefHelper(PCSharedConfig.PREF_NAME) {
 
     fun getDonationToken(): String? {
         val token = getString(DONATION_TOKEN, "")
-
-        return "toto"
+//        return "test"
 
         return if (token != "") {
             // Todo: validate token against public key!

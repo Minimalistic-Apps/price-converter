@@ -1,6 +1,8 @@
 package com.minimalisticapps.priceconverter.presentation.donate
 
 import android.app.Application
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,6 +22,9 @@ class DonationViewModel @Inject constructor(
     private var _lnUrl: MutableLiveData<String> = MutableLiveData()
     var lnUrl: LiveData<String> = _lnUrl
 
+    private val _isLoading = mutableStateOf(false)
+    val isLoading: State<Boolean> = _isLoading
+
     private val _error = MutableLiveData<Event<String>>()
     val error: LiveData<Event<String>> = _error
 
@@ -28,7 +33,10 @@ class DonationViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                _lnUrl.postValue(donationRepository.makeClaim(claim).lnurl)
+                _isLoading.value = true
+                val lnurl = donationRepository.makeClaim(claim).lnurl
+                _lnUrl.postValue(lnurl)
+                _isLoading.value = false
             } catch (e: Exception) {
                 _error.postValue(Event(e.toString()))
             }

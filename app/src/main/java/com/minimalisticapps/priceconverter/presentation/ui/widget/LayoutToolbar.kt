@@ -54,32 +54,30 @@ fun SetToolbar(
                 .align(Alignment.CenterVertically)
                 .weight(2.0f, fill = true)
         ) {
-            Button(
-                onClick = { onDonateClick() },
-                content = {
-                    if (donationToken != null) {
-                        Image(
-                            painterResource(R.drawable.ic_hearth),
-                            "Thank you!",
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                        )
-                    } else {
-                        Text(text = "⚡Donate⚡")
-                    }
-
-                },
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor =
-                    PrimaryColorLight
-                ),
-                contentPadding = PaddingValues(
-                    start = 4.dp,
-                    top = 0.dp,
-                    end = 4.dp,
-                    bottom = 0.dp
+            if (donationToken != null) {
+                Image(
+                    painterResource(R.drawable.ic_hearth),
+                    "Thank you!",
+                    modifier = Modifier.clickable { onDonateClick() }
                 )
-            )
+            } else {
+                Button(
+                    onClick = { onDonateClick() },
+                    content = {
+                        Text(text = "⚡Donate⚡")
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor =
+                        PrimaryColorLight
+                    ),
+                    contentPadding = PaddingValues(
+                        start = 4.dp,
+                        top = 0.dp,
+                        end = 4.dp,
+                        bottom = 0.dp
+                    )
+                )
+            }
         }
         Box(
             modifier = Modifier.align(Alignment.CenterVertically)

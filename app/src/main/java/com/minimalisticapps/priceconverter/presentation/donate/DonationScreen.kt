@@ -5,8 +5,10 @@ import android.content.ActivityNotFoundException
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -86,7 +88,17 @@ fun DonationScreen(donationViewModel: DonationViewModel = hiltViewModel()) {
                 text = "We accept donations in BTC over Lightning Network.",
             )
         }
-        if (donationViewModel.lnUrl.value == null) {
+
+
+        if (donationViewModel.isLoading.value) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                CircularProgressIndicator()
+            }
+
+        } else if (donationViewModel.lnUrl.observeAsState().value == null) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxWidth()
@@ -95,6 +107,7 @@ fun DonationScreen(donationViewModel: DonationViewModel = hiltViewModel()) {
                     Text(text = "Donate⚡", fontSize = 25.sp)
                 }
             }
+
         } else {
             Box(
                 contentAlignment = Alignment.Center,
