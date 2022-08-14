@@ -1,5 +1,6 @@
 package com.minimalisticapps.priceconverter.data.remote.donationserver
 
 data class DonationServerGetClaimResponse(
-    val todo: String // Todo: ...
+    val key: String?,
+    val status: List<String>
 )

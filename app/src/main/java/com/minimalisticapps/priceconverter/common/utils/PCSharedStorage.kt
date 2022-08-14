@@ -1,5 +1,6 @@
 package com.minimalisticapps.priceconverter.common.utils
 
+import android.util.Log
 import java.util.*
 
 
@@ -46,7 +47,8 @@ object PCSharedStorage : SharedPrefHelper(PCSharedConfig.PREF_NAME) {
 
     fun getDonationToken(): String? {
         val token = getString(DONATION_TOKEN, "")
-//        return "test"
+
+        Log.i("Donation Token", token)
 
         return if (token != "") {
             // Todo: validate token against public key!
@@ -58,16 +60,6 @@ object PCSharedStorage : SharedPrefHelper(PCSharedConfig.PREF_NAME) {
 
     fun saveDonationToken(token: String) {
         saveString(DONATION_TOKEN, token)
-    }
-
-    fun getDonationLnurl(): String? {
-        val lnurl = getString(DONATION_LNURL, "")
-
-        return if (lnurl != "") lnurl else null
-    }
-
-    fun saveDonationLnurl(token: String) {
-        saveString(DONATION_LNURL, token)
     }
 
     fun saveTimesAgo(value: Long) {
