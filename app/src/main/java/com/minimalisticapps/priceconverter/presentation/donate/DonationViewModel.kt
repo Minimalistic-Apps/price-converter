@@ -12,6 +12,7 @@ import com.minimalisticapps.priceconverter.common.Event
 import com.minimalisticapps.priceconverter.common.utils.PCSharedStorage
 import com.minimalisticapps.priceconverter.data.repository.DonationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -35,6 +36,15 @@ class DonationViewModel @Inject constructor(
     private val _keyStatus = mutableStateOf(listOf<String>())
     val keyStatus: State<List<String>> = _keyStatus
 
+    private var _hasValidKey = mutableStateOf(getRefreshedKey())
+    var hasValidKey: State<Boolean> = _hasValidKey
+
+    private fun getRefreshedKey(): Boolean {
+        val token = PCSharedStorage.getDonationToken()
+
+        return token != null
+    }
+
     fun userOpenedScreenWithDonate() {
         val claim = PCSharedStorage.getDonationClaim()
 
@@ -48,6 +58,7 @@ class DonationViewModel @Inject constructor(
                 val response = donationRepository.getClaim(claim)
                 if (response.key != null) {
                     PCSharedStorage.saveDonationToken(response.key)
+                    _hasValidKey.value = getRefreshedKey()
                 }
                 _keyStatus.value = response.status
 
@@ -80,6 +91,8 @@ class DonationViewModel @Inject constructor(
                             val response = donationRepository.getClaim(claim)
                             if (response.key != null) {
                                 PCSharedStorage.saveDonationToken(response.key)
+                                _hasValidKey.value = getRefreshedKey()
+                                this.cancel()
                             }
                             _keyStatus.value = response.status
 

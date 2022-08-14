@@ -47,53 +47,89 @@ fun DonationScreen(donationViewModel: DonationViewModel = hiltViewModel()) {
         modifier = Modifier.fillMaxHeight()
     ) {
         Box(
-            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 25.dp, start = 25.dp, end = 25.dp)
         ) {
             Text(
-                text = "Donate!",
-                textAlign = TextAlign.Center,
+                text = "Thank you!",
+                textAlign = TextAlign.Left,
                 fontSize = 35.sp
             )
         }
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 25.dp, start = 25.dp, end = 25.dp)
-        ) {
-            Text(
-                textAlign = TextAlign.Center,
-                text = buildAnnotatedString {
-                    append("Your contribution will helps us to deliver ")
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("Free Open-Source Privacy-Respecting Minimalistic")
+        if (!donationViewModel.hasValidKey.value) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 25.dp, start = 25.dp, end = 25.dp)
+            ) {
+                Text(
+                    textAlign = TextAlign.Left,
+                    text = buildAnnotatedString {
+                        append("Your contribution will helps us to deliver ")
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append("Free Open-Source Privacy-Respecting Minimalistic")
+                        }
+                        append(" apps to everybody!")
                     }
-                    append(" apps to everybody!")
-                }
-            )
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 25.dp, start = 25.dp, end = 25.dp)
+            ) {
+                Text(
+                    text = buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append(
+                                "If you donate at least 10000 satoshis, "
+                                        + "we stop periodically bugging you about it \uD83D\uDE09"
+                            )
+                        }
+                    },
+                    textAlign = TextAlign.Left
+                )
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 25.dp, start = 25.dp, end = 25.dp)
+            ) {
+                Text(
+                    textAlign = TextAlign.Left,
+                    text = buildAnnotatedString {
+                        append("❤️ You donation is big deal for us! ❤")
+                    }
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 25.dp, start = 25.dp, end = 25.dp)
+            ) {
+                Text(
+                    textAlign = TextAlign.Left,
+                    text = buildAnnotatedString {
+                        append("Thanks to our donors we can innovate and build even more ")
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                            append("Free Open-Source Privacy-Respecting Minimalistic")
+                        }
+                        append(" apps to everybody!")
+                    }
+                )
+            }
         }
+
+
         Box(
-            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 25.dp, start = 25.dp, end = 25.dp)
         ) {
             Text(
-                text = "And we stop periodically bugging you about it \uD83D\uDE09",
-                textAlign = TextAlign.Center
-            )
-        }
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 25.dp, start = 25.dp, end = 25.dp)
-        ) {
-            Text(
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Left,
                 text = "We accept donations in BTC over Lightning Network.",
             )
         }
@@ -121,7 +157,10 @@ fun DonationScreen(donationViewModel: DonationViewModel = hiltViewModel()) {
                         ).show()
                     }
                 }) {
-                Text(text = "Donate⚡", fontSize = 25.sp)
+                Text(
+                    text = if (!donationViewModel.hasValidKey.value) "Donate⚡" else "Donate again⚡",
+                    fontSize = 25.sp
+                )
             }
         }
 

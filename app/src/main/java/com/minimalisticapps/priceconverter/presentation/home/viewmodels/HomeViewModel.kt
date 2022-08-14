@@ -25,6 +25,8 @@ import java.math.RoundingMode
 import java.util.*
 import javax.inject.Inject
 
+const val DONATION_REMINDER_DELAY_MS = 14 * 24 * 3600 * 1000 // 14 days
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCoinUseCase: GetCoinsUseCase,
@@ -45,6 +47,7 @@ class HomeViewModel @Inject constructor(
     private val _isRefreshing: MutableLiveData<Boolean> = MutableLiveData(false)
     private val _state = mutableStateOf(CoinsState())
     private val _timeAgoState = mutableStateOf("")
+    private val _showDonationReminder = mutableStateOf(calculateShouldShowDonationReminder())
     private val _isLongerThan1hour = mutableStateOf(false)
     private val _shitcoinListState: MutableState<List<Pair<Int, BitPayCoinWithFiatCoin>>> =
         mutableStateOf(emptyList())
@@ -60,7 +63,29 @@ class HomeViewModel @Inject constructor(
     val shitcoinListState: State<List<Pair<Int, BitPayCoinWithFiatCoin>>> = _shitcoinListState
     var isRefreshing: LiveData<Boolean> = _isRefreshing
     val timeAgoState: State<String> = _timeAgoState
+    val showDonationReminder: State<Boolean> = _showDonationReminder
     val isLongerThan1hour: State<Boolean> = _isLongerThan1hour
+
+    private fun calculateShouldShowDonationReminder(): Boolean {
+        // User has valid token
+        if (PCSharedStorage.getDonationToken() != null) {
+            return false
+        }
+
+        val currentTimestamp = Calendar.getInstance().time.time
+        val lastReminder = PCSharedStorage.getLastDonationReminder()
+
+        // For first run, we don't want to ask user immediately,
+        // but only after the first time-period
+        if (lastReminder == 0L) {
+            PCSharedStorage.saveLastDonationReminder(currentTimestamp)
+            return false
+        }
+
+        val threshold = currentTimestamp - DONATION_REMINDER_DELAY_MS.toLong()
+
+        return lastReminder < threshold
+    }
 
     private val updateTextTask = object : Runnable {
         override fun run() {
@@ -83,6 +108,11 @@ class HomeViewModel @Inject constructor(
         }
         getCoins()
         getFiatCoins()
+    }
+
+    fun dismissReminder() {
+        PCSharedStorage.saveLastDonationReminder(Calendar.getInstance().time.time)
+        _showDonationReminder.value = calculateShouldShowDonationReminder()
     }
 
     //    time ago handle function
