@@ -1,7 +1,6 @@
 package com.minimalisticapps.priceconverter.presentation.currencylist
 
 import android.app.Activity
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +18,7 @@ import com.minimalisticapps.priceconverter.common.utils.toFiatCoinsExchange
 import com.minimalisticapps.priceconverter.presentation.currencylist.viewmodels.CoinListViewModel
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.presentation.ui.item.CoinItem
-import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInput
+import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputCurrency
 
 @Composable
 fun CoinListScreen(
@@ -29,14 +28,12 @@ fun CoinListScreen(
 ) {
     val mContext = LocalContext.current as Activity
     val coinsList = remember { mutableStateOf(coinsState.coins) }
-    val searchText = remember { mutableStateOf("") }
-
 
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
         Column {
-            TextInput { text ->
+            TextInputCurrency { text ->
                 if (text.isNotEmpty()) {
                     coinsList.value = coinsState.coins.filter {
                         it.name.lowercase().contains(text.lowercase()) ||
@@ -54,10 +51,10 @@ fun CoinListScreen(
                             hideKeyboard(mContext)
                             coinListViewModel.insertFiatCoin(item.toFiatCoinsExchange())
                             navController.popBackStack()
-                        })
+                        }
+                    )
                 }
             }
         }
-
     }
 }

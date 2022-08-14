@@ -13,7 +13,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.minimalisticapps.priceconverter.common.Resource
 import com.minimalisticapps.priceconverter.common.utils.*
-import com.minimalisticapps.priceconverter.domain.usecase.*
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.*
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
@@ -24,6 +24,8 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.*
 import javax.inject.Inject
+
+const val DONATION_REMINDER_DELAY_MS = 14 * 24 * 3600 * 1000 // 14 days
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -45,6 +47,7 @@ class HomeViewModel @Inject constructor(
     private val _isRefreshing: MutableLiveData<Boolean> = MutableLiveData(false)
     private val _state = mutableStateOf(CoinsState())
     private val _timeAgoState = mutableStateOf("")
+    private val _showDonationReminder = mutableStateOf(calculateShouldShowDonationReminder())
     private val _isLongerThan1hour = mutableStateOf(false)
     private val _shitcoinListState: MutableState<List<Pair<Int, BitPayCoinWithFiatCoin>>> =
         mutableStateOf(emptyList())
@@ -60,7 +63,29 @@ class HomeViewModel @Inject constructor(
     val shitcoinListState: State<List<Pair<Int, BitPayCoinWithFiatCoin>>> = _shitcoinListState
     var isRefreshing: LiveData<Boolean> = _isRefreshing
     val timeAgoState: State<String> = _timeAgoState
+    val showDonationReminder: State<Boolean> = _showDonationReminder
     val isLongerThan1hour: State<Boolean> = _isLongerThan1hour
+
+    private fun calculateShouldShowDonationReminder(): Boolean {
+        // User has valid token
+        if (PCSharedStorage.getDonationToken() != null) {
+            return false
+        }
+
+        val currentTimestamp = Calendar.getInstance().time.time
+        val lastReminder = PCSharedStorage.getLastDonationReminder()
+
+        // For first run, we don't want to ask user immediately,
+        // but only after the first time-period
+        if (lastReminder == 0L) {
+            PCSharedStorage.saveLastDonationReminder(currentTimestamp)
+            return false
+        }
+
+        val threshold = currentTimestamp - DONATION_REMINDER_DELAY_MS.toLong()
+
+        return lastReminder < threshold
+    }
 
     private val updateTextTask = object : Runnable {
         override fun run() {
@@ -83,6 +108,11 @@ class HomeViewModel @Inject constructor(
         }
         getCoins()
         getFiatCoins()
+    }
+
+    fun dismissReminder() {
+        PCSharedStorage.saveLastDonationReminder(Calendar.getInstance().time.time)
+        _showDonationReminder.value = calculateShouldShowDonationReminder()
     }
 
     //    time ago handle function
@@ -205,7 +235,7 @@ class HomeViewModel @Inject constructor(
         val shitcoinAmount =
             parseBigDecimalFromString(shitcoinInput) ?: return
         val oneUnitOfShitcoinInBTC =
-            shitcoin.bitPayExchangeRate.oneUnitOfShitcoinInBTC ?: return
+            shitcoin.exchangeRate.oneUnitOfShitcoinInBTC ?: return
         val bitcoinPrice = oneUnitOfShitcoinInBTC.multiply(shitcoinAmount)
         updateBitcoinAmountWithoutRecalculate(bitcoinPrice)
 
@@ -213,7 +243,7 @@ class HomeViewModel @Inject constructor(
         shitcoinListState.value.forEach {
             if (shitcoinIndex != it.first) {
                 val itOneUnitOfShitcoinInBtc =
-                    it.second.bitPayExchangeRate.oneUnitOfShitcoinInBTC ?: return
+                    it.second.exchangeRate.oneUnitOfShitcoinInBTC ?: return
 
                 val newValue = shitcoinAmount.multiply(
                     oneUnitOfShitcoinInBTC.divide(
@@ -235,7 +265,7 @@ class HomeViewModel @Inject constructor(
 
         shitcoinListState.value.forEach {
             val itOneUnitOfShitcoinInBtc =
-                it.second.bitPayExchangeRate.oneUnitOfShitcoinInBTC
+                it.second.exchangeRate.oneUnitOfShitcoinInBTC
 
             if (itOneUnitOfShitcoinInBtc != null) {
                 val newAmount = amountBitcoin.divide(

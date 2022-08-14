@@ -1,9 +1,8 @@
-package com.minimalisticapps.priceconverter.domain.usecase
+package com.minimalisticapps.priceconverter.data.repository.priceconverter
 
 import android.util.Log
 import com.minimalisticapps.priceconverter.common.Resource
-import com.minimalisticapps.priceconverter.data.remote.dto.BitPayExchangeRate
-import com.minimalisticapps.priceconverter.domain.repo.PriceConverterRepository
+import com.minimalisticapps.priceconverter.data.remote.coingecko.CoinGeckoExchangeRate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -21,9 +20,9 @@ constructor(
     private val repository: PriceConverterRepository,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun invoke(): Flow<Resource<Flow<List<BitPayExchangeRate>>>> =
+    operator fun invoke(): Flow<Resource<Flow<List<CoinGeckoExchangeRate>>>> =
         flow {
-            emit(Resource.Loading<Flow<List<BitPayExchangeRate>>>())
+            emit(Resource.Loading<Flow<List<CoinGeckoExchangeRate>>>())
             val entries = repository.getExchangeRates().rates.entries
             entries.forEach {
                 it.value.code = it.key.uppercase()
@@ -37,12 +36,12 @@ constructor(
                 }
                 repository.saveCoin(it.value)
             }
-            emit(Resource.Success<Flow<List<BitPayExchangeRate>>>(repository.getCoins()))
+            emit(Resource.Success<Flow<List<CoinGeckoExchangeRate>>>(repository.getCoins()))
         }
             .catch {
                 Log.e("GetCoinsUseCase", it.toString() + "\n" + it.stackTraceToString())
                 emit(
-                    Resource.Error<Flow<List<BitPayExchangeRate>>>(
+                    Resource.Error<Flow<List<CoinGeckoExchangeRate>>>(
                         it.localizedMessage
                             ?: "Something went wrong"
                     )
