@@ -69,6 +69,9 @@ class DonationViewModel @Inject constructor(
 
                 Log.e("x", e.stackTraceToString())
                 _error.postValue(Event(e.toString()))
+            } catch (e: Exception) {
+                Log.e("x", e.stackTraceToString())
+                _error.postValue(Event(e.toString()))
             }
         }
     }
@@ -101,6 +104,9 @@ class DonationViewModel @Inject constructor(
                                 return@launch
                             }
 
+                            Log.e("x", e.stackTraceToString())
+                            _error.postValue(Event(e.toString()))
+                        } catch (e: Exception) {
                             Log.e("x", e.stackTraceToString())
                             _error.postValue(Event(e.toString()))
                         }

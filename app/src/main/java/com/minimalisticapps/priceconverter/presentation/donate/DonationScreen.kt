@@ -2,11 +2,7 @@ package com.minimalisticapps.priceconverter.presentation.donate
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
-import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -14,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalUriHandler
@@ -164,28 +159,28 @@ fun DonationScreen(donationViewModel: DonationViewModel = hiltViewModel()) {
             }
         }
 
-        if (donationViewModel.keyStatus.value.isNotEmpty()) {
-            Log.i("x", donationViewModel.keyStatus.value.joinToString("\n"))
-
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 25.dp, start = 25.dp, end = 25.dp)
-                    .border(
-                        border = BorderStroke(
-                            width = 1.dp,
-                            color = if (isSystemInDarkTheme()) Color.DarkGray else Color.LightGray
-                        )
-                    )
-                    .padding(all = 6.dp)
-            ) {
-                Text(
-                    textAlign = TextAlign.Left,
-                    text = donationViewModel.keyStatus.value.joinToString("\n"),
-                    color = if (isSystemInDarkTheme()) Color.DarkGray else Color.LightGray
-                )
-            }
-        }
+//        if (donationViewModel.keyStatus.value.isNotEmpty()) {
+//            Log.i("x", donationViewModel.keyStatus.value.joinToString("\n"))
+//
+//            Box(
+//                contentAlignment = Alignment.Center,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(bottom = 25.dp, start = 25.dp, end = 25.dp)
+//                    .border(
+//                        border = BorderStroke(
+//                            width = 1.dp,
+//                            color = if (isSystemInDarkTheme()) Color.DarkGray else Color.LightGray
+//                        )
+//                    )
+//                    .padding(all = 6.dp)
+//            ) {
+//                Text(
+//                    textAlign = TextAlign.Left,
+//                    text = donationViewModel.keyStatus.value.joinToString("\n"),
+//                    color = if (isSystemInDarkTheme()) Color.DarkGray else Color.LightGray
+//                )
+//            }
+//        }
     }
 }
