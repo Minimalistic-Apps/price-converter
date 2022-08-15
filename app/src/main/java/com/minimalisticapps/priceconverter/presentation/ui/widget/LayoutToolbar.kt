@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.minimalisticapps.priceconverter.R
@@ -36,23 +37,28 @@ fun SetToolbar(
                 top = 10.dp,
                 end = 16.dp,
                 bottom = 10.dp
-            )
+            ),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Box(
-            modifier = Modifier.align(Alignment.CenterVertically)
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .weight(2.0f, fill = true)
         ) {
             Text(
                 textAlign = TextAlign.Start,
                 text = title,
                 color = Color.White,
                 fontSize = 20.sp,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis
             )
         }
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
-                .weight(2.0f, fill = true)
+                .widthIn(if (donationToken != null) 0.dp else 120.dp, 120.dp)
         ) {
             if (donationToken != null) {
                 Image(
@@ -64,7 +70,7 @@ fun SetToolbar(
                 Button(
                     onClick = { onDonateClick() },
                     content = {
-                        Text(text = "⚡Donate⚡")
+                        Text(text = "⚡Donate⚡", softWrap = false)
                     },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor =
@@ -75,7 +81,8 @@ fun SetToolbar(
                         top = 0.dp,
                         end = 4.dp,
                         bottom = 0.dp
-                    )
+                    ),
+//                    modifier = Modifier.width(100.dp)
                 )
             }
         }
