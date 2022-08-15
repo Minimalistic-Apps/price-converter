@@ -44,6 +44,7 @@ fun SetToolbar(
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .weight(2.0f, fill = true)
+//                .background(color = Color.Green)
         ) {
             Text(
                 textAlign = TextAlign.Start,
@@ -52,13 +53,21 @@ fun SetToolbar(
                 fontSize = 20.sp,
                 softWrap = false,
                 overflow = TextOverflow.Ellipsis
+//                modifier = Modifier.background(color = Color.Red)
             )
         }
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .widthIn(if (donationToken != null) 0.dp else 120.dp, 120.dp)
+            modifier =
+            if (donationToken != null)
+                Modifier
+                    .align(Alignment.CenterVertically)
+                    .weight(1.0f, fill = false)
+                    .widthIn(0.dp, 120.dp)
+            else
+                Modifier
+                    .align(Alignment.CenterVertically)
+                    .widthIn(120.dp, 120.dp)
         ) {
             if (donationToken != null) {
                 Image(
