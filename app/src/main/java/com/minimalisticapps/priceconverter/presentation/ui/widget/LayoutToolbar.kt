@@ -12,10 +12,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.minimalisticapps.priceconverter.R
-import com.minimalisticapps.priceconverter.common.utils.PCSharedStorage
 import com.minimalisticapps.priceconverter.presentation.ui.theme.PrimaryColorLight
 import com.minimalisticapps.priceconverter.presentation.ui.theme.WhiteColor
 
@@ -25,10 +25,9 @@ fun SetToolbar(
     onReload: () -> Unit,
     onDonateClick: () -> Unit,
     btcOrSats: String,
-    onBtcOrSatsChange: () -> Unit
+    onBtcOrSatsChange: () -> Unit,
+    donationToken: String?
 ) {
-    val donationToken = PCSharedStorage.getDonationToken()
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -43,7 +42,7 @@ fun SetToolbar(
         Box(
             modifier = Modifier
                 .align(Alignment.CenterVertically)
-                .weight(2.0f, fill = true)
+                .weight(2.0f, fill = false)
 //                .background(color = Color.Green)
         ) {
             Text(
@@ -136,4 +135,17 @@ fun SetToolbar(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun SetToolbarPreview() {
+    SetToolbar(
+        title = "Price Converter",
+        btcOrSats = "BTC",
+        onReload = {},
+        onDonateClick = {},
+        onBtcOrSatsChange = {},
+        donationToken = null // "token"
+    )
 }

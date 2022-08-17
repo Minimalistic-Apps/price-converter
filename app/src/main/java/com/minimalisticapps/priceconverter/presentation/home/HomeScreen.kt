@@ -238,7 +238,8 @@ fun HomeScreen(
                         navController.navigate(Screen.DonationScreen.route)
                     },
                     onBtcOrSatsChange = { homeViewModel.switchBtcOrSats() },
-                    btcOrSats = homeViewModel.btcOrSats.value
+                    btcOrSats = homeViewModel.btcOrSats.value,
+                    donationToken = PCSharedStorage.getDonationToken()
                 )
             }
 

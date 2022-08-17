@@ -12,7 +12,6 @@ import com.minimalisticapps.priceconverter.common.Event
 import com.minimalisticapps.priceconverter.common.utils.PCSharedStorage
 import com.minimalisticapps.priceconverter.data.repository.DonationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -38,6 +37,8 @@ class DonationViewModel @Inject constructor(
 
     private var _hasValidKey = mutableStateOf(getRefreshedKey())
     var hasValidKey: State<Boolean> = _hasValidKey
+
+    var timer: TimerTask? = null
 
     private fun getRefreshedKey(): Boolean {
         val token = PCSharedStorage.getDonationToken()
@@ -81,39 +82,41 @@ class DonationViewModel @Inject constructor(
 
         var attempts = 0
 
-        Timer().schedule(
-            object : TimerTask() {
-                override fun run() {
-                    if (attempts > MAX_ATTEMPTS) {
-                        this.cancel()
-                        _error.postValue(Event("Waiting for payment timeouts. ($MAX_ATTEMPTS)"))
-                    }
-
-                    viewModelScope.launch {
-                        try {
-                            val response = donationRepository.getClaim(claim)
-                            if (response.key != null) {
-                                PCSharedStorage.saveDonationToken(response.key)
-                                _hasValidKey.value = getRefreshedKey()
-                                this.cancel()
-                            }
-                            _keyStatus.value = response.status
-
-                        } catch (e: retrofit2.HttpException) {
-                            if (e.code() == 404) {
-                                return@launch
-                            }
-
-                            Log.e("x", e.stackTraceToString())
-                            _error.postValue(Event(e.toString()))
-                        } catch (e: Exception) {
-                            Log.e("x", e.stackTraceToString())
-                            _error.postValue(Event(e.toString()))
-                        }
-                    }
-                    attempts += 1
+        timer = object : TimerTask() {
+            override fun run() {
+                if (attempts > MAX_ATTEMPTS) {
+                    this.cancel()
+                    _error.postValue(Event("Waiting for payment timeouts. ($MAX_ATTEMPTS)"))
                 }
-            },
+
+                viewModelScope.launch {
+                    try {
+                        val response = donationRepository.getClaim(claim)
+                        if (response.key != null) {
+                            PCSharedStorage.saveDonationToken(response.key)
+                            _hasValidKey.value = getRefreshedKey()
+                            this@DonationViewModel.timer?.cancel()
+                        }
+                        _keyStatus.value = response.status
+
+                    } catch (e: retrofit2.HttpException) {
+                        if (e.code() == 404) {
+                            return@launch
+                        }
+
+                        Log.e("x", e.stackTraceToString())
+                        _error.postValue(Event(e.toString()))
+                    } catch (e: Exception) {
+                        Log.e("x", e.stackTraceToString())
+                        _error.postValue(Event(e.toString()))
+                    }
+                }
+                attempts += 1
+            }
+        }
+
+        Timer().schedule(
+            timer,
             POLLING_FREQ.toLong(),
             POLLING_FREQ.toLong(),
         )
