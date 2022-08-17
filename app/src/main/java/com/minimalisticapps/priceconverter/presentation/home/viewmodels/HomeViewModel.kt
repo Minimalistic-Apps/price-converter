@@ -8,8 +8,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.minimalisticapps.priceconverter.common.Resource
 import com.minimalisticapps.priceconverter.common.utils.*
@@ -44,7 +42,7 @@ class HomeViewModel @Inject constructor(
     var timerHandler: Handler = Handler(Looper.getMainLooper())
 
     //    Mutable states
-    private val _isRefreshing: MutableLiveData<Boolean> = MutableLiveData(false)
+    private val _isRefreshing = mutableStateOf(false)
     private val _state = mutableStateOf(CoinsState())
     private val _timeAgoState = mutableStateOf("")
     private val _showDonationReminder = mutableStateOf(calculateShouldShowDonationReminder())
@@ -61,7 +59,7 @@ class HomeViewModel @Inject constructor(
     //    States
     val state: State<CoinsState> = _state
     val shitcoinListState: State<List<Pair<Int, BitPayCoinWithFiatCoin>>> = _shitcoinListState
-    var isRefreshing: LiveData<Boolean> = _isRefreshing
+    var isRefreshing: State<Boolean> = _isRefreshing
     val timeAgoState: State<String> = _timeAgoState
     val showDonationReminder: State<Boolean> = _showDonationReminder
     val isLongerThan1hour: State<Boolean> = _isLongerThan1hour

@@ -9,8 +9,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -58,7 +56,7 @@ fun HomeScreen(
     val coinsState = homeViewModel.state.value
     val timeAgo = homeViewModel.timeAgoState.value
     val isLongerThan1hour = homeViewModel.isLongerThan1hour.value
-    val isRefreshing by homeViewModel.isRefreshing.observeAsState()
+    val isRefreshing = homeViewModel.isRefreshing.value
     val colorTimeAgo = if (isLongerThan1hour) ErrorColor else SecondaryColorForDark
     val fiatCoinsListState = homeViewModel.shitcoinListState.value
     val isErrorShown = remember { mutableStateOf(false) }
