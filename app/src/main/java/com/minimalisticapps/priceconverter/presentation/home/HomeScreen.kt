@@ -25,9 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
-import com.minimalisticapps.priceconverter.common.dialog.ShowProgressDialog
 import com.minimalisticapps.priceconverter.common.utils.PCSharedStorage
 import com.minimalisticapps.priceconverter.common.utils.showToast
 import com.minimalisticapps.priceconverter.common.utils.toFiatCoinsExchange
@@ -57,6 +58,7 @@ fun HomeScreen(
     val timeAgo = homeViewModel.timeAgoState.value
     val isLongerThan1hour = homeViewModel.isLongerThan1hour.value
     val isRefreshing = homeViewModel.isRefreshing.value
+    val swipeRefreshState = rememberSwipeRefreshState(false)
     val colorTimeAgo = if (isLongerThan1hour) ErrorColor else SecondaryColorForDark
     val fiatCoinsListState = homeViewModel.shitcoinListState.value
     val isErrorShown = remember { mutableStateOf(false) }
@@ -67,9 +69,6 @@ fun HomeScreen(
         mContext.showToast(coinsState.error)
         isErrorShown.value = true
     }
-
-    if (coinsState.isLoading && isRefreshing == false)
-        ShowProgressDialog()
 
     // Default usd currency added once app launch
     if (!PCSharedStorage.isUsdAddDefault()) {
@@ -177,154 +176,153 @@ fun HomeScreen(
             contentColor = Color.White
         )
     }
-
-    Scaffold(
-        modifier = Modifier
-            .fillMaxSize(),
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                backgroundColor = PrimaryColor,
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "image",
-                        tint = Color.White
-                    )
-                },
-                text = {
-                    Text(
-                        text = mContext.resources.getString(R.string.add),
-                        color = Color.White
-                    )
-                },
-                onClick = {
-                    coinsStateValue = coinsState
-                    navController.navigate(Screen.CoinsListScreen.route)
-                }
-            )
-
-            // Confirmation dialog
-            if (isShownConfirmDialog.value) {
-                ConfirmationDialog(
-                    onPositiveClick = {
-                        isShownConfirmDialog.value = it
-                        homeViewModel.deleteFiatCoin(index = selectedFiatCoin.value)
-                    },
-                    onDismiss = {
-                        isShownConfirmDialog.value = it
-                    })
-            }
-
-        }
+    SwipeRefresh(
+        state = swipeRefreshState,
+        onRefresh = { homeViewModel.refreshData() },
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize(),
+            floatingActionButton = {
+                ExtendedFloatingActionButton(
+                    backgroundColor = PrimaryColor,
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "image",
+                            tint = Color.White
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = mContext.resources.getString(R.string.add),
+                            color = Color.White
+                        )
+                    },
+                    onClick = {
+                        coinsStateValue = coinsState
+                        navController.navigate(Screen.CoinsListScreen.route)
+                    }
+                )
+
+                if (isShownConfirmDialog.value) {
+                    ConfirmationDialog(
+                        onPositiveClick = {
+                            isShownConfirmDialog.value = it
+                            homeViewModel.deleteFiatCoin(index = selectedFiatCoin.value)
+                        },
+                        onDismiss = {
+                            isShownConfirmDialog.value = it
+                        })
+                }
+
+            }
         ) {
-            Row(
-                modifier = Modifier
-                    .height(60.dp)
-                    .fillMaxWidth()
-                    .background(PrimaryColor)
+            Column(
+                modifier = Modifier.fillMaxSize()
             ) {
-                SetToolbar(
-                    title = mContext.resources.getString(R.string.app_name),
-                    onReload = {
-                        homeViewModel.refreshData()
-                        isErrorShown.value = false
-                    },
-                    onDonateClick = {
-                        navController.navigate(Screen.DonationScreen.route)
-                    },
-                    onBtcOrSatsChange = { homeViewModel.switchBtcOrSats() },
-                    btcOrSats = homeViewModel.btcOrSats.value,
-                    donationToken = PCSharedStorage.getDonationToken()
-                )
-            }
-
-            if (coinsState.isLoading && isRefreshing == true) {
-                ShowLinearIndicator()
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 0.dp),
-                horizontalArrangement = Arrangement.End,
-            ) {
-                Text(
-                    text = timeAgo,
-                    style = MaterialTheme.typography.body2,
+                Row(
                     modifier = Modifier
-                        .padding(vertical = 10.dp, horizontal = 16.dp),
-                    color = colorTimeAgo,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    textAlign = TextAlign.Left
-                )
-            }
+                        .height(60.dp)
+                        .fillMaxWidth()
+                        .background(PrimaryColor)
+                ) {
+                    SetToolbar(
+                        title = mContext.resources.getString(R.string.app_name),
+                        onReload = {
+                            homeViewModel.refreshData()
+                            isErrorShown.value = false
+                        },
+                        onDonateClick = {
+                            navController.navigate(Screen.DonationScreen.route)
+                        },
+                        onBtcOrSatsChange = { homeViewModel.switchBtcOrSats() },
+                        btcOrSats = homeViewModel.btcOrSats.value,
+                        donationToken = PCSharedStorage.getDonationToken()
+                    )
+                }
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(vertical = 0.dp)
-            ) {
-                item {
-                    Row(
+                if (coinsState.isLoading && isRefreshing) {
+                    ShowLinearIndicator()
+                }
+
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 0.dp),
+                    horizontalArrangement = Arrangement.End,
+                ) {
+                    Text(
+                        text = timeAgo,
+                        style = MaterialTheme.typography.body2,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 20.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
+                            .padding(vertical = 10.dp, horizontal = 16.dp),
+                        color = colorTimeAgo,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Left
+                    )
+                }
+
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 0.dp)
+                ) {
+                    item {
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(3.0f)
+                                .padding(bottom = 20.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            TextInputBtc()
-                        }
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(3.0f)
+                            ) {
+                                TextInputBtc()
+                            }
 
-                        Text(
-                            text = if (homeViewModel.btcOrSats.value == "BTC") "BTC" else "Sats",
-                            textAlign = TextAlign.Start,
-                            fontSize = 18.sp,
-                            modifier = Modifier
-                                .padding(start = 11.dp, end = 50.dp)
-                                .width(45.dp)
+                            Text(
+                                text = if (homeViewModel.btcOrSats.value == "BTC") "BTC" else "Sats",
+                                textAlign = TextAlign.Start,
+                                fontSize = 18.sp,
+                                modifier = Modifier
+                                    .padding(start = 11.dp, end = 50.dp)
+                                    .width(45.dp)
+                            )
+                        }
+                    }
+                    items(
+                        items = fiatCoinsListState,
+                        key = { pair -> pair.first }
+                    ) { pair ->
+                        val code = pair.second.fiatCoinExchange.code
+                        val state = homeViewModel.shitcoinInputsState[code]!!
+
+                        ItemFiatCoin(
+                            index = pair.first,
+                            code = code,
+                            oneUnitOfShitcoinInBTC = pair.second.exchangeRate.oneUnitOfShitcoinInBTC,
+                            state = state,
+                            onValueChange = { homeViewModel.updateShitcoin(pair.first, it) },
+                            onLongPress = { // Todo: ordering
+                            },
+                            onSelected = {
+                                homeViewModel.selectedCoin.value = code
+                            },
+                            onDeleteClick = {
+                                selectedFiatCoin.value = it
+                                isShownConfirmDialog.value = true
+                            },
+                            btcOrSats = homeViewModel.btcOrSats.value
                         )
                     }
                 }
-                items(
-                    items = fiatCoinsListState,
-                    key = { pair -> pair.first }
-                ) { pair ->
-                    val code = pair.second.fiatCoinExchange.code
-                    val state = homeViewModel.shitcoinInputsState[code]!!
-
-                    ItemFiatCoin(
-                        index = pair.first,
-                        code = code,
-                        oneUnitOfShitcoinInBTC = pair.second.exchangeRate.oneUnitOfShitcoinInBTC,
-                        state = state,
-                        onValueChange = { homeViewModel.updateShitcoin(pair.first, it) },
-                        onLongPress = {
-//                                          work on orderable
-                        },
-                        onSelected = {
-                            homeViewModel.selectedCoin.value = code
-                        },
-                        onDeleteClick = {
-                            selectedFiatCoin.value = it
-                            isShownConfirmDialog.value = true
-                        },
-                        btcOrSats = homeViewModel.btcOrSats.value
-                    )
-                }
             }
-
-
         }
-
     }
-
 }
 

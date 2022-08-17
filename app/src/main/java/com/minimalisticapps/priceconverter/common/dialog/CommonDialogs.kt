@@ -16,17 +16,6 @@ import androidx.compose.ui.window.DialogProperties
 import com.minimalisticapps.priceconverter.R
 
 @Composable
-fun ShowProgressDialog() {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    )
-    {
-        CircularProgressIndicator(Modifier.align(Alignment.Center))
-    }
-
-}
-
-@Composable
 fun ConfirmationDialog(
     onPositiveClick: (value: Boolean) -> Unit,
     onDismiss: (value: Boolean) -> Unit
