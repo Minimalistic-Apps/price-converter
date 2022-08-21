@@ -10,8 +10,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import com.minimalisticapps.priceconverter.common.utils.AppConstants.BIT_COIN_PRECISION
-import com.minimalisticapps.priceconverter.data.repository.priceconverter.CurrencyRate
-import com.minimalisticapps.priceconverter.room.entities.ScreenCurrencyRecord
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.Shitcoin
+import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreen
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -54,8 +54,8 @@ fun Long.timeToTimeAgo(past: Long): String {
     }
 }
 
-fun CurrencyRate.toFiatCoinsExchange(): ScreenCurrencyRecord {
-    return ScreenCurrencyRecord(name = name, code = code)
+fun Shitcoin.asShitcoinOnScreen(): ShitcoinOnScreen {
+    return ShitcoinOnScreen(name = name, code = code)
 }
 
 fun String.toSatsFormat(): String {

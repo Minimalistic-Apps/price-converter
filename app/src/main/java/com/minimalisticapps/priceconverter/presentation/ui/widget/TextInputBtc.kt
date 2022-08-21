@@ -11,7 +11,7 @@ import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
+import com.minimalisticapps.priceconverter.presentation.home.HomeViewModel
 
 @SuppressLint("UnrememberedMutableState")
 @Composable

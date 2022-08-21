@@ -8,7 +8,6 @@ import com.minimalisticapps.priceconverter.data.remote.coingecko.CoingeckoApiInt
 import com.minimalisticapps.priceconverter.data.remote.donationserver.DonationServerApiInterface
 import com.minimalisticapps.priceconverter.data.repository.DonationRepository
 import com.minimalisticapps.priceconverter.data.repository.priceconverter.PriceConverterRepository
-import com.minimalisticapps.priceconverter.data.repository.priceconverter.PriceConverterRepositoryImpl
 import com.minimalisticapps.priceconverter.room.dao.PriceConverterDao
 import com.minimalisticapps.priceconverter.room.database.AppDatabase
 import dagger.Module
@@ -95,12 +94,12 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCoinRepository(
+    fun providePriceConverterRepository(
         coingeckoAPi: CoingeckoApiInterface,
         bitPayApi: BitpayApiInterface,
         priceConverterDao: PriceConverterDao
     ): PriceConverterRepository {
-        return PriceConverterRepositoryImpl(
+        return PriceConverterRepository(
             coingeckoAPi = coingeckoAPi,
             bitPayApi = bitPayApi,
             priceConverterDao = priceConverterDao

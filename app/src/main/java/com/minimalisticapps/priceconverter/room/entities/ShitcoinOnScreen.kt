@@ -4,11 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-/**
- * This represents ADDED currency on the MainView Screen
- */
-@Entity(tableName = "screen_currency_record")
-data class ScreenCurrencyRecord(
+@Entity(tableName = "shitcoins_on_screen")
+data class ShitcoinOnScreen(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "name")
     val name: String,

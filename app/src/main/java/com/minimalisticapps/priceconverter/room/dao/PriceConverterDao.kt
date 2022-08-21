@@ -1,29 +1,29 @@
 package com.minimalisticapps.priceconverter.room.dao
 
 import androidx.room.*
-import com.minimalisticapps.priceconverter.data.repository.priceconverter.CurrencyRate
-import com.minimalisticapps.priceconverter.room.entities.ScreenCurrencyRecord
-import com.minimalisticapps.priceconverter.room.entities.ScreenCurrencyRecordWithRate
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.Shitcoin
+import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreen
+import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreenWithRate
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PriceConverterDao {
-    @Query("SELECT * FROM currency_rate ORDER BY name")
-    fun fetchAllCurrencyRates(): Flow<List<CurrencyRate>>
+    @Query("SELECT * FROM shitcoins ORDER BY name")
+    fun fetchShitcoins(): Flow<List<Shitcoin>>
 
     @Transaction
-    @Query("SELECT * FROM screen_currency_record")
-    fun fetchAllScreenCurrencyRecords(): Flow<List<ScreenCurrencyRecordWithRate>>
+    @Query("SELECT * FROM shitcoins_on_screen")
+    fun fetchAllShitcoinOnScreen(): Flow<List<ShitcoinOnScreenWithRate>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCurrencyRate(coin: CurrencyRate)
+    suspend fun insertShitcoin(coin: Shitcoin)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertScreenCurrencyRecord(coin: ScreenCurrencyRecord)
+    suspend fun insertShitcoinOnScreen(coin: ShitcoinOnScreen)
 
     @Delete
-    suspend fun deleteScreenCurrencyRecord(screenCurrencyRecord: ScreenCurrencyRecord)
+    suspend fun deleteShitcoinOnScreen(shitcoinOnScreen: ShitcoinOnScreen)
 
     @Update
-    fun updateScreenCurrencyRecord(screenCurrencyRecord: ScreenCurrencyRecord)
+    fun updateShitcoinOnScreen(shitcoinOnScreen: ShitcoinOnScreen)
 }

@@ -13,16 +13,15 @@ class GetCoinsUseCase @Inject
 constructor(
     private val repository: PriceConverterRepository,
 ) {
-    operator fun invoke(): Flow<Resource<Flow<List<CurrencyRate>>>> =
+    operator fun invoke(): Flow<Resource<Flow<List<Shitcoin>>>> =
         flow {
             emit(Resource.Loading())
-            val entries = repository.getExchangeRates()
-            Log.i("getExchangeRates()", entries.toString())
+            val entries = repository.fetchShitcoinFromApi()
             entries.forEach {
                 repository.saveCoin(it)
             }
 
-            emit(Resource.Success(repository.getCoins()))
+            emit(Resource.Success(repository.getShitcoinsFromDatabase()))
         }
             .catch {
                 Log.e("GetCoinsUseCase", it.toString() + "\n" + it.stackTraceToString())

@@ -11,8 +11,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -25,12 +23,7 @@ import com.minimalisticapps.priceconverter.presentation.ui.theme.FadedColorDark
 import com.minimalisticapps.priceconverter.presentation.ui.theme.FadedColorLight
 
 @Composable
-fun TextInputCurrency(
-    onValueChange: (String) -> Unit,
-) {
-    val searchText = remember {
-        mutableStateOf("")
-    }
+fun FilterInput(query: String, onValueChange: (String) -> Unit) {
     val mContext = LocalContext.current as Activity
 
     TextField(
@@ -54,11 +47,8 @@ fun TextInputCurrency(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent
         ),
-        value = searchText.value,
-        onValueChange = { text ->
-            searchText.value = text
-            onValueChange(text)
-        },
+        value = query,
+        onValueChange = onValueChange,
         singleLine = true,
         label = {
             Text(

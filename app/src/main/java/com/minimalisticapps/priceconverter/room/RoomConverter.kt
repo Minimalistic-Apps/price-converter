@@ -1,4 +1,4 @@
-package com.minimalisticapps.priceconverter.data
+package com.minimalisticapps.priceconverter.room
 
 import androidx.room.TypeConverter
 import java.math.BigDecimal
