@@ -1,172 +1,230 @@
 package com.minimalisticapps.priceconverter.common.utils
 
-data class Currency(val flag: String?)
+data class Currency(val flags: List<String>)
 
 val ALLOWED_ISO_CURRENCIES = mapOf<String, Currency>(
-    "AED" to Currency(flag = null), // United Arab Emirates dirham
-    "AFN" to Currency(flag = null), // Afghan afghani
-    "ALL" to Currency(flag = null), // Albanian lek
-    "AMD" to Currency(flag = null), // Armenian dram
-    "ANG" to Currency(flag = null), // Netherlands Antillean guilder
-    "AOA" to Currency(flag = null), // Angolan kwanza
-    "ARS" to Currency(flag = null), // Argentine peso
-    "AUD" to Currency(flag = null), // Australian dollar
-    "AWG" to Currency(flag = null), // Aruban florin
-    "AZN" to Currency(flag = null), // Azerbaijani manat
-    "BAM" to Currency(flag = null), // Bosnia and Herzegovina convertible mark
-    "BBD" to Currency(flag = null), // Barbados dollar
-    "BDT" to Currency(flag = null), // Bangladeshi taka
-    "BGN" to Currency(flag = null), // Bulgarian lev
-    "BHD" to Currency(flag = null), // Bahraini dinar
-    "BIF" to Currency(flag = null), // Burundian franc
-    "BMD" to Currency(flag = null), // Bermudian dollar
-    "BND" to Currency(flag = null), // Brunei dollar
-    "BOB" to Currency(flag = null), // Boliviano
-    "BOV" to Currency(flag = null), // Bolivian Mvdol (funds code)
-    "BRL" to Currency(flag = null), // Brazilian real
-    "BSD" to Currency(flag = null), // Bahamian dollar
-    "BTN" to Currency(flag = null), // Bhutanese ngultrum
-    "BWP" to Currency(flag = null), // Botswana pula
-    "BYN" to Currency(flag = null), // Belarusian ruble
-    "BZD" to Currency(flag = null), // Belize dollar
-    "CAD" to Currency(flag = null), // Canadian dollar
-    "CDF" to Currency(flag = null), // Congolese franc
-    "CHE" to Currency(flag = null), // WIR euro (complementary currency)
-    "CHF" to Currency(flag = null), // Swiss franc
-    "CHW" to Currency(flag = null), // WIR franc (complementary currency)
-    "CLF" to Currency(flag = null), // Unidad de Fomento (funds code)
-    "CLP" to Currency(flag = null), // Chilean peso
-    "COP" to Currency(flag = null), // Colombian peso
-    "CRC" to Currency(flag = null), // Costa Rican colon
-    "CUC" to Currency(flag = null), // Cuban convertible peso
-    "CUP" to Currency(flag = null), // Cuban peso
-    "CVE" to Currency(flag = null), // Cape Verdean escudo
-    "CZK" to Currency(flag = null), // Czech koruna
-    "DJF" to Currency(flag = null), // Djiboutian franc
-    "DKK" to Currency(flag = null), // Danish krone
-    "DOP" to Currency(flag = null), // Dominican peso
-    "DZD" to Currency(flag = null), // Algerian dinar
-    "EGP" to Currency(flag = null), // Egyptian pound
-    "ERN" to Currency(flag = null), // Eritrean nakfa
-    "ETB" to Currency(flag = null), // Ethiopian birr
-    "EUR" to Currency(flag = null), // Euro
-    "FJD" to Currency(flag = null), // Fiji dollar
-    "FKP" to Currency(flag = null), // Falkland Islands pound
-    "GBP" to Currency(flag = null), // Pound sterling
-    "GEL" to Currency(flag = null), // Georgian lari
-    "GHS" to Currency(flag = null), // Ghanaian cedi
-    "GIP" to Currency(flag = null), // Gibraltar pound
-    "GMD" to Currency(flag = null), // Gambian dalasi
-    "GNF" to Currency(flag = null), // Guinean franc
-    "GTQ" to Currency(flag = null), // Guatemalan quetzal
-    "GYD" to Currency(flag = null), // Guyanese dollar
-    "HKD" to Currency(flag = null), // Hong Kong dollar
-    "HNL" to Currency(flag = null), // Honduran lempira
-    "HRK" to Currency(flag = null), // Croatian kuna
-    "HTG" to Currency(flag = null), // Haitian gourde
-    "HUF" to Currency(flag = null), // Hungarian forint
-    "IDR" to Currency(flag = null), // Indonesian rupiah
-    "ILS" to Currency(flag = null), // Israeli new shekel
-    "INR" to Currency(flag = null), // Indian rupee
-    "IQD" to Currency(flag = null), // Iraqi dinar
-    "IRR" to Currency(flag = null), // Iranian rial
-    "ISK" to Currency(flag = null), // Icelandic króna (plural: krónur)
-    "JMD" to Currency(flag = null), // Jamaican dollar
-    "JOD" to Currency(flag = null), // Jordanian dinar
-    "JPY" to Currency(flag = null), // Japanese yen
-    "KES" to Currency(flag = null), // Kenyan shilling
-    "KGS" to Currency(flag = null), // Kyrgyzstani som
-    "KHR" to Currency(flag = null), // Cambodian riel
-    "KMF" to Currency(flag = null), // Comoro franc
-    "KPW" to Currency(flag = null), // North Korean won
-    "KRW" to Currency(flag = null), // South Korean won
-    "KWD" to Currency(flag = null), // Kuwaiti dinar
-    "KYD" to Currency(flag = null), // Cayman Islands dollar
-    "KZT" to Currency(flag = null), // Kazakhstani tenge
-    "LAK" to Currency(flag = null), // Lao kip
-    "LBP" to Currency(flag = null), // Lebanese pound
-    "LKR" to Currency(flag = null), // Sri Lankan rupee
-    "LRD" to Currency(flag = null), // Liberian dollar
-    "LSL" to Currency(flag = null), // Lesotho loti
-    "LYD" to Currency(flag = null), // Libyan dinar
-    "MAD" to Currency(flag = null), // Moroccan dirham
-    "MDL" to Currency(flag = null), // Moldovan leu
-    "MGA" to Currency(flag = null), // Malagasy ariary
-    "MKD" to Currency(flag = null), // Macedonian denar
-    "MMK" to Currency(flag = null), // Myanmar kyat
-    "MNT" to Currency(flag = null), // Mongolian tögrög
-    "MOP" to Currency(flag = null), // Macanese pataca
-    "MRU" to Currency(flag = null), // Mauritanian ouguiya
-    "MUR" to Currency(flag = null), // Mauritian rupee
-    "MVR" to Currency(flag = null), // Maldivian rufiyaa
-    "MWK" to Currency(flag = null), // Malawian kwacha
-    "MXN" to Currency(flag = null), // Mexican peso
-    "MYR" to Currency(flag = null), // Malaysian ringgit
-    "MZN" to Currency(flag = null), // Mozambican metical
-    "NAD" to Currency(flag = null), // Namibian dollar
-    "NGN" to Currency(flag = null), // Nigerian naira
-    "NIO" to Currency(flag = null), // Nicaraguan córdoba
-    "NOK" to Currency(flag = null), // Norwegian krone
-    "NPR" to Currency(flag = null), // Nepalese rupee
-    "NZD" to Currency(flag = null), // New Zealand dollar
-    "OMR" to Currency(flag = null), // Omani rial
-    "PAB" to Currency(flag = null), // Panamanian balboa
-    "PEN" to Currency(flag = null), // Peruvian sol
-    "PGK" to Currency(flag = null), // Papua New Guinean kina
-    "PHP" to Currency(flag = null), // Philippine peso
-    "PKR" to Currency(flag = null), // Pakistani rupee
-    "PLN" to Currency(flag = null), // Polish złoty
-    "PYG" to Currency(flag = null), // Paraguayan guaraní
-    "QAR" to Currency(flag = null), // Qatari riyal
-    "RON" to Currency(flag = null), // Romanian leu
-    "RSD" to Currency(flag = null), // Serbian dinar
-    "CNY" to Currency(flag = null), // Renminbi[14]
-    "RUB" to Currency(flag = null), // Russian ruble
-    "RWF" to Currency(flag = null), // Rwandan franc
-    "SAR" to Currency(flag = null), // Saudi riyal
-    "SBD" to Currency(flag = null), // Solomon Islands dollar
-    "SCR" to Currency(flag = null), // Seychelles rupee
-    "SDG" to Currency(flag = null), // Sudanese pound
-    "SEK" to Currency(flag = null), // Swedish krona (plural: kronor)
-    "SGD" to Currency(flag = null), // Singapore dollar
-    "SHP" to Currency(flag = null), // Saint Helena pound
-    "SLL" to Currency(flag = null), // Sierra Leonean leone
-    "SOS" to Currency(flag = null), // Somali shilling
-    "SRD" to Currency(flag = null), // Surinamese dollar
-    "SSP" to Currency(flag = null), // South Sudanese pound
-    "STN" to Currency(flag = null), // São Tomé and Príncipe dobra
-    "SVC" to Currency(flag = null), // Salvadoran colón
-    "SYP" to Currency(flag = null), // Syrian pound
-    "SZL" to Currency(flag = null), // Swazi lilangeni
-    "THB" to Currency(flag = null), // Thai baht
-    "TJS" to Currency(flag = null), // Tajikistani somoni
-    "TMT" to Currency(flag = null), // Turkmenistan manat
-    "TND" to Currency(flag = null), // Tunisian dinar
-    "TOP" to Currency(flag = null), // Tongan paʻanga
-    "TRY" to Currency(flag = null), // Turkish lira
-    "TTD" to Currency(flag = null), // Trinidad and Tobago dollar
-    "TWD" to Currency(flag = null), // New Taiwan dollar
-    "TZS" to Currency(flag = null), // Tanzanian shilling
-    "UAH" to Currency(flag = null), // Ukrainian hryvnia
-    "UGX" to Currency(flag = null), // Ugandan shilling
-    "USD" to Currency(flag = null), // United States dollar
-    "UYU" to Currency(flag = null), // Uruguayan peso
-    "UYW" to Currency(flag = null), // Unidad previsional
-    "UZS" to Currency(flag = null), // Uzbekistan som
-    "VED" to Currency(flag = null), // Venezuelan bolívar digital
-    "VES" to Currency(flag = null), // Venezuelan bolívar soberano
-    "VND" to Currency(flag = null), // Vietnamese đồng
-    "VUV" to Currency(flag = null), // Vanuatu vatu
-    "WST" to Currency(flag = null), // Samoan tala
-    "XAF" to Currency(flag = null), // CFA franc BEAC
-    "XAG" to Currency(flag = null), // Silver (one troy ounce)
-    "XAU" to Currency(flag = null), // Gold (one troy ounce)
-    "XCD" to Currency(flag = null), // East Caribbean dollar
-    "XOF" to Currency(flag = null), // CFA franc BCEAO
-    "XPD" to Currency(flag = null), // Palladium (one troy ounce)
-    "XPF" to Currency(flag = null), // CFP franc (franc Pacifique)
-    "XPT" to Currency(flag = null), // Platinum (one troy ounce)
-    "YER" to Currency(flag = null), // Yemeni rial
-    "ZAR" to Currency(flag = null), // South African rand
-    "ZMW" to Currency(flag = null), // Zambian kwacha
+    "AED" to Currency(flags = listOf("\uD83C\uDDE6\uD83C\uDDEA")), // United Arab Emirates dirham
+    "AFN" to Currency(flags = listOf("\uD83C\uDDE6\uD83C\uDDEB")), // Afghan afghani
+    "ALL" to Currency(flags = listOf("\uD83C\uDDE6\uD83C\uDDF1")), // Albanian lek
+    "AMD" to Currency(flags = listOf("\uD83C\uDDE6\uD83C\uDDF2")), // Armenian dram
+    "ANG" to Currency(
+        flags = listOf(
+            "\uD83C\uDDE8\uD83C\uDDFC", // Curaçao
+            "\uD83C\uDDF8\uD83C\uDDFD", // Sint Maarten
+        )
+    ), // Netherlands Antillean guilder
+    "AOA" to Currency(flags = listOf("\uD83C\uDDE6\uD83C\uDDF4")), // Angolan kwanza
+    "ARS" to Currency(flags = listOf("\uD83C\uDDE6\uD83C\uDDF7")), // Argentine peso
+    "AUD" to Currency(flags = listOf("\uD83C\uDDE6\uD83C\uDDF7")), // Australian dollar
+    "AWG" to Currency(flags = listOf("\uD83C\uDDE6\uD83C\uDDFC")), // Aruban florin
+    "AZN" to Currency(flags = listOf("\uD83C\uDDE6\uD83C\uDDFF")), // Azerbaijani manat
+    "BAM" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDE6")), // Bosnia and Herzegovina convertible mark
+    "BBD" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDE7")), // Barbados dollar
+    "BDT" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDE9")), // Bangladeshi taka
+    "BGN" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDEC")), // Bulgarian lev
+    "BHD" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDED")), // Bahraini dinar
+    "BIF" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDEE")), // Burundian franc
+    "BMD" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDF2")), // Bermudian dollar
+    "BND" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDF3")), // Brunei dollar
+    "BOB" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDF4")), // Boliviano
+    "BRL" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDF7")), // Brazilian real
+    "BSD" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDF8")), // Bahamian dollar
+    "BTN" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDF9")), // Bhutanese ngultrum
+    "BWP" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDFC")), // Botswana pula
+    "BYN" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDFE")), // Belarusian ruble
+    "BZD" to Currency(flags = listOf("\uD83C\uDDE7\uD83C\uDDFF")), // Belize dollar
+    "CAD" to Currency(flags = listOf("\uD83C\uDDE8\uD83C\uDDE6")), // Canadian dollar
+    "CDF" to Currency(flags = listOf("\uD83C\uDDE8\uD83C\uDDE9")), // Congolese franc
+    "CHF" to Currency(
+        flags = listOf(
+            "\uD83C\uDDE8\uD83C\uDDED", // Switzerland
+            "\uD83C\uDDF1\uD83C\uDDEE", // Liechtenstein
+        )
+    ), // Swiss franc
+    "CLP" to Currency(flags = listOf("\uD83C\uDDE8\uD83C\uDDF1")), // Chilean peso
+    "COP" to Currency(flags = listOf("\uD83C\uDDE8\uD83C\uDDF4")), // Colombian peso
+    "CRC" to Currency(flags = listOf("\uD83C\uDDE8\uD83C\uDDF7")), // Costa Rican colon
+    "CUC" to Currency(flags = listOf("\uD83C\uDDE8\uD83C\uDDFA")), // Cuban convertible peso
+    "CUP" to Currency(flags = listOf("\uD83C\uDDE8\uD83C\uDDFA")), // Cuban peso
+    "CVE" to Currency(flags = listOf("\uD83C\uDDE8\uD83C\uDDFB")), // Cape Verdean escudo
+    "CZK" to Currency(flags = listOf("\uD83C\uDDE8\uD83C\uDDFF")), // Czech koruna
+    "DJF" to Currency(flags = listOf("\uD83C\uDDE9\uD83C\uDDEF")), // Djiboutian franc
+    "DKK" to Currency(
+        flags = listOf(
+            "\uD83C\uDDE9\uD83C\uDDF0", // Denmark
+            "\uD83C\uDDEB\uD83C\uDDF4", // Faroe Islands
+            "\uD83C\uDDEC\uD83C\uDDF1", // Greenland
+        )
+    ), // Danish krone
+    "DOP" to Currency(flags = listOf("\uD83C\uDDE9\uD83C\uDDF2")), // Dominican peso
+    "DZD" to Currency(flags = listOf("\uD83C\uDDE9\uD83C\uDDFF")), // Algerian dinar
+    "EGP" to Currency(flags = listOf("\uD83C\uDDEA\uD83C\uDDEC")), // Egyptian pound
+    "ERN" to Currency(flags = listOf("\uD83C\uDDEA\uD83C\uDDF7")), // Eritrean nakfa
+    "ETB" to Currency(flags = listOf("\uD83C\uDDEA\uD83C\uDDF9")), // Ethiopian birr
+    "EUR" to Currency(
+        flags = listOf(
+            "\uD83C\uDDEA\uD83C\uDDFA", // EU
+            "\uD83C\uDDE6\uD83C\uDDFD", // Åland Islands
+            "\uD83C\uDDE6\uD83C\uDDE9", // Andorra
+            "\uD83C\uDDE6\uD83C\uDDF9", // Austria
+            "\uD83C\uDDE7\uD83C\uDDEA", // Belgium
+            "\uD83C\uDDE8\uD83C\uDDFE", // Cyprus
+            "\uD83C\uDDEA\uD83C\uDDEA", // Estonia
+            "\uD83C\uDDEB\uD83C\uDDEE", // Finland
+            "\uD83C\uDDEB\uD83C\uDDF7", // France
+            // "", // French Southern and Antarctic Lands
+            "\uD83C\uDDE9\uD83C\uDDEA", // Germany
+            "\uD83C\uDDEC\uD83C\uDDF7", // Greece
+            "\uD83C\uDDEC\uD83C\uDDF5", // Guadeloupe
+            "\uD83C\uDDEE\uD83C\uDDEA", // Ireland
+            "\uD83C\uDDEE\uD83C\uDDF9", // Italy
+            "\uD83C\uDDF1\uD83C\uDDFB", // Latvia
+            "\uD83C\uDDF1\uD83C\uDDF9", // Lithuania
+            "\uD83C\uDDF1\uD83C\uDDFA", // Luxembourg
+            "\uD83C\uDDF2\uD83C\uDDF9", // Malta
+            "\uD83C\uDDEC\uD83C\uDDEB", // French Guiana
+            "\uD83C\uDDF2\uD83C\uDDF6", // Martinique
+            "\uD83C\uDDFE\uD83C\uDDF9", // Mayotte
+            "\uD83C\uDDF2\uD83C\uDDE8", // Monaco
+            "\uD83C\uDDF2\uD83C\uDDEA", // Montenegro
+            "\uD83C\uDDF3\uD83C\uDDF1", // Netherlands
+            "\uD83C\uDDF5\uD83C\uDDF9", // Portugal
+            "\uD83C\uDDF7\uD83C\uDDEA", // Réunion
+            "\uD83C\uDDE7\uD83C\uDDF1", // Saint Barthélemy
+            "\uD83C\uDDF2\uD83C\uDDEB", // Saint Martin
+            "\uD83C\uDDF5\uD83C\uDDF2", // Saint Pierre and Miquelon
+            "\uD83C\uDDF8\uD83C\uDDF2", // San Marino
+            "\uD83C\uDDF8\uD83C\uDDF0", // Slovakia
+            "\uD83C\uDDF8\uD83C\uDDEE", // Slovenia
+            "\uD83C\uDDEA\uD83C\uDDF8", // Spain
+            "\uD83C\uDDFB\uD83C\uDDE6", // Vatican City
+        )
+    ), // Euro
+    "FJD" to Currency(flags = listOf("\uD83C\uDDEB\uD83C\uDDEF")), // Fiji dollar
+    "FKP" to Currency(flags = listOf("\uD83C\uDDEB\uD83C\uDDF0")), // Falkland Islands pound
+    "GBP" to Currency(
+        flags = listOf(
+            "\uD83C\uDDEC\uD83C\uDDE7", // United Kingdom,
+            "\uD83C\uDDEE\uD83C\uDDF2", // Isle of Man
+            "\uD83C\uDDEF\uD83C\uDDEA", // Jersey
+            "\uD83C\uDDEC\uD83C\uDDEC", // Guernsey
+            "\uD83C\uDDF9\uD83C\uDDE6", // Tristan da Cunha
+        )
+    ), // Pound sterling
+    "GEL" to Currency(flags = listOf()), // Georgian lari
+    "GHS" to Currency(flags = listOf()), // Ghanaian cedi
+    "GIP" to Currency(flags = listOf()), // Gibraltar pound
+    "GMD" to Currency(flags = listOf()), // Gambian dalasi
+    "GNF" to Currency(flags = listOf()), // Guinean franc
+    "GTQ" to Currency(flags = listOf()), // Guatemalan quetzal
+    "GYD" to Currency(flags = listOf()), // Guyanese dollar
+    "HKD" to Currency(flags = listOf()), // Hong Kong dollar
+    "HNL" to Currency(flags = listOf()), // Honduran lempira
+    "HRK" to Currency(flags = listOf()), // Croatian kuna
+    "HTG" to Currency(flags = listOf()), // Haitian gourde
+    "HUF" to Currency(flags = listOf()), // Hungarian forint
+    "IDR" to Currency(flags = listOf()), // Indonesian rupiah
+    "ILS" to Currency(flags = listOf()), // Israeli new shekel
+    "INR" to Currency(flags = listOf()), // Indian rupee
+    "IQD" to Currency(flags = listOf()), // Iraqi dinar
+    "IRR" to Currency(flags = listOf()), // Iranian rial
+    "ISK" to Currency(flags = listOf()), // Icelandic króna (plural: krónur)
+    "JMD" to Currency(flags = listOf()), // Jamaican dollar
+    "JOD" to Currency(flags = listOf()), // Jordanian dinar
+    "JPY" to Currency(flags = listOf()), // Japanese yen
+    "KES" to Currency(flags = listOf()), // Kenyan shilling
+    "KGS" to Currency(flags = listOf()), // Kyrgyzstani som
+    "KHR" to Currency(flags = listOf()), // Cambodian riel
+    "KMF" to Currency(flags = listOf()), // Comoro franc
+    "KPW" to Currency(flags = listOf()), // North Korean won
+    "KRW" to Currency(flags = listOf()), // South Korean won
+    "KWD" to Currency(flags = listOf()), // Kuwaiti dinar
+    "KYD" to Currency(flags = listOf()), // Cayman Islands dollar
+    "KZT" to Currency(flags = listOf()), // Kazakhstani tenge
+    "LAK" to Currency(flags = listOf()), // Lao kip
+    "LBP" to Currency(flags = listOf()), // Lebanese pound
+    "LKR" to Currency(flags = listOf()), // Sri Lankan rupee
+    "LRD" to Currency(flags = listOf()), // Liberian dollar
+    "LSL" to Currency(flags = listOf()), // Lesotho loti
+    "LYD" to Currency(flags = listOf()), // Libyan dinar
+    "MAD" to Currency(flags = listOf()), // Moroccan dirham
+    "MDL" to Currency(flags = listOf()), // Moldovan leu
+    "MGA" to Currency(flags = listOf()), // Malagasy ariary
+    "MKD" to Currency(flags = listOf()), // Macedonian denar
+    "MMK" to Currency(flags = listOf()), // Myanmar kyat
+    "MNT" to Currency(flags = listOf()), // Mongolian tögrög
+    "MOP" to Currency(flags = listOf()), // Macanese pataca
+    "MRU" to Currency(flags = listOf()), // Mauritanian ouguiya
+    "MUR" to Currency(flags = listOf()), // Mauritian rupee
+    "MVR" to Currency(flags = listOf()), // Maldivian rufiyaa
+    "MWK" to Currency(flags = listOf()), // Malawian kwacha
+    "MXN" to Currency(flags = listOf()), // Mexican peso
+    "MYR" to Currency(flags = listOf()), // Malaysian ringgit
+    "MZN" to Currency(flags = listOf()), // Mozambican metical
+    "NAD" to Currency(flags = listOf()), // Namibian dollar
+    "NGN" to Currency(flags = listOf()), // Nigerian naira
+    "NIO" to Currency(flags = listOf()), // Nicaraguan córdoba
+    "NOK" to Currency(flags = listOf()), // Norwegian krone
+    "NPR" to Currency(flags = listOf()), // Nepalese rupee
+    "NZD" to Currency(flags = listOf()), // New Zealand dollar
+    "OMR" to Currency(flags = listOf()), // Omani rial
+    "PAB" to Currency(flags = listOf()), // Panamanian balboa
+    "PEN" to Currency(flags = listOf()), // Peruvian sol
+    "PGK" to Currency(flags = listOf()), // Papua New Guinean kina
+    "PHP" to Currency(flags = listOf()), // Philippine peso
+    "PKR" to Currency(flags = listOf()), // Pakistani rupee
+    "PLN" to Currency(flags = listOf()), // Polish złoty
+    "PYG" to Currency(flags = listOf()), // Paraguayan guaraní
+    "QAR" to Currency(flags = listOf()), // Qatari riyal
+    "RON" to Currency(flags = listOf()), // Romanian leu
+    "RSD" to Currency(flags = listOf()), // Serbian dinar
+    "CNY" to Currency(flags = listOf()), // Renminbi[14]
+    "RUB" to Currency(flags = listOf()), // Russian ruble
+    "RWF" to Currency(flags = listOf()), // Rwandan franc
+    "SAR" to Currency(flags = listOf()), // Saudi riyal
+    "SBD" to Currency(flags = listOf()), // Solomon Islands dollar
+    "SCR" to Currency(flags = listOf()), // Seychelles rupee
+    "SDG" to Currency(flags = listOf()), // Sudanese pound
+    "SEK" to Currency(flags = listOf()), // Swedish krona (plural: kronor)
+    "SGD" to Currency(flags = listOf()), // Singapore dollar
+    "SHP" to Currency(flags = listOf()), // Saint Helena pound
+    "SLL" to Currency(flags = listOf()), // Sierra Leonean leone
+    "SOS" to Currency(flags = listOf()), // Somali shilling
+    "SRD" to Currency(flags = listOf()), // Surinamese dollar
+    "SSP" to Currency(flags = listOf()), // South Sudanese pound
+    "STN" to Currency(flags = listOf()), // São Tomé and Príncipe dobra
+    "SVC" to Currency(flags = listOf()), // Salvadoran colón
+    "SYP" to Currency(flags = listOf()), // Syrian pound
+    "SZL" to Currency(flags = listOf()), // Swazi lilangeni
+    "THB" to Currency(flags = listOf()), // Thai baht
+    "TJS" to Currency(flags = listOf()), // Tajikistani somoni
+    "TMT" to Currency(flags = listOf()), // Turkmenistan manat
+    "TND" to Currency(flags = listOf()), // Tunisian dinar
+    "TOP" to Currency(flags = listOf()), // Tongan paʻanga
+    "TRY" to Currency(flags = listOf()), // Turkish lira
+    "TTD" to Currency(flags = listOf()), // Trinidad and Tobago dollar
+    "TWD" to Currency(flags = listOf()), // New Taiwan dollar
+    "TZS" to Currency(flags = listOf()), // Tanzanian shilling
+    "UAH" to Currency(flags = listOf()), // Ukrainian hryvnia
+    "UGX" to Currency(flags = listOf()), // Ugandan shilling
+    "USD" to Currency(flags = listOf("\uD83C\uDDFA\uD83C\uDDF8")), // United States dollar
+    "UYU" to Currency(flags = listOf()), // Uruguayan peso
+    "UYW" to Currency(flags = listOf()), // Unidad previsional
+    "UZS" to Currency(flags = listOf()), // Uzbekistan som
+    "VED" to Currency(flags = listOf()), // Venezuelan bolívar digital
+    "VES" to Currency(flags = listOf()), // Venezuelan bolívar soberano
+    "VND" to Currency(flags = listOf()), // Vietnamese đồng
+    "VUV" to Currency(flags = listOf()), // Vanuatu vatu
+    "WST" to Currency(flags = listOf()), // Samoan tala
+    "XAF" to Currency(flags = listOf()), // CFA franc BEAC
+    "XAG" to Currency(flags = listOf()), // Silver (one troy ounce)
+    "XAU" to Currency(flags = listOf()), // Gold (one troy ounce)
+    "XCD" to Currency(flags = listOf()), // East Caribbean dollar
+    "XOF" to Currency(flags = listOf()), // CFA franc BCEAO
+    "XPD" to Currency(flags = listOf()), // Palladium (one troy ounce)
+    "XPF" to Currency(flags = listOf()), // CFP franc (franc Pacifique)
+    "XPT" to Currency(flags = listOf()), // Platinum (one troy ounce)
+    "YER" to Currency(flags = listOf()), // Yemeni rial
+    "ZAR" to Currency(flags = listOf()), // South African rand
+    "ZMW" to Currency(flags = listOf()), // Zambian kwacha
 )
