@@ -10,8 +10,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import com.minimalisticapps.priceconverter.common.utils.AppConstants.BIT_COIN_PRECISION
-import com.minimalisticapps.priceconverter.data.repository.priceconverter.ExchangeRate
-import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.CurrencyRate
+import com.minimalisticapps.priceconverter.room.entities.ScreenCurrencyRecord
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -54,12 +54,8 @@ fun Long.timeToTimeAgo(past: Long): String {
     }
 }
 
-fun ExchangeRate.toFiatCoinsExchange(): FiatCoinExchange {
-    return FiatCoinExchange(
-        name = name,
-        unit = source,
-        code = code
-    )
+fun CurrencyRate.toFiatCoinsExchange(): ScreenCurrencyRecord {
+    return ScreenCurrencyRecord(name = name, code = code)
 }
 
 fun String.toSatsFormat(): String {

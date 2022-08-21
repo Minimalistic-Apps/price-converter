@@ -15,12 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.minimalisticapps.priceconverter.common.utils.getFlagsForCurrency
-import com.minimalisticapps.priceconverter.data.repository.priceconverter.ExchangeRate
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.CurrencyRate
 
 @Composable
 fun CoinItem(
-    coin: ExchangeRate,
-    onItemClick: (ExchangeRate) -> Unit,
+    coin: CurrencyRate,
+    onItemClick: (CurrencyRate) -> Unit,
 ) {
     val interaction = remember {
         MutableInteractionSource()

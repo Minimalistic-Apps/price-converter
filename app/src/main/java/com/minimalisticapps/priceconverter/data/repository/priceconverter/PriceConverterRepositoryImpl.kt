@@ -5,8 +5,8 @@ import com.minimalisticapps.priceconverter.common.utils.AppConstants
 import com.minimalisticapps.priceconverter.data.remote.bitpay.BitpayApiInterface
 import com.minimalisticapps.priceconverter.data.remote.coingecko.CoingeckoApiInterface
 import com.minimalisticapps.priceconverter.room.dao.PriceConverterDao
-import com.minimalisticapps.priceconverter.room.entities.ExchangeRateWithFiatCoin
-import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
+import com.minimalisticapps.priceconverter.room.entities.ScreenCurrencyRecord
+import com.minimalisticapps.priceconverter.room.entities.ScreenCurrencyRecordWithRate
 import kotlinx.coroutines.flow.Flow
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -25,27 +25,24 @@ class PriceConverterRepositoryImpl @Inject constructor(
     private val priceConverterDao: PriceConverterDao
 ) : PriceConverterRepository {
 
-    override suspend fun getExchangeRates(): List<ExchangeRate> {
+    override suspend fun getExchangeRates(): List<CurrencyRate> {
+        val coingecko: Map<String, CurrencyRate> =
+            coingeckoAPi.getExchangeRates().rates
+                .filter { it.value.type == "fiat" }
+                .entries.associate {
+                    it.key.uppercase() to CurrencyRate(
+                        code = it.key.uppercase(),
+                        name = it.value.name,
+                        satsPerUnit = calculateSatsPerUnitRate(it.value.value),
+                    )
+                }
 
-        val coingecko: Map<String, ExchangeRate> =
-            coingeckoAPi.getExchangeRates().rates.entries.associate {
-                it.key.uppercase() to ExchangeRate(
-                    code = it.key.uppercase(),
-                    name = it.value.name,
-                    type = it.value.type,
-                    source = "coingecko",
-                    oneUnitOfShitcoinInBTC = calculateSatsPerUnitRate(it.value.value),
-                )
-            }
-
-        val bitpay: Map<String, ExchangeRate> =
+        val bitpay: Map<String, CurrencyRate> =
             bitPayApi.getExchangeRates().data.associate {
-                it.code.uppercase() to ExchangeRate(
+                it.code.uppercase() to CurrencyRate(
                     code = it.code.uppercase(),
                     name = it.name,
-                    type = "fiat", // Todo: solve this
-                    source = "bitpay",
-                    oneUnitOfShitcoinInBTC = calculateSatsPerUnitRate(it.rate),
+                    satsPerUnit = calculateSatsPerUnitRate(it.rate),
                 )
             }
 
@@ -53,10 +50,10 @@ class PriceConverterRepositoryImpl @Inject constructor(
             .filter { it.key in ALLOWED_ISO_CURRENCIES }
             .groupBy({ it.key }, { it.value })
             .mapValues {
-                val entriesWithRate = it.value.filter { it2 -> it2.oneUnitOfShitcoinInBTC != null }
+                val entriesWithRate = it.value.filter { it2 -> it2.satsPerUnit != null }
 
                 val average = entriesWithRate.map { it2 ->
-                    it2.oneUnitOfShitcoinInBTC
+                    it2.satsPerUnit
                 }
                     .reduce { acc, rate ->
                         if (acc != null)
@@ -65,36 +62,34 @@ class PriceConverterRepositoryImpl @Inject constructor(
                     }
                     ?.divide(entriesWithRate.size.toBigDecimal())
 
-                ExchangeRate(
+                CurrencyRate(
                     code = it.value.first().code,
                     name = it.value.first().name,
-                    type = it.value.first().type,
-                    source = entriesWithRate.joinToString(",") { it2 -> it2.source },
-                    oneUnitOfShitcoinInBTC = average
+                    satsPerUnit = average
                 )
             }
 
         return groupedRates.values.toList()
     }
 
-    override suspend fun getCoins(): Flow<List<ExchangeRate>> =
-        priceConverterDao.fetchAllCoins()
+    override suspend fun getCoins(): Flow<List<CurrencyRate>> =
+        priceConverterDao.fetchAllCurrencyRates()
 
-    override suspend fun getFiatCoins(): Flow<List<ExchangeRateWithFiatCoin>> =
-        priceConverterDao.fetchAllFiatCoins()
+    override suspend fun getFiatCoins(): Flow<List<ScreenCurrencyRecordWithRate>> =
+        priceConverterDao.fetchAllScreenCurrencyRecords()
 
-    override suspend fun saveFiatCoin(fiatCoinExchange: FiatCoinExchange) {
-        priceConverterDao.insertFiatCoin(fiatCoinExchange)
+    override suspend fun saveFiatCoin(screenCurrencyRecord: ScreenCurrencyRecord) {
+        priceConverterDao.insertScreenCurrencyRecord(screenCurrencyRecord)
     }
 
-    override suspend fun updateFiatCoin(fiatCoinExchange: FiatCoinExchange) {
-        priceConverterDao.updateFiatCoin(fiatCoinExchange)
+    override suspend fun updateFiatCoin(screenCurrencyRecord: ScreenCurrencyRecord) {
+        priceConverterDao.updateScreenCurrencyRecord(screenCurrencyRecord)
     }
 
-    override suspend fun saveCoin(exchangeRate: ExchangeRate) {
-        priceConverterDao.insertCoin(exchangeRate)
+    override suspend fun saveCoin(currencyRate: CurrencyRate) {
+        priceConverterDao.insertCurrencyRate(currencyRate)
     }
 
-    override suspend fun deleteFiatCoin(fiatCoinExchange: FiatCoinExchange) =
-        priceConverterDao.deleteFiatCoin(fiatCoinExchange)
+    override suspend fun deleteFiatCoin(screenCurrencyRecord: ScreenCurrencyRecord) =
+        priceConverterDao.deleteScreenCurrencyRecord(screenCurrencyRecord)
 }

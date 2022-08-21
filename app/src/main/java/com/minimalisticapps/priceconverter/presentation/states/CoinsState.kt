@@ -2,11 +2,11 @@ package com.minimalisticapps.priceconverter.presentation.states
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.minimalisticapps.priceconverter.data.repository.priceconverter.ExchangeRate
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.CurrencyRate
 
 data class CoinsState(
     val isLoading: Boolean = false,
-    val coins: List<ExchangeRate> = emptyList(),
+    val coins: List<CurrencyRate> = emptyList(),
     val error: String = "",
     val isRefreshing: Boolean = false
 ): Parcelable {

@@ -299,13 +299,13 @@ fun HomeScreen(
                         items = fiatCoinsListState,
                         key = { pair -> pair.first }
                     ) { pair ->
-                        val code = pair.second.fiatCoinExchange.code
+                        val code = pair.second.screenCurrencyRecord.code
                         val state = homeViewModel.shitcoinInputsState[code]!!
 
                         ItemFiatCoin(
                             index = pair.first,
                             code = code,
-                            oneUnitOfShitcoinInBTC = pair.second.exchangeRate.oneUnitOfShitcoinInBTC,
+                            oneUnitOfShitcoinInBTC = pair.second.currencyRate.satsPerUnit,
                             state = state,
                             onValueChange = { homeViewModel.updateShitcoin(pair.first, it) },
                             onLongPress = { // Todo: ordering

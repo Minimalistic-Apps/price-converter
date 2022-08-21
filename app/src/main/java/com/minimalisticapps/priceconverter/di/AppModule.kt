@@ -85,7 +85,7 @@ object AppModule {
             context.applicationContext,
             AppDatabase::class.java, "db_price_converter"
         )
-            .addMigrations()
+            .fallbackToDestructiveMigration()
             .build()
 
 
