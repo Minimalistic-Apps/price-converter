@@ -11,12 +11,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.minimalisticapps.priceconverter.data.remote.coingecko.CoinGeckoExchangeRate
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.ExchangeRate
 
 @Composable
 fun CoinItem(
-    coin: CoinGeckoExchangeRate,
-    onItemClick: (CoinGeckoExchangeRate) -> Unit,
+    coin: ExchangeRate,
+    onItemClick: (ExchangeRate) -> Unit,
 ) {
     val interaction = remember {
         MutableInteractionSource()

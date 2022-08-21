@@ -3,7 +3,8 @@ package com.minimalisticapps.priceconverter.di
 import android.content.Context
 import androidx.room.Room
 import com.minimalisticapps.priceconverter.common.utils.AppConstants
-import com.minimalisticapps.priceconverter.data.remote.coingecko.CoinGeckoApiInterface
+import com.minimalisticapps.priceconverter.data.remote.bitpay.BitpayApiInterface
+import com.minimalisticapps.priceconverter.data.remote.coingecko.CoingeckoApiInterface
 import com.minimalisticapps.priceconverter.data.remote.donationserver.DonationServerApiInterface
 import com.minimalisticapps.priceconverter.data.repository.DonationRepository
 import com.minimalisticapps.priceconverter.data.repository.priceconverter.PriceConverterRepository
@@ -51,12 +52,21 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCoinGeckoApi(client: OkHttpClient): CoinGeckoApiInterface = Retrofit.Builder()
+    fun provideCoinGeckoApi(client: OkHttpClient): CoingeckoApiInterface = Retrofit.Builder()
         .baseUrl(AppConstants.COINGECTKO_BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
         .build()
-        .create(CoinGeckoApiInterface::class.java)
+        .create(CoingeckoApiInterface::class.java)
+
+    @Provides
+    @Singleton
+    fun provideBitpayApi(client: OkHttpClient): BitpayApiInterface = Retrofit.Builder()
+        .baseUrl(AppConstants.BITPAY_BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .client(client)
+        .build()
+        .create(BitpayApiInterface::class.java)
 
     @Provides
     @Singleton
@@ -86,11 +96,13 @@ object AppModule {
     @Provides
     @Singleton
     fun provideCoinRepository(
-        coinGeckoApi: CoinGeckoApiInterface,
+        coingeckoAPi: CoingeckoApiInterface,
+        bitPayApi: BitpayApiInterface,
         priceConverterDao: PriceConverterDao
     ): PriceConverterRepository {
         return PriceConverterRepositoryImpl(
-            coinGeckoApi = coinGeckoApi,
+            coingeckoAPi = coingeckoAPi,
+            bitPayApi = bitPayApi,
             priceConverterDao = priceConverterDao
         )
     }

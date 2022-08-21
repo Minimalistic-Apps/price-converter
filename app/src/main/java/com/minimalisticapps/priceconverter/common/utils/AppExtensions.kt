@@ -10,7 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import com.minimalisticapps.priceconverter.common.utils.AppConstants.BIT_COIN_PRECISION
-import com.minimalisticapps.priceconverter.data.remote.coingecko.CoinGeckoExchangeRate
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.ExchangeRate
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 import java.math.BigDecimal
 import java.text.DecimalFormat
@@ -54,10 +54,10 @@ fun Long.timeToTimeAgo(past: Long): String {
     }
 }
 
-fun CoinGeckoExchangeRate.toFiatCoinsExchange(): FiatCoinExchange {
+fun ExchangeRate.toFiatCoinsExchange(): FiatCoinExchange {
     return FiatCoinExchange(
         name = name,
-        unit = unit,
+        unit = source,
         code = code
     )
 }

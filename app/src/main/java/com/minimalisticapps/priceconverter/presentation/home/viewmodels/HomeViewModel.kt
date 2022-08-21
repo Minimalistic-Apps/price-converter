@@ -11,9 +11,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.minimalisticapps.priceconverter.common.Resource
 import com.minimalisticapps.priceconverter.common.utils.*
-import com.minimalisticapps.priceconverter.data.repository.priceconverter.*
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.DeleteUseCase
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.GetCoinsUseCase
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.GetFiatCoinsUseCase
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.SaveFiatCoinUseCase
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
-import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
+import com.minimalisticapps.priceconverter.room.entities.ExchangeRateWithFiatCoin
 import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -47,7 +50,7 @@ class HomeViewModel @Inject constructor(
     private val _timeAgoState = mutableStateOf("")
     private val _showDonationReminder = mutableStateOf(calculateShouldShowDonationReminder())
     private val _isLongerThan1hour = mutableStateOf(false)
-    private val _shitcoinListState: MutableState<List<Pair<Int, BitPayCoinWithFiatCoin>>> =
+    private val _shitcoinListState: MutableState<List<Pair<Int, ExchangeRateWithFiatCoin>>> =
         mutableStateOf(emptyList())
     var textFiledValueBtc: MutableState<TextFieldValue> = mutableStateOf(TextFieldValue())
 
@@ -58,7 +61,7 @@ class HomeViewModel @Inject constructor(
 
     //    States
     val state: State<CoinsState> = _state
-    val shitcoinListState: State<List<Pair<Int, BitPayCoinWithFiatCoin>>> = _shitcoinListState
+    val shitcoinListState: State<List<Pair<Int, ExchangeRateWithFiatCoin>>> = _shitcoinListState
     var isRefreshing: State<Boolean> = _isRefreshing
     val timeAgoState: State<String> = _timeAgoState
     val showDonationReminder: State<Boolean> = _showDonationReminder
@@ -157,11 +160,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    //    function for getting fiat coins
-    fun getFiatCoins() {
+    private fun getFiatCoins() {
         viewModelScope.launch {
             getFiatCoinUseCase().collect { it ->
-                val listStateValue: MutableList<Pair<Int, BitPayCoinWithFiatCoin>> = mutableListOf()
+                val listStateValue: MutableList<Pair<Int, ExchangeRateWithFiatCoin>> =
+                    mutableListOf()
                 val shitcoinInputsStateValue: MutableMap<String, MutableState<TextFieldValue>> =
                     mutableMapOf()
 
@@ -169,6 +172,7 @@ class HomeViewModel @Inject constructor(
                     listStateValue.add(Pair(index, shitcoin))
 
                     val code = shitcoin.fiatCoinExchange.code
+
                     shitcoinInputsStateValue[code] = shitcoinInputsState[code]
                         ?: mutableStateOf(TextFieldValue())
                 }
@@ -246,7 +250,7 @@ class HomeViewModel @Inject constructor(
                 val newValue = shitcoinAmount.multiply(
                     oneUnitOfShitcoinInBTC.divide(
                         itOneUnitOfShitcoinInBtc,
-                        PRECISION,
+                        AppConstants.STORAGE_PRECISION,
                         RoundingMode.HALF_UP
                     )
                 )
@@ -268,7 +272,7 @@ class HomeViewModel @Inject constructor(
             if (itOneUnitOfShitcoinInBtc != null) {
                 val newAmount = amountBitcoin.divide(
                     itOneUnitOfShitcoinInBtc,
-                    PRECISION,
+                    AppConstants.STORAGE_PRECISION,
                     RoundingMode.HALF_UP
                 )
 
