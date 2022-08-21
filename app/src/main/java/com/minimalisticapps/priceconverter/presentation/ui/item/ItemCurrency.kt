@@ -2,7 +2,10 @@ package com.minimalisticapps.priceconverter.presentation.ui.item
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
@@ -11,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.minimalisticapps.priceconverter.common.utils.getFlagsForCurrency
 import com.minimalisticapps.priceconverter.data.repository.priceconverter.ExchangeRate
 
 @Composable
@@ -32,8 +36,10 @@ fun CoinItem(
             .padding(vertical = 14.dp, horizontal = 18.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        val flags = getFlagsForCurrency(coin.code)
+
         Text(
-            text = "${coin.name} (${coin.code})",
+            text = "${coin.name} (${coin.code}) ${flags.joinToString("")}",
             style = MaterialTheme.typography.body1,
             fontSize = 14.sp,
             modifier = Modifier

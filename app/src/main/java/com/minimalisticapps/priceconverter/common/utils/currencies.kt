@@ -2,7 +2,18 @@ package com.minimalisticapps.priceconverter.common.utils
 
 data class Currency(val flags: List<String>)
 
-val ALLOWED_ISO_CURRENCIES = mapOf<String, Currency>(
+fun getFlagsForCurrency(currencyCode: String): List<String> {
+    var flags = ALLOWED_ISO_CURRENCIES[currencyCode]?.flags ?: listOf()
+    if (currencyCode in CURRENCIES_TO_SHOW_ONLY_FIRST_FLAG) {
+        flags = flags.slice(0 until 1)
+    }
+
+    return flags
+}
+
+val CURRENCIES_TO_SHOW_ONLY_FIRST_FLAG = listOf("GBP", "EUR")
+
+val ALLOWED_ISO_CURRENCIES = mapOf(
     "AED" to Currency(flags = listOf("\uD83C\uDDE6\uD83C\uDDEA")), // United Arab Emirates dirham
     "AFN" to Currency(flags = listOf("\uD83C\uDDE6\uD83C\uDDEB")), // Afghan afghani
     "ALL" to Currency(flags = listOf("\uD83C\uDDE6\uD83C\uDDF1")), // Albanian lek
@@ -111,7 +122,7 @@ val ALLOWED_ISO_CURRENCIES = mapOf<String, Currency>(
             "\uD83C\uDDF9\uD83C\uDDE6", // Tristan da Cunha
         )
     ), // Pound sterling
-    "GEL" to Currency(flags = listOf()), // Georgian lari
+    "GEL" to Currency(flags = listOf("\uD83C\uDDEC\uD83C\uDDEA")), // Georgian lari
     "GHS" to Currency(flags = listOf()), // Ghanaian cedi
     "GIP" to Currency(flags = listOf()), // Gibraltar pound
     "GMD" to Currency(flags = listOf()), // Gambian dalasi
