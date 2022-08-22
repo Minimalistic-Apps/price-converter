@@ -2,7 +2,7 @@ package com.minimalisticapps.priceconverter.data.remote.coingecko
 
 import retrofit2.http.GET
 
-interface CoinGeckoApiInterface {
+interface CoingeckoApiInterface {
     @GET("api/v3/exchange_rates")
-    suspend fun getExchangeRates(): CoinGeckoExchangeRatesResponse
+    suspend fun getExchangeRates(): CoingeckoRatesResponse
 }

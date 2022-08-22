@@ -1,31 +1,29 @@
 package com.minimalisticapps.priceconverter.room.dao
 
 import androidx.room.*
-import com.minimalisticapps.priceconverter.data.remote.coingecko.CoinGeckoExchangeRate
-import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
-import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
+import com.minimalisticapps.priceconverter.room.entities.Shitcoin
+import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreen
+import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreenWithRate
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PriceConverterDao {
-    @Query("SELECT * FROM coins where type !=:type order by name")
-    fun fetchAllCoins(type: String = "crypto"): Flow<List<CoinGeckoExchangeRate>>
+    @Query("SELECT * FROM shitcoins ORDER BY name")
+    fun fetchShitcoins(): Flow<List<Shitcoin>>
 
     @Transaction
-    @Query("SELECT * FROM fiat_coin_exchange")
-    fun fetchAllFiatCoins(): Flow<List<BitPayCoinWithFiatCoin>>
+    @Query("SELECT * FROM shitcoins_on_screen")
+    fun fetchAllShitcoinOnScreen(): Flow<List<ShitcoinOnScreenWithRate>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCoin(coin: CoinGeckoExchangeRate)
+    suspend fun insertShitcoin(coin: Shitcoin)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFiatCoin(coin: FiatCoinExchange)
+    suspend fun insertShitcoinOnScreen(coin: ShitcoinOnScreen)
 
     @Delete
-    suspend fun deleteFiatCoin(fiatCoinExchange: FiatCoinExchange)
+    suspend fun deleteShitcoinOnScreen(shitcoinOnScreen: ShitcoinOnScreen)
 
     @Update
-    fun updateFiatCoin(fiatCoinExchange: FiatCoinExchange)
-
-
+    fun updateShitcoinOnScreen(shitcoinOnScreen: ShitcoinOnScreen)
 }

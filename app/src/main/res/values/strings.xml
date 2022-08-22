@@ -2,7 +2,7 @@
     <string name="app_name">Price Converter</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="add">Add</string>
-    <string name="search_currency">Search Currency</string>
+    <string name="search_currency">Search by code, currency or country</string>
     <string name="confirmation_dialog_desc">Are you sure you want to delete this coin?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>

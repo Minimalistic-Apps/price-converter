@@ -3,11 +3,12 @@ package com.minimalisticapps.priceconverter.di
 import android.content.Context
 import androidx.room.Room
 import com.minimalisticapps.priceconverter.common.utils.AppConstants
-import com.minimalisticapps.priceconverter.data.remote.coingecko.CoinGeckoApiInterface
+import com.minimalisticapps.priceconverter.data.remote.bitpay.BitpayApiInterface
+import com.minimalisticapps.priceconverter.data.remote.blockchaininfo.BlockchainInfoApiInterface
+import com.minimalisticapps.priceconverter.data.remote.coingecko.CoingeckoApiInterface
 import com.minimalisticapps.priceconverter.data.remote.donationserver.DonationServerApiInterface
 import com.minimalisticapps.priceconverter.data.repository.DonationRepository
 import com.minimalisticapps.priceconverter.data.repository.priceconverter.PriceConverterRepository
-import com.minimalisticapps.priceconverter.data.repository.priceconverter.PriceConverterRepositoryImpl
 import com.minimalisticapps.priceconverter.room.dao.PriceConverterDao
 import com.minimalisticapps.priceconverter.room.database.AppDatabase
 import dagger.Module
@@ -51,12 +52,31 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCoinGeckoApi(client: OkHttpClient): CoinGeckoApiInterface = Retrofit.Builder()
+    fun provideBlockchainInfoApi(client: OkHttpClient): BlockchainInfoApiInterface =
+        Retrofit.Builder()
+            .baseUrl(AppConstants.BLOCKCHAIN_INFO_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build()
+            .create(BlockchainInfoApiInterface::class.java)
+
+    @Provides
+    @Singleton
+    fun provideCoinGeckoApi(client: OkHttpClient): CoingeckoApiInterface = Retrofit.Builder()
         .baseUrl(AppConstants.COINGECTKO_BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
         .build()
-        .create(CoinGeckoApiInterface::class.java)
+        .create(CoingeckoApiInterface::class.java)
+
+    @Provides
+    @Singleton
+    fun provideBitpayApi(client: OkHttpClient): BitpayApiInterface = Retrofit.Builder()
+        .baseUrl(AppConstants.BITPAY_BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .client(client)
+        .build()
+        .create(BitpayApiInterface::class.java)
 
     @Provides
     @Singleton
@@ -75,7 +95,7 @@ object AppModule {
             context.applicationContext,
             AppDatabase::class.java, "db_price_converter"
         )
-            .addMigrations()
+            .fallbackToDestructiveMigration()
             .build()
 
 
@@ -85,12 +105,16 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCoinRepository(
-        coinGeckoApi: CoinGeckoApiInterface,
+    fun providePriceConverterRepository(
+        blockchainInfoApi: BlockchainInfoApiInterface,
+        coingeckoApi: CoingeckoApiInterface,
+        bitPayApi: BitpayApiInterface,
         priceConverterDao: PriceConverterDao
     ): PriceConverterRepository {
-        return PriceConverterRepositoryImpl(
-            coinGeckoApi = coinGeckoApi,
+        return PriceConverterRepository(
+            blockchainInfoApi = blockchainInfoApi,
+            coingeckoApi = coingeckoApi,
+            bitPayApi = bitPayApi,
             priceConverterDao = priceConverterDao
         )
     }

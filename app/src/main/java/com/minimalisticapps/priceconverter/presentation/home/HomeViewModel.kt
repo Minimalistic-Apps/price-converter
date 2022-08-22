@@ -1,4 +1,4 @@
-package com.minimalisticapps.priceconverter.presentation.home.viewmodels
+package com.minimalisticapps.priceconverter.presentation.home
 
 import android.app.Application
 import android.os.Handler
@@ -11,12 +11,15 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.minimalisticapps.priceconverter.common.Resource
 import com.minimalisticapps.priceconverter.common.utils.*
-import com.minimalisticapps.priceconverter.data.repository.priceconverter.*
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.DeleteUseCase
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.GetCoinsUseCase
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.GetFiatCoinsUseCase
+import com.minimalisticapps.priceconverter.data.repository.priceconverter.SaveScreenCurrencyRecordUseCase
+import com.minimalisticapps.priceconverter.presentation.home.viewmodels.updateTextFieldModelWithCommas
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
-import com.minimalisticapps.priceconverter.room.entities.BitPayCoinWithFiatCoin
-import com.minimalisticapps.priceconverter.room.entities.FiatCoinExchange
+import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreenWithRate
+import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -30,7 +33,7 @@ class HomeViewModel @Inject constructor(
     private val getCoinUseCase: GetCoinsUseCase,
     private val getFiatCoinUseCase: GetFiatCoinsUseCase,
     private val deleteUseCase: DeleteUseCase,
-    private val saveFiatCoinUseCase: SaveFiatCoinUseCase,
+    private val saveScreenCurrencyRecordUseCase: SaveScreenCurrencyRecordUseCase,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -47,7 +50,7 @@ class HomeViewModel @Inject constructor(
     private val _timeAgoState = mutableStateOf("")
     private val _showDonationReminder = mutableStateOf(calculateShouldShowDonationReminder())
     private val _isLongerThan1hour = mutableStateOf(false)
-    private val _shitcoinListState: MutableState<List<Pair<Int, BitPayCoinWithFiatCoin>>> =
+    private val _shitcoinListState: MutableState<List<Pair<Int, ShitcoinOnScreenWithRate>>> =
         mutableStateOf(emptyList())
     var textFiledValueBtc: MutableState<TextFieldValue> = mutableStateOf(TextFieldValue())
 
@@ -58,7 +61,7 @@ class HomeViewModel @Inject constructor(
 
     //    States
     val state: State<CoinsState> = _state
-    val shitcoinListState: State<List<Pair<Int, BitPayCoinWithFiatCoin>>> = _shitcoinListState
+    val shitcoinListState: State<List<Pair<Int, ShitcoinOnScreenWithRate>>> = _shitcoinListState
     var isRefreshing: State<Boolean> = _isRefreshing
     val timeAgoState: State<String> = _timeAgoState
     val showDonationReminder: State<Boolean> = _showDonationReminder
@@ -121,14 +124,11 @@ class HomeViewModel @Inject constructor(
         _timeAgoState.value = this@HomeViewModel.timeAgo
     }
 
-    //    function for getting or inserting coins
-    @OptIn(InternalCoroutinesApi::class)
     fun getCoins() {
         viewModelScope.launch {
             getCoinUseCase().collect { result ->
                 when (result) {
                     is Resource.Success -> {
-
                         PCSharedStorage.saveDataLoaded(true)
                         PCSharedStorage.saveTimesAgo(Calendar.getInstance().time.time)
                         timeAgoLong = Calendar.getInstance().time.time
@@ -157,18 +157,19 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    //    function for getting fiat coins
-    fun getFiatCoins() {
+    private fun getFiatCoins() {
         viewModelScope.launch {
-            getFiatCoinUseCase().collect { it ->
-                val listStateValue: MutableList<Pair<Int, BitPayCoinWithFiatCoin>> = mutableListOf()
+            getFiatCoinUseCase().collect {
+                val listStateValue: MutableList<Pair<Int, ShitcoinOnScreenWithRate>> =
+                    mutableListOf()
                 val shitcoinInputsStateValue: MutableMap<String, MutableState<TextFieldValue>> =
                     mutableMapOf()
 
                 it.forEachIndexed { index, shitcoin ->
                     listStateValue.add(Pair(index, shitcoin))
 
-                    val code = shitcoin.fiatCoinExchange.code
+                    val code = shitcoin.shitcoinOnScreen.code
+
                     shitcoinInputsStateValue[code] = shitcoinInputsState[code]
                         ?: mutableStateOf(TextFieldValue())
                 }
@@ -180,7 +181,7 @@ class HomeViewModel @Inject constructor(
                     recalculateByBitcoin()
                 } else {
                     val index =
-                        _shitcoinListState.value.find { it2 -> it2.second.fiatCoinExchange.code == selectedCoin.value }?.first
+                        _shitcoinListState.value.find { it2 -> it2.second.shitcoinOnScreen.code == selectedCoin.value }?.first
                     if (index != null) {
                         recalculateByShitcoin(index)
                     }
@@ -194,7 +195,7 @@ class HomeViewModel @Inject constructor(
         val shitcoin = _shitcoinListState.value.find { it.first == index } ?: return
 
         viewModelScope.launch {
-            deleteUseCase.invoke(shitcoin.second.fiatCoinExchange)
+            deleteUseCase.invoke(shitcoin.second.shitcoinOnScreen)
         }
     }
 
@@ -228,12 +229,12 @@ class HomeViewModel @Inject constructor(
         val shitcoin =
             shitcoinListState.value.find { it.first == shitcoinIndex }?.second ?: return
         val shitcoinInput =
-            shitcoinInputsState[shitcoin.fiatCoinExchange.code]?.value?.text ?: return
+            shitcoinInputsState[shitcoin.shitcoinOnScreen.code]?.value?.text ?: return
 
         val shitcoinAmount =
             parseBigDecimalFromString(shitcoinInput) ?: return
         val oneUnitOfShitcoinInBTC =
-            shitcoin.exchangeRate.oneUnitOfShitcoinInBTC ?: return
+            shitcoin.shitcoin.satsPerUnit ?: return
         val bitcoinPrice = oneUnitOfShitcoinInBTC.multiply(shitcoinAmount)
         updateBitcoinAmountWithoutRecalculate(bitcoinPrice)
 
@@ -241,17 +242,17 @@ class HomeViewModel @Inject constructor(
         shitcoinListState.value.forEach {
             if (shitcoinIndex != it.first) {
                 val itOneUnitOfShitcoinInBtc =
-                    it.second.exchangeRate.oneUnitOfShitcoinInBTC ?: return
+                    it.second.shitcoin.satsPerUnit ?: return
 
                 val newValue = shitcoinAmount.multiply(
                     oneUnitOfShitcoinInBTC.divide(
                         itOneUnitOfShitcoinInBtc,
-                        PRECISION,
+                        AppConstants.STORAGE_PRECISION,
                         RoundingMode.HALF_UP
                     )
                 )
 
-                shitcoinInputsState[it.second.fiatCoinExchange.code]?.value =
+                shitcoinInputsState[it.second.shitcoinOnScreen.code]?.value =
                     TextFieldValue(text = formatFiatShitcoin(newValue))
             }
         }
@@ -263,16 +264,16 @@ class HomeViewModel @Inject constructor(
 
         shitcoinListState.value.forEach {
             val itOneUnitOfShitcoinInBtc =
-                it.second.exchangeRate.oneUnitOfShitcoinInBTC
+                it.second.shitcoin.satsPerUnit
 
             if (itOneUnitOfShitcoinInBtc != null) {
                 val newAmount = amountBitcoin.divide(
                     itOneUnitOfShitcoinInBtc,
-                    PRECISION,
+                    AppConstants.STORAGE_PRECISION,
                     RoundingMode.HALF_UP
                 )
 
-                shitcoinInputsState[it.second.fiatCoinExchange.code]?.value =
+                shitcoinInputsState[it.second.shitcoinOnScreen.code]?.value =
                     TextFieldValue(text = formatFiatShitcoin(newAmount))
             }
         }
@@ -286,7 +287,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun updateShitcoin(shitcoinIndex: Int, input: TextFieldValue) {
-        val code = _shitcoinListState.value[shitcoinIndex].second.fiatCoinExchange.code
+        val code = _shitcoinListState.value[shitcoinIndex].second.shitcoinOnScreen.code
         val state = shitcoinInputsState[code] ?: return
 
         // if only selection changed don't do any magic, just change selection
@@ -328,9 +329,9 @@ class HomeViewModel @Inject constructor(
 
     }
 
-    fun insertFiatCoin(fiatCoinExchange: FiatCoinExchange) {
+    fun insertFiatCoin(shitcoinOnScreen: ShitcoinOnScreen) {
         viewModelScope.launch {
-            saveFiatCoinUseCase.invoke(fiatCoinExchange)
+            saveScreenCurrencyRecordUseCase.invoke(shitcoinOnScreen)
         }
     }
 }

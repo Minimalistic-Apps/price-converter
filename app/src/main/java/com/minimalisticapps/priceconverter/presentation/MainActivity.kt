@@ -16,16 +16,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.minimalisticapps.priceconverter.common.utils.hideKeyboard
 import com.minimalisticapps.priceconverter.common.utils.noRippleClickable
-import com.minimalisticapps.priceconverter.presentation.currencylist.CoinListScreen
+import com.minimalisticapps.priceconverter.presentation.addshitcoins.AvailableShitcoinsToAddScreen
 import com.minimalisticapps.priceconverter.presentation.donate.DonationScreen
 import com.minimalisticapps.priceconverter.presentation.home.HomeScreen
-import com.minimalisticapps.priceconverter.presentation.home.coinsStateValue
 import com.minimalisticapps.priceconverter.presentation.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class MainActivity() : ComponentActivity() {
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -51,10 +50,9 @@ class MainActivity() : ComponentActivity() {
                             composable(route = Screen.HomeScreen.route) {
                                 HomeScreen(navController = navController)
                             }
-                            composable(route = Screen.CoinsListScreen.route) {
-                                CoinListScreen(
+                            composable(route = Screen.AvailableShitcoinsToAdd.route) {
+                                AvailableShitcoinsToAddScreen(
                                     navController = navController,
-                                    coinsState = coinsStateValue
                                 )
                             }
                             composable(route = Screen.DonationScreen.route) {

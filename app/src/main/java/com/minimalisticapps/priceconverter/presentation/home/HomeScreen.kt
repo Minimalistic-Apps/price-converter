@@ -31,9 +31,8 @@ import com.minimalisticapps.priceconverter.R
 import com.minimalisticapps.priceconverter.common.dialog.ConfirmationDialog
 import com.minimalisticapps.priceconverter.common.utils.PCSharedStorage
 import com.minimalisticapps.priceconverter.common.utils.showToast
-import com.minimalisticapps.priceconverter.common.utils.toFiatCoinsExchange
+import com.minimalisticapps.priceconverter.common.utils.asShitcoinOnScreen
 import com.minimalisticapps.priceconverter.presentation.Screen
-import com.minimalisticapps.priceconverter.presentation.home.viewmodels.HomeViewModel
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.presentation.ui.item.ItemFiatCoin
 import com.minimalisticapps.priceconverter.presentation.ui.theme.ErrorColor
@@ -77,7 +76,7 @@ fun HomeScreen(
                     it.code.lowercase().contains("USD".lowercase())
         }.elementAtOrNull(0)
         usdCurrency?.let {
-            homeViewModel.insertFiatCoin(it.toFiatCoinsExchange())
+            homeViewModel.insertFiatCoin(it.asShitcoinOnScreen())
             PCSharedStorage.saveUsdAsDefault(true)
         }
     }
@@ -201,7 +200,7 @@ fun HomeScreen(
                     },
                     onClick = {
                         coinsStateValue = coinsState
-                        navController.navigate(Screen.CoinsListScreen.route)
+                        navController.navigate(Screen.AvailableShitcoinsToAdd.route)
                     }
                 )
 
@@ -299,13 +298,13 @@ fun HomeScreen(
                         items = fiatCoinsListState,
                         key = { pair -> pair.first }
                     ) { pair ->
-                        val code = pair.second.fiatCoinExchange.code
+                        val code = pair.second.shitcoinOnScreen.code
                         val state = homeViewModel.shitcoinInputsState[code]!!
 
                         ItemFiatCoin(
                             index = pair.first,
                             code = code,
-                            oneUnitOfShitcoinInBTC = pair.second.exchangeRate.oneUnitOfShitcoinInBTC,
+                            oneUnitOfShitcoinInBTC = pair.second.shitcoin.satsPerUnit,
                             state = state,
                             onValueChange = { homeViewModel.updateShitcoin(pair.first, it) },
                             onLongPress = { // Todo: ordering
