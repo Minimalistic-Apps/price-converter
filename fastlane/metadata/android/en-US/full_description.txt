@@ -1,3 +1,6 @@
-Minimalistic price converter that allows you to convert prices of fiat shitcoins easily. It uses Bitcoin as the base currency.
+Convert prices of fiat shitcoins easily.
 
-It supports both BTC and Sats view.
+- **Minimalistic! Just type! No extra steps!**
+- All prices are recalculated together
+- It uses Bitcoin as the base currency
+- BTC and Sats view

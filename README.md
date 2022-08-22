@@ -16,8 +16,8 @@ Minimalistic app converting prices of fiat shitcoins and Bitcoin
 - [x] Uses Bitcoin as base currency
 - Use rates as average from
     - [x] Coingecko
-    - [ ] Bitpay
-    - [ ] Blockchain.info
+    - [x] Bitpay
+    - [x] Blockchain.info
 - [x] Supports Bitcoin and most of ISO fiat shitcoins
 - [x] Refresh button for current rates
 - [x] Displays rates in sats-friendly format (`0.00,001,000`)
