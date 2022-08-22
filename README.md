@@ -49,8 +49,8 @@ Only features that are aligned with the purpose of the app will be considered.
    won't work.
 
 3. **What is the source of rates?** The app calculate averages of rates from those endpoints:
-    - ~https://bitpay.com/ratesa~ (currently suspended)
-    - ~https://blockchain.info/ticker~ (currently suspended)
+    - https://bitpay.com/ratesa
+    - https://blockchain.info/ticker
     - https://api.coingecko.com/api/v3/exchange_rates
 
 ## More
