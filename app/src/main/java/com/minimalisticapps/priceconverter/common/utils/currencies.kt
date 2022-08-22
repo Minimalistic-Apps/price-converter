@@ -22,6 +22,8 @@ data class Territory(
 fun getFlagsForCurrency(currencyCode: String): List<String> {
     var flags =
         ALLOWED_ISO_CURRENCIES[currencyCode]?.territories?.map { territory -> territory.flag }
+            ?.toSet() // make unique
+            ?.toList()
             ?: listOf()
 
     if (currencyCode in CURRENCIES_TO_SHOW_ONLY_FIRST_FLAG) {
