@@ -27,8 +27,7 @@ fun FilterInput(query: String, onValueChange: (String) -> Unit) {
     val mContext = LocalContext.current as Activity
 
     TextField(
-        modifier =
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .height(85.dp)
             .padding(16.dp)
@@ -56,7 +55,6 @@ fun FilterInput(query: String, onValueChange: (String) -> Unit) {
                 fontSize = 14.sp,
                 color = if (isSystemInDarkTheme()) FadedColorDark else FadedColorLight
             )
-        }
+        },
     )
 }
-

@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.minimalisticapps.priceconverter.common.utils.ALLOWED_ISO_CURRENCIES
 import com.minimalisticapps.priceconverter.common.utils.asShitcoinOnScreen
 import com.minimalisticapps.priceconverter.common.utils.hideKeyboard
 import com.minimalisticapps.priceconverter.data.repository.priceconverter.Shitcoin
@@ -25,8 +26,15 @@ fun filterShitcoins(shitcoins: List<Shitcoin>, query: String): List<Shitcoin> {
     val lQuery = query.lowercase()
 
     return shitcoins.filter {
-        it.name.lowercase().contains(lQuery)
-                || it.code.lowercase().contains(lQuery)
+
+        val currency = ALLOWED_ISO_CURRENCIES[it.code]
+
+        val nameMatch = it.name.lowercase().contains(lQuery)
+        val codeMatch = it.code.lowercase().contains(lQuery)
+        val territoryMatch = currency?.territories?.map { territory -> territory.name }
+            ?.any { name -> name.lowercase().contains(lQuery) } == true
+
+        nameMatch || codeMatch || territoryMatch
     }
 }
 
@@ -48,7 +56,6 @@ fun AvailableShitcoinsToAddScreen(
                 query = query.value,
                 onValueChange = { text -> query.value = text }
             )
-
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(filterShitcoins(shitcoins.value ?: listOf(), query.value)) { shitcoin ->
                     ShitcoinListRow(
