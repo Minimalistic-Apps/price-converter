@@ -18,7 +18,7 @@ import androidx.navigation.NavController
 import com.minimalisticapps.priceconverter.common.utils.ALLOWED_ISO_CURRENCIES
 import com.minimalisticapps.priceconverter.common.utils.asShitcoinOnScreen
 import com.minimalisticapps.priceconverter.common.utils.hideKeyboard
-import com.minimalisticapps.priceconverter.data.repository.priceconverter.Shitcoin
+import com.minimalisticapps.priceconverter.room.entities.Shitcoin
 import com.minimalisticapps.priceconverter.presentation.ui.item.ShitcoinListRow
 import com.minimalisticapps.priceconverter.presentation.ui.widget.FilterInput
 

@@ -10,7 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import com.minimalisticapps.priceconverter.common.utils.AppConstants.BIT_COIN_PRECISION
-import com.minimalisticapps.priceconverter.data.repository.priceconverter.Shitcoin
+import com.minimalisticapps.priceconverter.room.entities.Shitcoin
 import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreen
 import java.math.BigDecimal
 import java.text.DecimalFormat

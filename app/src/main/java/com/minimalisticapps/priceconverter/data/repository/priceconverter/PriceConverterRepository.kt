@@ -3,8 +3,10 @@ package com.minimalisticapps.priceconverter.data.repository.priceconverter
 import com.minimalisticapps.priceconverter.common.utils.ALLOWED_ISO_CURRENCIES
 import com.minimalisticapps.priceconverter.common.utils.AppConstants
 import com.minimalisticapps.priceconverter.data.remote.bitpay.BitpayApiInterface
+import com.minimalisticapps.priceconverter.data.remote.blockchaininfo.BlockchainInfoApiInterface
 import com.minimalisticapps.priceconverter.data.remote.coingecko.CoingeckoApiInterface
 import com.minimalisticapps.priceconverter.room.dao.PriceConverterDao
+import com.minimalisticapps.priceconverter.room.entities.Shitcoin
 import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreen
 import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreenWithRate
 import kotlinx.coroutines.flow.Flow
@@ -20,14 +22,24 @@ fun calculateSatsPerUnitRate(rate: BigDecimal?): BigDecimal? {
 }
 
 class PriceConverterRepository @Inject constructor(
-    private val coingeckoAPi: CoingeckoApiInterface,
+    private val coingeckoApi: CoingeckoApiInterface,
     private val bitPayApi: BitpayApiInterface,
+    private val blockchainInfoApi: BlockchainInfoApiInterface,
     private val priceConverterDao: PriceConverterDao
 ) {
 
     suspend fun fetchShitcoinFromApi(): List<Shitcoin> {
+        val blockchainInfo = blockchainInfoApi.getExchangeRates()
+            .entries.associate {
+                it.key.uppercase() to Shitcoin(
+                    code = it.key.uppercase(),
+                    name = it.value.symbol,
+                    satsPerUnit = calculateSatsPerUnitRate(it.value.last),
+                )
+            }
+
         val coingecko: Map<String, Shitcoin> =
-            coingeckoAPi.getExchangeRates().rates
+            coingeckoApi.getExchangeRates().rates
                 .filter { it.value.type == "fiat" }
                 .entries.associate {
                     it.key.uppercase() to Shitcoin(
@@ -46,7 +58,10 @@ class PriceConverterRepository @Inject constructor(
                 )
             }
 
-        val groupedRates = (coingecko.asSequence() + bitpay.asSequence())
+        val sourcesData =
+            (blockchainInfo.asSequence() + coingecko.asSequence() + bitpay.asSequence())
+
+        val groupedRates = sourcesData
             .filter { it.key in ALLOWED_ISO_CURRENCIES }
             .groupBy({ it.key }, { it.value })
             .mapValues {
@@ -60,11 +75,17 @@ class PriceConverterRepository @Inject constructor(
                             (if (rate != null) acc.plus(rate) else acc)
                         else BigDecimal.ZERO
                     }
-                    ?.divide(entriesWithRate.size.toBigDecimal())
+                    ?.divide(
+                        entriesWithRate.size.toBigDecimal(),
+                        AppConstants.STORAGE_PRECISION,
+                        RoundingMode.HALF_UP
+                    )
+
+                val code = it.value.first().code
 
                 Shitcoin(
-                    code = it.value.first().code,
-                    name = it.value.first().name,
+                    code = code,
+                    name = ALLOWED_ISO_CURRENCIES[code]?.name ?: code,
                     satsPerUnit = average
                 )
             }

@@ -2,7 +2,7 @@ package com.minimalisticapps.priceconverter.presentation.states
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.minimalisticapps.priceconverter.data.repository.priceconverter.Shitcoin
+import com.minimalisticapps.priceconverter.room.entities.Shitcoin
 
 data class CoinsState(
     val isLoading: Boolean = false,

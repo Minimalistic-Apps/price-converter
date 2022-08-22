@@ -1,20 +1,16 @@
-package com.minimalisticapps.priceconverter.data.repository.priceconverter
+package com.minimalisticapps.priceconverter.room.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.math.BigDecimal
 
-/**
- * This class represents the Currency with rate.
- * List of this in DB is list of all available currencies.
- */
 @Entity(tableName = "shitcoins")
 data class Shitcoin(
+    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "code")
     var code: String,
 
-    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "name")
     val name: String,
 

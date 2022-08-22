@@ -1,7 +1,7 @@
 package com.minimalisticapps.priceconverter.room.dao
 
 import androidx.room.*
-import com.minimalisticapps.priceconverter.data.repository.priceconverter.Shitcoin
+import com.minimalisticapps.priceconverter.room.entities.Shitcoin
 import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreen
 import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreenWithRate
 import kotlinx.coroutines.flow.Flow

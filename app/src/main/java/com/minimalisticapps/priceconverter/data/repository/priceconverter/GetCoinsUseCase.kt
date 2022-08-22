@@ -2,6 +2,7 @@ package com.minimalisticapps.priceconverter.data.repository.priceconverter
 
 import android.util.Log
 import com.minimalisticapps.priceconverter.common.Resource
+import com.minimalisticapps.priceconverter.room.entities.Shitcoin
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch

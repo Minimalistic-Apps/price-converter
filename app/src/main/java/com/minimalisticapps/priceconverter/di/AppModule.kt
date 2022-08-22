@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.minimalisticapps.priceconverter.common.utils.AppConstants
 import com.minimalisticapps.priceconverter.data.remote.bitpay.BitpayApiInterface
+import com.minimalisticapps.priceconverter.data.remote.blockchaininfo.BlockchainInfoApiInterface
 import com.minimalisticapps.priceconverter.data.remote.coingecko.CoingeckoApiInterface
 import com.minimalisticapps.priceconverter.data.remote.donationserver.DonationServerApiInterface
 import com.minimalisticapps.priceconverter.data.repository.DonationRepository
@@ -51,6 +52,16 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideBlockchainInfoApi(client: OkHttpClient): BlockchainInfoApiInterface =
+        Retrofit.Builder()
+            .baseUrl(AppConstants.BLOCKCHAIN_INFO_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build()
+            .create(BlockchainInfoApiInterface::class.java)
+
+    @Provides
+    @Singleton
     fun provideCoinGeckoApi(client: OkHttpClient): CoingeckoApiInterface = Retrofit.Builder()
         .baseUrl(AppConstants.COINGECTKO_BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
@@ -95,12 +106,14 @@ object AppModule {
     @Provides
     @Singleton
     fun providePriceConverterRepository(
-        coingeckoAPi: CoingeckoApiInterface,
+        blockchainInfoApi: BlockchainInfoApiInterface,
+        coingeckoApi: CoingeckoApiInterface,
         bitPayApi: BitpayApiInterface,
         priceConverterDao: PriceConverterDao
     ): PriceConverterRepository {
         return PriceConverterRepository(
-            coingeckoAPi = coingeckoAPi,
+            blockchainInfoApi = blockchainInfoApi,
+            coingeckoApi = coingeckoApi,
             bitPayApi = bitPayApi,
             priceConverterDao = priceConverterDao
         )
