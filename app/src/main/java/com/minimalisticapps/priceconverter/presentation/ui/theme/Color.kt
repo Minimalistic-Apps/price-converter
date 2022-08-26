@@ -17,4 +17,5 @@ val OnBackgroundColor = Color(0xFFFFFFFF)
 val ErrorColor = Color(0xFFed2b2b)
 
 val FadedColorLight = Color(0xFF999999)
-val FadedColorDark = Color(0xFFCCCCCC)
+val HalfFadedColorDark = Color(0xFFCCCCCC)
+val FadedColorDark = Color(0xFF777777)

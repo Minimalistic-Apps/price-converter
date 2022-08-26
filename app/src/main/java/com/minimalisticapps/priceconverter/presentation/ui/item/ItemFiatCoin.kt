@@ -18,8 +18,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.minimalisticapps.priceconverter.R
-import com.minimalisticapps.priceconverter.presentation.ui.theme.FadedColorDark
 import com.minimalisticapps.priceconverter.presentation.ui.theme.FadedColorLight
+import com.minimalisticapps.priceconverter.presentation.ui.theme.HalfFadedColorDark
 import com.minimalisticapps.priceconverter.presentation.ui.widget.TextInputShitCoin
 import com.minimalisticapps.priceconverter.presentation.ui.widget.formatUnitOfShitcoinPrice
 import java.math.BigDecimal
@@ -54,7 +54,7 @@ fun ItemFiatCoin(
                     .fillMaxWidth()
                     .weight(3.0f)
             ) {
-                TextInputShitCoin(state, onValueChange, onSelected)
+                TextInputShitCoin(code, state, onValueChange, onSelected)
             }
 
             Text(
@@ -77,7 +77,7 @@ fun ItemFiatCoin(
         val unitOfShitcoinInBtcFormatted =
             formatUnitOfShitcoinPrice(oneUnitOfShitcoinInBTC, btcOrSats)
         Text(
-            color = if (isSystemInDarkTheme()) FadedColorDark else FadedColorLight,
+            color = if (isSystemInDarkTheme()) HalfFadedColorDark else FadedColorLight,
             fontFamily = FontFamily.Monospace,
             text = "1 $code = $unitOfShitcoinInBtcFormatted",
             style = MaterialTheme.typography.body1,
