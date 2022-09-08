@@ -140,7 +140,7 @@ fun DonationScreen(donationViewModel: DonationViewModel = hiltViewModel()) {
             Button(
                 enabled = donationViewModel.lnUrl.value != null,
                 onClick = {
-                    val link = "lightning://${donationViewModel.lnUrl.value}"
+                    val link = "lightning:${donationViewModel.lnUrl.value}"
                     try {
                         donationViewModel.userClickedPay()
                         mUriHandler.openUri(link)
