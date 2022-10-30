@@ -21,6 +21,8 @@ fun calculateSatsPerUnitRate(rate: BigDecimal?): BigDecimal? {
     return BigDecimal.ONE.divide(rate, AppConstants.STORAGE_PRECISION, RoundingMode.HALF_UP)
 }
 
+val CRYPTO_SHITCOINS_THAT_I_LIKE = listOf<String>() // Haha, its empty 🧌
+
 class PriceConverterRepository @Inject constructor(
     private val coingeckoApi: CoingeckoApiInterface,
     private val bitPayApi: BitpayApiInterface,
@@ -40,7 +42,6 @@ class PriceConverterRepository @Inject constructor(
 
         val coingecko: Map<String, Shitcoin> =
             coingeckoApi.getExchangeRates().rates
-                .filter { it.value.type == "fiat" }
                 .entries.associate {
                     it.key.uppercase() to Shitcoin(
                         code = it.key.uppercase(),
@@ -61,8 +62,10 @@ class PriceConverterRepository @Inject constructor(
         val sourcesData =
             (blockchainInfo.asSequence() + coingecko.asSequence() + bitpay.asSequence())
 
+//        Log.i("PriceConverterRepo", sourcesData.toList().map { it.key }.sorted().toString())
+
         val groupedRates = sourcesData
-            .filter { it.key in ALLOWED_ISO_CURRENCIES }
+            .filter { it.key in ALLOWED_ISO_CURRENCIES || it.key in CRYPTO_SHITCOINS_THAT_I_LIKE }
             .groupBy({ it.key }, { it.value })
             .mapValues {
                 val entriesWithRate = it.value.filter { it2 -> it2.satsPerUnit != null }
