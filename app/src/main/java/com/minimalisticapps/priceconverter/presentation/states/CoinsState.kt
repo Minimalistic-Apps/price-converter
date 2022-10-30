@@ -13,9 +13,6 @@ data class CoinsState(
 
     constructor(parcel: Parcel) : this(
         parcel.readByte() != 0.toByte(),
-        TODO("coins"),
-        parcel.readString() ?: "",
-        parcel.readByte() != 0.toByte()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
