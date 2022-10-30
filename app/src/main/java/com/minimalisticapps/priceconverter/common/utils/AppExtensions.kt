@@ -13,6 +13,7 @@ import com.minimalisticapps.priceconverter.common.utils.AppConstants.BIT_COIN_PR
 import com.minimalisticapps.priceconverter.room.entities.Shitcoin
 import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreen
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
@@ -149,7 +150,8 @@ fun formatSatsString(input: String): String {
 }
 
 fun formatFiatShitcoin(input: BigDecimal): String {
-    return formatNumberString(input.toPlainString(), SHITCOIN_PRECISION)
+    val roundedInput = input.setScale(SHITCOIN_PRECISION, RoundingMode.HALF_UP)
+    return formatNumberString(roundedInput.toPlainString(), SHITCOIN_PRECISION)
 }
 
 fun parseBigDecimalFromString(input: String): BigDecimal? {

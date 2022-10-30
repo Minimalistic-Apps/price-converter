@@ -3,6 +3,7 @@ package com.minimalisticapps.priceconverter.presentation.home
 import android.app.Application
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -17,8 +18,8 @@ import com.minimalisticapps.priceconverter.data.repository.priceconverter.GetFia
 import com.minimalisticapps.priceconverter.data.repository.priceconverter.SaveScreenCurrencyRecordUseCase
 import com.minimalisticapps.priceconverter.presentation.home.viewmodels.updateTextFieldModelWithCommas
 import com.minimalisticapps.priceconverter.presentation.states.CoinsState
-import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreenWithRate
 import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreen
+import com.minimalisticapps.priceconverter.room.entities.ShitcoinOnScreenWithRate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
