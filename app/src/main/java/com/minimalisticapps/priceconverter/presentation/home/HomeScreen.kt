@@ -15,12 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,7 +33,6 @@ import com.minimalisticapps.priceconverter.presentation.states.CoinsState
 import com.minimalisticapps.priceconverter.presentation.ui.item.ItemFiatCoin
 import com.minimalisticapps.priceconverter.presentation.ui.theme.ErrorColor
 import com.minimalisticapps.priceconverter.presentation.ui.theme.PrimaryColor
-import com.minimalisticapps.priceconverter.presentation.ui.theme.PrimaryColorLight
 import com.minimalisticapps.priceconverter.presentation.ui.theme.SecondaryColorForDark
 import com.minimalisticapps.priceconverter.presentation.ui.widget.SetToolbar
 import com.minimalisticapps.priceconverter.presentation.ui.widget.ShowLinearIndicator
@@ -81,100 +76,6 @@ fun HomeScreen(
         }
     }
 
-    if (homeViewModel.showDonationReminder.value) {
-        AlertDialog(
-            onDismissRequest = {
-                homeViewModel.dismissReminder()
-            },
-            title = {
-                Text(
-                    text = "Do you like the app? Please Donate!",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
-            },
-            text = {
-                Column() {
-                    Box(
-                        contentAlignment = Alignment.Center, modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 25.dp)
-                    ) {
-                        Text(
-                            buildAnnotatedString {
-                                append("Your contribution will helps us to deliver ")
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append("Free Open-Source Privacy-Respecting Minimalistic")
-                                }
-                                append(" apps to everybody!")
-                            },
-                            fontSize = 16.sp,
-                            textAlign = TextAlign.Left
-                        )
-                    }
-
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 25.dp)
-                    ) {
-                        Button(
-                            onClick = {
-                                homeViewModel.dismissReminder()
-                                navController.navigate(Screen.DonationScreen.route)
-                            },
-                            content = {
-                                Text(text = "⚡Donate⚡", fontSize = 26.sp)
-                            },
-                            colors = ButtonDefaults.buttonColors(backgroundColor = PrimaryColorLight),
-                            contentPadding = PaddingValues(
-                                start = 4.dp,
-                                top = 0.dp,
-                                end = 4.dp,
-                                bottom = 0.dp
-                            ),
-                            modifier = Modifier.height(50.dp)
-                        )
-                    }
-
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            buildAnnotatedString {
-                                append("If you can't donate, no problem, ")
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append("app will be free for everybody, forever.")
-                                }
-                            },
-                            fontSize = 16.sp,
-                            textAlign = TextAlign.Left
-                        )
-                    }
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = { homeViewModel.dismissReminder() },
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor =
-                        PrimaryColorLight
-                    ),
-                ) {
-                    Text("Remind me later", style = TextStyle(color = Color.White))
-                }
-            },
-//            dismissButton = {
-//                TextButton(onClick = {}) {
-//                    Text("No", style = TextStyle(color = Color.White))
-//                }
-//            },
-            backgroundColor = PrimaryColor,
-            contentColor = Color.White
-        )
-    }
     SwipeRefresh(
         state = swipeRefreshState,
         onRefresh = { homeViewModel.refreshData() },
