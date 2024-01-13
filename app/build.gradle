@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.minimalisticapps.priceconverter"
         minSdk 21
-        targetSdk 33
+        targetSdk 34
         versionCode 15
         versionName "2.7.0"
 
