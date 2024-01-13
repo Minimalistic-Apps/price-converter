@@ -64,7 +64,6 @@ class HomeViewModel @Inject constructor(
     val shitcoinListState: State<List<Pair<Int, ShitcoinOnScreenWithRate>>> = _shitcoinListState
     var isRefreshing: State<Boolean> = _isRefreshing
     val timeAgoState: State<String> = _timeAgoState
-    val showDonationReminder: State<Boolean> = _showDonationReminder
     val isLongerThan1hour: State<Boolean> = _isLongerThan1hour
 
     private fun calculateShouldShowDonationReminder(): Boolean {
