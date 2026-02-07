@@ -1,3 +1,6 @@
+> ❗❗**DISCONTINUED**: new app will be in the [monorepo](https://github.com/Minimalistic-Apps/monorepo)❗❗
+
+
 # Minimalistic Price Converter
 
 `Minimalistic` | `Free` | `Open Source` | `Private` | `Bitcoin` | `No adds` | `No trackers`
